@@ -9,7 +9,7 @@ const Articles = () => {
   return (
     <>
       <Header />
-      <Banner />
+      {/* <Banner /> */}
       <QuizHead />
       <QuizCard />
 

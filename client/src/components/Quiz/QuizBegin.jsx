@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import logo from "@assets/icons/hela-edu-white-text.svg";
-
+import background from "@assets/img/quiz-bg.svg";
 import Guidlines from "./Guidlines";
-import PrimaryButton from "@components/common/PrimaryButton";
 import Questions from "./Questions";
 import Score from "./Score";
+import QuizHeader from "./QuizHeader";
+import StartPopup from "./StartPopup";
 
 const QuizBegin = ({ subject }) => {
   const questionbank = [
@@ -15,78 +15,123 @@ const QuizBegin = ({ subject }) => {
       id: 1,
     },
     {
-      question: "When was a rubber planted first planted in Sri Lanka?",
+      question: "When was a rubber first planted in Sri Lanka?",
       options: ["1890", "1790", "1892", "1895"],
       answer: "1890",
       id: 2,
     },
-
     {
       question: "What is not a main area where graphite is found in Sri Lanka?",
       options: ["Southern", "Sabaragamuwa", "North Western", "Western"],
       answer: "Western",
       id: 3,
     },
+    {
+      question: "What is not a significant feature of paddy cultivation?",
+      options: [
+        "It is a staple food of Sri Lankans",
+        "It provides raw materials for many industries",
+        "It is a Production of organic fertilizer",
+        "It is popular among many countries",
+      ],
+      answer: "It is popular among many countries",
+      id: 4,
+    },
+    {
+      question: "What is a vegetable grown in dry zone?",
+      options: ["Potatoes", "Drumsticks", "Long beans", "Carrot"],
+      answer: "Drumsticks",
+      id: 5,
+    },
   ];
+
+  const perQuestionTime = 1000;
 
   const [questions, setQuestions] = useState(questionbank);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [score, setScore] = useState(0);
-  const [timer, setTimer] = useState(10);
+  const [timer, setTimer] = useState(perQuestionTime);
   const [quizStarted, setQuizStarted] = useState(false);
   const [isLastQuestion, setIsLastQuestion] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
+  const [totalTime, setTotalTime] = useState(0);
 
   useEffect(() => {
-    if (quizStarted) {
+    if (quizStarted && currentQuestion < questions.length) {
       const interval = setInterval(() => {
         setTimer((prevTimer) => {
           if (prevTimer > 0) {
             return prevTimer - 1;
           } else {
-            setCurrentQuestion((prevQuestion) => prevQuestion + 1);
-            // Reset timer for the next question
-            return 10;
+            setTotalTime((prevTime) => prevTime + perQuestionTime);
+            if (currentQuestion + 1 < questions.length) {
+              setCurrentQuestion((prevQuestion) => prevQuestion + 1);
+              return perQuestionTime;
+            } else {
+              setIsLastQuestion(true);
+              setQuizStarted(false);
+              clearInterval(interval);
+              return 0;
+            }
           }
         });
-      }, 1000);
+      }, 10);
 
       return () => clearInterval(interval);
     }
-  }, [currentQuestion, quizStarted]);
+  }, [quizStarted, currentQuestion, questions.length]);
 
   const handleAnswerClick = (selectedAnswer) => {
-    console.log("Answer clicked:", selectedAnswer);
     if (selectedAnswer === questions[currentQuestion].answer) {
       setScore((prevScore) => prevScore + 1);
     }
+    handleNextQuestion(timer);
   };
 
-  const handleNextQuestion = () => {
-    if (currentQuestion + 2 === questions.length) {
-      console.log("Question Length:", questions.length);
+  const handleNextQuestion = (remainingTime) => {
+    setTotalTime((prevTime) => prevTime + (perQuestionTime - remainingTime));
+    if (currentQuestion + 1 === questions.length) {
       setIsLastQuestion(true);
     }
     setCurrentQuestion((prevQuestion) => prevQuestion + 1);
-    setTimer(10);
+    setTimer(perQuestionTime);
   };
 
   const startQuiz = () => {
     setQuizStarted(true);
+    setShowPopup(false);
+    setScore(0);
+    setCurrentQuestion(0);
+    setTotalTime(0);
+    setTimer(perQuestionTime);
+    setIsLastQuestion(false);
+  };
+
+  const showStartPopup = () => {
+    setShowPopup(true);
   };
 
   return (
-    <>
+    <div
+      className="relative min-h-screen bg-cover bg-fixed"
+      style={{ backgroundImage: `url(${background})` }}
+    >
       <div>
-        <img src={logo} alt="" />
-        <h2 className="s-topic">Weekly Quiz 1 </h2>
+        <QuizHeader />
       </div>
       <div>
-        {!quizStarted ? (
+        {!quizStarted && !showPopup ? (
           <div>
             <Guidlines subject={subject} />
-            <PrimaryButton name="Start" click={startQuiz} />
+            <div className="text-center m-10">
+              <div className="button-29 mt-10" onClick={showStartPopup}>
+                Start Quiz!
+              </div>
+            </div>
           </div>
-        ) : currentQuestion < questions.length ? (
+        ) : showPopup && !quizStarted ? (
+          <StartPopup onComplete={startQuiz} />
+        ) : quizStarted && currentQuestion < questions.length ? (
           <Questions
             questions={questions}
             handleNextQuestion={handleNextQuestion}
@@ -94,6 +139,7 @@ const QuizBegin = ({ subject }) => {
             handleAnswerClick={handleAnswerClick}
             timer={timer}
             isLastQuestion={isLastQuestion}
+            questionTime={perQuestionTime}
           />
         ) : (
           <Score
@@ -103,10 +149,11 @@ const QuizBegin = ({ subject }) => {
             setQuizStarted={setQuizStarted}
             setIsLastQuestion={setIsLastQuestion}
             setTimer={setTimer}
+            totalTime={totalTime}
           />
         )}
       </div>
-    </>
+    </div>
   );
 };
 

@@ -9,12 +9,11 @@ import banner from "@assets/img/subject_background.png";
 
 const Articles = () => {
   const [articles, setArticles] = useState([]); // Initialize articles state
-
   useEffect(() => {
     const fetchApprovedArticles = async () => {
       try {
         const response = await approvedArticles();
-        const articles = response.data.slice(0, 3);
+        const articles = response.data;
         console.log(articles);
 
         const articlesWithUserDetails = await Promise.all(
@@ -24,7 +23,9 @@ const Articles = () => {
             const userDetails = userResponse.data;
             return {
               ...article,
-              authorName: userDetails.firstName,
+              firstName: userDetails.firstName,
+              lastName: userDetails.lastName,
+              coverImage: userDetails.profilePictureUrl,
             };
           })
         );
@@ -49,12 +50,13 @@ const Articles = () => {
           <div className="mx-44 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {articles.map((article) => (
               <div key={article.articleId} className="p-2">
-                <Link to={`/readArticles/${article.articleId}`}>
+                <Link to={`/articles/readArticles/${article.articleId}`}>
                   <ArticleCard
                     key={article.articleId}
                     imageUrl={article.imageRef}
-                    profilePictureUrl={article.profilePictureUrl}
-                    authorName={article.authorName}
+                    profilePictureUrl={article.coverImage}
+                    firstName={article.firstName}
+                    lastName={article.lastName}
                     date={article.publishedTimestamp}
                     title={article.title}
                     description={article.content}

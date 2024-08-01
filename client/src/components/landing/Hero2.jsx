@@ -1,7 +1,8 @@
 import React from "react";
 import bot from "@assets/img/bot.svg";
-import logo from "@assets/icons/hela-edu-black-text.svg";
+import logo from "@assets/icons/hela-edu-black-text2.svg";
 import land from "@assets/img/Land bg.svg";
+import { useNavigate } from "react-router-dom";
 
 import maths from "@assets/img/subjects/maths.png";
 import science from "@assets/img/subjects/2.png";
@@ -16,6 +17,7 @@ import articleImg3 from "@assets/img/Top Articles/Young indian woman in blue sar
 import Article from "@components/landing/Article";
 import hinduism from "@assets/img/subjects/8.png";
 function Hero2() {
+  let navigator = useNavigate();
   return (
     <div className="hero2">
       <div className="flex-c">
@@ -25,18 +27,27 @@ function Hero2() {
         <img src={land} alt="" srcset="" className="banner-bg" />
       </div>
       <main className="pannels">
-        <div className="left-pannel">
+        <div className="left-pannel flex-c">
           <div className="hero-text-box">
             <div className="subscribe">
               <h3 className="text-center blue">Subscribe to premium now</h3>
-              <h3 className="text-center white">Subscribe</h3>
+              <h3
+                className="text-center white"
+                onClick={() => {
+                  navigator("/premiumPlan");
+                }}
+              >
+                Subscribe
+              </h3>
             </div>
-            <h4>
+            <h4 className="mt-4">
               Your ultimate self-study platform, designed to make learning
               engaging and effective. Start your journey to academic excellence
               today with HelaEdu!
             </h4>
-            <h3>Unlock Your Academic Potential with HelaEdu!</h3>
+            <h3 className="mt-4">
+              Unlock Your Academic Potential with HelaEdu!
+            </h3>
           </div>
         </div>
         <div className="right-pannel">
@@ -63,7 +74,9 @@ function Hero2() {
               </div>
             </div>
             <div className="w-10/12">
-              <button className="btn black-button w-full">Start a chat</button>
+              <button className="btn black-button w-full">
+                <h3>Start a chat</h3>
+              </button>
             </div>
           </div>
           <div className="bot-wrapper flex-end">

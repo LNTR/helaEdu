@@ -41,3 +41,17 @@ def get_history():
     }
 
     return jsonify(response_payload)
+
+@chat.route("/quizgen", methods=["POST"])
+@chat.route("/quizgen/", methods=["POST"])
+# @authenticate
+def get_quiz():
+    request_payload = request.get_json(silent=True)
+    grade = request_payload["grade"]
+    number = request_payload["number"]
+    quiz_response = quiz_gen(grade, number)
+    response_payload = {
+        "response": quiz_response,
+    }
+
+    return jsonify(response_payload)

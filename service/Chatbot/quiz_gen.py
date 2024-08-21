@@ -1,64 +1,43 @@
-import json
 from Chatbot.lang_funcs import *
-# from langchain.chat_models import ChatOpenAi
-from langchain_core.runnables.base import RunnableSequence
 from langchain_core.prompts.prompt import PromptTemplate
 from langchain_community.llms import Ollama
-from langchain.chains.sequential import SequentialChain
-from langchain_core.runnables import RunnablePassthrough
 from operator import itemgetter
-from langchain_core.output_parsers import StrOutputParser
- 
+from langchain_core.output_parsers import JsonOutputParser
+from langchain_core.pydantic_v1 import BaseModel, Field, validator
 
-RESPONSE_JSON = {
-    "1": {
-        "no": "1",
-        "mcq": "multiple choice question",
-        "options": {
-            "a": "choice here",
-            "b": "choice here",
-            "c": "choice here",
-            "d": "choice here",
-        },
-        "correct": "correct answer",
-    },
-    "2": {
-        "no": "2",
-        "mcq": "multiple choice question",
-        "options": {
-            "a": "choice here",
-            "b": "choice here",
-            "c": "choice here",
-            "d": "choice here",
-        },
-        "correct": "correct answer",
-    },
-    "3": {
-        "no": "3",
-        "mcq": "multiple choice question",
-        "options": {
-            "a": "choice here",
-            "b": "choice here",
-            "c": "choice here",
-            "d": "choice here",
-        },
-        "correct": "correct answer",
-    },
-}
+class MCQ(BaseModel):
+    id: int = Field(description="The question number")
+    question: str = Field(description="The multiple choice question")
+    options: list[str] = Field(description="The list of 4 options for the question")
+    answer: str = Field(description="The answer from the options list")
 
-llm = Ollama(model="orca-mini", temperature=0)
+    @validator("options")
+    def question_with_4_options(cls, field):
+        if len(field) != 4:
+            raise ValueError("4 options required!")
+        return field
+
+class Quiz(BaseModel):
+    questions: list[MCQ] = Field(description="The list of multiple choice questions")
+
+parser = JsonOutputParser(pydantic_object=Quiz)
+
+llm = Ollama(model="llama3.1:8b", temperature=0)
 
 retriever = load_vectorstore(embedding_model="all-MiniLM-L6-v2")
 
- 
- 
-template = """You are an expert MCQ maker. Given the {context}, it is your job to\
-create a quiz of {number} multiple choice questions for grade {grade} students.
+template = """You are an expert multiple choice question maker. Given the {context}, it is your job to\
+create a quiz of {number} multiple choice questions for students from the given {context}.
+Each question must have exactly 4 options and only one option should be the correct answer to the question.
+State the correct answer.
 Make sure that questions are not repeated and check all the questions to be conforming to the {context} as well.
-Make sure to format your response like the JSON .\
-Ensure to make the {number} MCQs.
+{format_instructions}
+Ensure to make {number} MCQs.
 """
-prompt = ChatPromptTemplate.from_template(template)
+prompt = PromptTemplate(
+    template=template,
+    input_variables=["context", "number", "grade"],
+    partial_variables={"format_instructions": parser.get_format_instructions()},)
 
 quiz_chain_ret = (
     {
@@ -68,28 +47,14 @@ quiz_chain_ret = (
     }
     | prompt
     | llm
-    | StrOutputParser()
+    | parser
 )
 
 def get_quiz(number, grade, chain=quiz_chain_ret):
     
     response = chain.invoke({"number": number, "grade": grade})
-    print (number, grade)
-    # response = quiz_chain_ret.invoke({"number": "3", "grade": "10"}) 
-    # # response =quiz_chain_ret.invoke({"question": "where did harrison work", "language": "italian"})
-
 
     return response
 
-
-
-
-
-
-
-
 if __name__ == "__main__":
     output = get_quiz(10, 10, quiz_chain_ret)
-    
-
-    print(output)

@@ -10,7 +10,7 @@ def retrieve_history(session_id):
     return chat_history(session_id)
 
 def quiz_gen(grade, number):
-    return get_quiz(grade, number)
+    return get_quiz(number, grade)
 
 
 # def main():

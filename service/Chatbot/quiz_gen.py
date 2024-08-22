@@ -24,7 +24,9 @@ parser = JsonOutputParser(pydantic_object=Quiz)
 
 llm = Ollama(model="llama3.1:8b", temperature=0)
 
-retriever = load_vectorstore(embedding_model="all-MiniLM-L6-v2")
+vectorstore = load_vectorstore(embedding_model="all-MiniLM-L6-v2")
+# retriever = vectorstore.as_retriever()
+retriever = vectorstore.as_retriever(search_kwargs={"k": 1, "filter": {"source": "/Users/helaEdu/textbooks/10/Science_I.pdf"}})
 
 template = """You are an expert multiple choice question maker. Given the {context}, it is your job to\
 create a quiz of {number} multiple choice questions for students from the given {context}.

@@ -12,16 +12,16 @@ import os
 
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 os.environ["OPENAI_API_KEY"] = (
-    "sk-None-x9obQKPkYCv9CSNrYlvjT3BlbkFJtaA554W5Y4p1G4y4H8QV"
+    "sk-XTR_ACEcOmCAwv5kMsjyd3Jz65Xn24FEgx1yQbxk34T3BlbkFJHPQpYdsp__T_qZCQS8t4j51QEDcogVpKeJwIdXw48A"
 )
 
+# openai_api_key = os.getenv("OPENAI_API_KEY")
+# llm = ChatOpenAI(model="gpt-4o")
+llm = Ollama(model="llama3.1:8b", temperature=0)
 
-# llm = Ollama(model="orca-mini", temperature=0)
-
-openai_api_key = os.getenv("OPENAI_API_KEY")
-llm = ChatOpenAI(model="gpt-4o")
-
-retriever = load_vectorstore(embedding_model="all-MiniLM-L6-v2")
+vectorstore = load_vectorstore(embedding_model="all-MiniLM-L6-v2")
+# retriever = vectorstore.as_retriever()
+retriever = vectorstore.as_retriever(search_kwargs={"k": 3, "filter": {"source": "/Users/helaEdu/textbooks/10/Business&AccountingStudies.pdf"}})
 
 retriever_with_history = add_history(llm, retriever)
 

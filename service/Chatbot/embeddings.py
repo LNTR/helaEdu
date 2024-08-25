@@ -100,3 +100,5 @@ def remove_pages(input_pdf, output_pdf, pages_to_remove):
 
 # remove_pages("/Users/helaEdu/textbooks/grade10/HealthScience.pdf","/Users/helaEdu/textbooks/10/HealthScience.pdf", [])
 
+def embed(grade, subject, book_data):
+    return True

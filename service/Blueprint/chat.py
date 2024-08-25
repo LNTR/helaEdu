@@ -55,3 +55,18 @@ def get_quiz():
     }
 
     return jsonify(response_payload)
+
+@chat.route("/embed", methods=["POST"])
+@chat.route("/embed/", methods=["POST"])
+# @authenticate
+def get_textbook():
+    request_payload = request.get_json(silent=True)
+    grade = request_payload["grade"]
+    subject = request_payload["subject"]
+    book_data = request_payload["data"]
+    embeddings = embeddings_gen(grade, subject, book_data)
+    response_payload = {
+        "response": embeddings,
+    }
+
+    return jsonify(response_payload)

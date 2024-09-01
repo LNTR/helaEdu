@@ -62,11 +62,28 @@ def get_quiz():
 def get_textbook():
     request_payload = request.get_json(silent=True)
     grade = request_payload["grade"]
-    subject = request_payload["subject"]
-    book_data = request_payload["data"]
-    embeddings = embeddings_gen(grade, subject, book_data)
+    book_info = request_payload["info"]
+    subject = request_payload["subject"] 
+    type = request_payload["type"]
+    embeddings = embeddings_gen(grade, subject, book_info, type)
     response_payload = {
         "response": embeddings,
+    }
+
+    return jsonify(response_payload)
+
+@chat.route("/contents", methods=["POST"])
+@chat.route("/contents/", methods=["POST"])
+# @authenticate
+def get_contents():
+    request_payload = request.get_json(silent=True)
+    grade = request_payload["grade"]
+    book_info = request_payload["info"]
+    subject = request_payload["subject"] 
+    type = request_payload["type"]
+    contents = contents_gen(grade, subject, book_info, type)
+    response_payload = {
+        "response": contents,
     }
 
     return jsonify(response_payload)

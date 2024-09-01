@@ -1,4 +1,5 @@
 # from lang_funcs import *
+from Chatbot.contents import get_contents
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.document_loaders import PyMuPDFLoader
@@ -98,7 +99,17 @@ def remove_pages(input_pdf, output_pdf, pages_to_remove):
 
     return True
 
-# remove_pages("/Users/helaEdu/textbooks/grade10/HealthScience.pdf","/Users/helaEdu/textbooks/10/HealthScience.pdf", [])
+# remove_pages("/Users/helaEdu/resources/textbooks/grade10/HealthScience.pdf","/Users/helaEdu/textbooks/10/HealthScience.pdf", [])
 
 def embed(grade, subject, book_data):
     return True
+
+def contents(grade, subject, book_data, type):
+    contents = {}
+    for index, book in enumerate(book_data, start=1):
+        part_no = book['book_part']
+        toc_page = book['toc']
+        file_path = f"/Users/helaEdu/resources/{type}/{grade}/{subject}_{part_no}.pdf"
+        contents_of_book = get_contents(file_path, toc_page)
+        contents[index] = contents_of_book
+    return contents

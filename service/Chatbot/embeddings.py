@@ -102,6 +102,18 @@ def remove_pages(input_pdf, output_pdf, pages_to_remove):
 # remove_pages("/Users/helaEdu/resources/textbooks/grade10/HealthScience.pdf","/Users/helaEdu/textbooks/10/HealthScience.pdf", [])
 
 def embed(grade, subject, book_data):
+    pdf_path = f"/Users/helaEdu/resources/{type}/{grade}/{subject}_{part_no}.pdf"
+
+    embed = load_embedding_model(model_path="all-MiniLM-L6-v2")
+
+    docs = load_pdf_data(
+        file_path=pdf_path
+    )
+
+    documents = split_docs(documents=docs)
+
+    # vectorstore = create_embeddings(documents, embed)
+
     return True
 
 def contents(grade, subject, book_data, type):

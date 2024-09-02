@@ -18,20 +18,21 @@ openai_api_key = os.getenv("OPENAI_API_KEY")
 # llm = ChatOpenAI(model="gpt-4o", temperature=0)
 llm = Ollama(model="llama3.1:8b", temperature=0)
 
-def extract_text_from_page(pdf_file, page_number):
+def extract_text_from_page(pdf_file, page_number_list):
     # Open the PDF file in binary read mode
     with open(pdf_file, 'rb') as file:
         # Create a PDF reader object
         pdf_reader = PyPDF2.PdfReader(file)
-        
-        # Check if the page number is valid
-        if page_number < 1 or page_number > len(pdf_reader.pages):
-            raise ValueError("Invalid page number")
-        
-        # Extract text from the specified page (note that page numbers are zero-indexed)
-        page = pdf_reader.pages[page_number - 1]
-        text = page.extract_text()
-        
+        text = ""
+        for page_number in page_number_list:
+            # Check if the page number is valid
+            if page_number < 1 or page_number > len(pdf_reader.pages):
+                raise ValueError("Invalid page number")
+            
+            # Extract text from the specified page (note that page numbers are zero-indexed)
+            page = pdf_reader.pages[page_number - 1]
+            text = text + page.extract_text()
+    
         return text
 
 class Content(BaseModel):
@@ -50,8 +51,9 @@ parser = JsonOutputParser(pydantic_object=TOCofAll)
 
 
 template = """You are an expert in analyzing the structure of documents. You are provided with {text}, which is a dictionary obtained from the table of contents page of one or more PDFs. Consider the {text} and create one list of all the chapters present in the {text}. For each chapter, identify the title, starting page number and chapter number. Return the data in a JSON format where each chapter is nested under its corresponding PDF number.
+Ensure all the chapters are included in the list, and the chapters in each pdf is in the ascending.
 
-Exclude chapters such as "Glossary","Index", "Appendix", "Preface", "Foreword", "Acknowledgments", "Bibliography", "Dedication", "Prologue", "Epilogue", "References", "Table of Contents (TOC)", and "Introduction" as these might not contain core educational content.. 
+Exclude chapters such as "Glossary","Index", "Appendix", "Preface", "Foreword", "Acknowledgments", "Bibliography", "Dedication", "Prologue", "Epilogue", "References", "Table of Contents (TOC)", and "Introduction" as these might not contain core educational content. Exclude sub-chapters as well, sub-chapters will be represented in floating numbers most of the time, for example: 1.1, 1.2, 2.1, 2.2.
 The JSON structure should be like this:
 {format_instructions}
 """
@@ -71,8 +73,8 @@ toc_chain = (
 )
 
 
-def get_contents(book, toc_page):
-    toc_text = extract_text_from_page(book, toc_page)
+def get_contents(book, toc_page_list):
+    toc_text = extract_text_from_page(book, toc_page_list)
     response = toc_chain.invoke({"toC": toc_text})
     # return toc_text
     return response

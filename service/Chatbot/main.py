@@ -14,8 +14,8 @@ def retrieve_history(session_id):
 def quiz_gen(grade, number):
     return get_quiz(number, grade)
 
-def embeddings_gen(grade, subject, book_data, type):
-    return embed(grade, subject, book_data, type)
+def embeddings_gen(grade, subject, toc, type):
+    return embed(grade, subject, toc, type)
 
 def contents_gen(grade, subject, book_info, type):
     return contents(grade, subject, book_info, type)

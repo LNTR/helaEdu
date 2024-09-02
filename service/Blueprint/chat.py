@@ -62,10 +62,10 @@ def get_quiz():
 def get_textbook():
     request_payload = request.get_json(silent=True)
     grade = request_payload["grade"]
-    book_info = request_payload["info"]
     subject = request_payload["subject"] 
+    toc = request_payload["toc"] 
     type = request_payload["type"]
-    embeddings = embeddings_gen(grade, subject, book_info, type)
+    embeddings = embeddings_gen(grade, subject, toc, type)
     response_payload = {
         "response": embeddings,
     }

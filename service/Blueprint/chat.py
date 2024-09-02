@@ -65,7 +65,8 @@ def get_textbook():
     subject = request_payload["subject"] 
     toc = request_payload["toc"] 
     type = request_payload["type"]
-    embeddings = embeddings_gen(grade, subject, toc, type)
+    remove_pages = request_payload["remove_pages"]
+    embeddings = embeddings_gen(grade, subject, toc, type, remove_pages)
     response_payload = {
         "response": embeddings,
     }

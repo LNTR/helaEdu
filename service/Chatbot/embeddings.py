@@ -101,20 +101,67 @@ def remove_pages(input_pdf, output_pdf, pages_to_remove):
 
 # remove_pages("/Users/helaEdu/resources/textbooks/grade10/HealthScience.pdf","/Users/helaEdu/textbooks/10/HealthScience.pdf", [])
 
-def embed(grade, subject, book_data):
-    pdf_path = f"/Users/helaEdu/resources/{type}/{grade}/{subject}_{part_no}.pdf"
+def embed(grade, subject, toc, type, remove_pages):
+    for part, content in toc.items():
+        pdf_path = f"/Users/helaEdu/resources/{type}/{grade}/{subject}_{part}.pdf"
+        
+        # embed = load_embedding_model(model_path="all-MiniLM-L6-v2")
+        docs = load_pdf_data(file_path=pdf_path) #load doc
 
-    embed = load_embedding_model(model_path="all-MiniLM-L6-v2")
+        #remove pages
+        modified_doc = docs
+        final_page = len(docs)
 
-    docs = load_pdf_data(
-        file_path=pdf_path
-    )
+        print(final_page)
+        toc = add_chapter_end_page(content['response'], final_page)
+        #split chunks
+        documents = split_docs(documents=docs) 
 
-    documents = split_docs(documents=docs)
+        #nameing the source
+        if len(toc) > 1:
+            source = f"{subject} {type} Part {part} - Grade {grade}"
+        elif len(toc) == 1:
+            source = f"{subject} {type} - Grade {grade}"
 
-    # vectorstore = create_embeddings(documents, embed)
+        #add new metadata to the chunks
+        doc_with_metadata = add_metadata(documents, toc, source, type)
 
-    return True
+        print(doc_with_metadata)
+        #     # vectorstore = create_embeddings(documents, embed)
+
+    return toc
+
+def add_metadata(chunks, toc, source, type):
+    page_with_chapter = chapter_of_the_page(toc)
+    if (type=="textbook"):
+        for chunk in chunks:
+            page = chunk.metadata['page']
+            if page in page_with_chapter:
+                chunk.metadata['chapter'] = page_with_chapter[page]
+                chunk.metadata['source'] = source
+        return chunks
+    else:
+        for chunk in chunks:
+            chunk.metadata['source'] = source
+        return chunks
+    
+
+def chapter_of_the_page(toc):
+    chapter_of_page = {}
+    for chapter in toc:
+        for page in range(chapter['start'], chapter['end']+1):
+            chapter_of_page[page] = chapter['chapter']
+    return chapter_of_page
+        
+     
+def add_chapter_end_page(toc, final_page):
+    for index, chapter in enumerate(toc):
+        if index < len(toc) - 1:
+            chapter['end'] = toc[index + 1]['start'] - 1
+        else:
+            chapter['end'] = final_page
+
+    return toc
 
 def contents(grade, subject, book_data, type):
     contents = {}

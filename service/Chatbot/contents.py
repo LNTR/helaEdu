@@ -78,3 +78,14 @@ def get_contents(book, toc_page_list):
     response = toc_chain.invoke({"toC": toc_text})
     # return toc_text
     return response
+
+
+def contents(grade, subject, book_data, type):
+    contents = {}
+    for index, book in enumerate(book_data, start=1):
+        part_no = book['book_part']
+        toc_page = book['toc']
+        file_path = f"/Users/helaEdu/resources/{type}/{grade}/{subject}_{part_no}.pdf"
+        contents_of_book = get_contents(file_path, toc_page)
+        contents[index] = contents_of_book
+    return contents

@@ -1,5 +1,4 @@
 # from lang_funcs import *
-from Chatbot.contents import get_contents
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.document_loaders import PyMuPDFLoader
@@ -40,18 +39,20 @@ def split_docs(documents, chunk_size=1000, chunk_overlap=200):
     # returning the document chunks
     return chunks
 
-def create_embeddings(chunks, embedding_model, storing_path="service/Chatbot/vectorstore/10"):
+def create_embeddings(chunks, type, grade, subject):
+    storing_path=f"service/Chatbot/vectorstore"
+    embedding_model = load_embedding_model(model_path="all-MiniLM-L6-v2")
+
+    os.makedirs(os.path.dirname(storing_path), exist_ok=True) #ensure dir exists
     # Creating the embeddings using FAISS
     if os.path.exists(storing_path):
-        embeddings = load_embedding_model(model_path="all-MiniLM-L6-v2")
         # Load the existing vectorstore
-        vectorstore = FAISS.load_local(storing_path, embeddings, allow_dangerous_deserialization=True)
+        vectorstore = FAISS.load_local(storing_path, embedding_model, allow_dangerous_deserialization=True)
         # Add new embeddings to the existing vectorstore
         # vectorstore.add_documents(chunks)
-        if   vectorstore.add_documents(chunks):
-            # Save the updated vectorstore
-            
-            print("Updated vectorstore")
+        vectorstore.add_documents(chunks)
+        # Save the updated vectorstore
+        print("Updated vectorstore")
 
     else:
         # Create a new vectorstore
@@ -88,6 +89,8 @@ def remove_pages(input_pdf, output_pdf, pages_to_remove):
     reader = PdfReader(input_pdf)
     writer = PdfWriter()
 
+    pages_to_remove = [x-1 for x in pages_to_remove]
+
     # Add pages to the writer except the ones to remove
     for i in range(len(reader.pages)):
         if i not in pages_to_remove:
@@ -99,23 +102,14 @@ def remove_pages(input_pdf, output_pdf, pages_to_remove):
 
     return True
 
-# remove_pages("/Users/helaEdu/resources/textbooks/grade10/HealthScience.pdf","/Users/helaEdu/textbooks/10/HealthScience.pdf", [])
-
-def embed(grade, subject, toc, type, remove_pages):
+def embed(grade, subject, toc, type):
     for part, content in toc.items():
         pdf_path = f"/Users/helaEdu/resources/{type}/{grade}/{subject}_{part}.pdf"
         
-        # embed = load_embedding_model(model_path="all-MiniLM-L6-v2")
+         #remove pages
+        remove_pages(pdf_path, pdf_path, content['remove_pages'])
+
         docs = load_pdf_data(file_path=pdf_path) #load doc
-
-        #remove pages
-        modified_doc = docs
-        final_page = len(docs)
-
-        print(final_page)
-        toc = add_chapter_end_page(content['response'], final_page)
-        #split chunks
-        documents = split_docs(documents=docs) 
 
         #nameing the source
         if len(toc) > 1:
@@ -123,27 +117,35 @@ def embed(grade, subject, toc, type, remove_pages):
         elif len(toc) == 1:
             source = f"{subject} {type} - Grade {grade}"
 
-        #add new metadata to the chunks
-        doc_with_metadata = add_metadata(documents, toc, source, type)
+        final_page = len(docs)
 
-        print(doc_with_metadata)
-        #     # vectorstore = create_embeddings(documents, embed)
+        toc = add_chapter_end_page(content['response'], final_page)
+        #split chunks
+        documents = split_docs(documents=docs) 
+
+        #add new metadata to the chunks
+        doc_with_metadata = add_metadata(documents, toc, type, grade, subject, part, source)
+
+        vectorstore = create_embeddings(documents, type, grade, subject)
 
     return toc
 
-def add_metadata(chunks, toc, source, type):
+def add_metadata(chunks, toc, type, grade, subject, part, source):
+    
     page_with_chapter = chapter_of_the_page(toc)
-    if (type=="textbook"):
-        for chunk in chunks:
-            page = chunk.metadata['page']
-            if page in page_with_chapter:
-                chunk.metadata['chapter'] = page_with_chapter[page]
-                chunk.metadata['source'] = source
-        return chunks
-    else:
-        for chunk in chunks:
-            chunk.metadata['source'] = source
-        return chunks
+
+    for chunk in chunks:
+        chunk.metadata['source'] = source
+        chunk.metadata['type'] = type
+        chunk.metadata['grade'] = grade
+        chunk.metadata['subject'] = subject
+        chunk.metadata['part'] = part
+
+        page = chunk.metadata['page']
+        if page in page_with_chapter:
+            chunk.metadata['chapter'] = page_with_chapter[page]      
+    return chunks
+
     
 
 def chapter_of_the_page(toc):
@@ -163,12 +165,3 @@ def add_chapter_end_page(toc, final_page):
 
     return toc
 
-def contents(grade, subject, book_data, type):
-    contents = {}
-    for index, book in enumerate(book_data, start=1):
-        part_no = book['book_part']
-        toc_page = book['toc']
-        file_path = f"/Users/helaEdu/resources/{type}/{grade}/{subject}_{part_no}.pdf"
-        contents_of_book = get_contents(file_path, toc_page)
-        contents[index] = contents_of_book
-    return contents

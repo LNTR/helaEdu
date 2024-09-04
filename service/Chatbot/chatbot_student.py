@@ -14,14 +14,14 @@ from langchain_core.pydantic_v1 import BaseModel, Field, validator
 from operator import itemgetter
 import os
 
-os.environ["TOKENIZERS_PARALLELISM"] = "false"
-os.environ["OPENAI_API_KEY"] = (
-    "sk-XTR_ACEcOmCAwv5kMsjyd3Jz65Xn24FEgx1yQbxk34T3BlbkFJHPQpYdsp__T_qZCQS8t4j51QEDcogVpKeJwIdXw48A"
-)
+# os.environ["TOKENIZERS_PARALLELISM"] = "false"
+# os.environ["OPENAI_API_KEY"] = (
+#     "sk-XTR_ACEcOmCAwv5kMsjyd3Jz65Xn24FEgx1yQbxk34T3BlbkFJHPQpYdsp__T_qZCQS8t4j51QEDcogVpKeJwIdXw48A"
+# )
 
-openai_api_key = os.getenv("OPENAI_API_KEY")
-llm = ChatOpenAI(model="gpt-4o")
-# llm = Ollama(model="llama3.1:8b", temperature=0)
+# openai_api_key = os.getenv("OPENAI_API_KEY")
+# llm = ChatOpenAI(model="gpt-4o")
+llm = Ollama(model="llama3.1:8b", temperature=0)
 
 vectorstore = load_vectorstore(embedding_model="all-MiniLM-L6-v2")
 # retriever = vectorstore.as_retriever()

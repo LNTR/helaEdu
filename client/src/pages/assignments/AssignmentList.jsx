@@ -80,58 +80,61 @@ export default function AssignmentList() {
   return (
     <div>
       <Header />
-      <div className="flex justify-between mx-48 my-12">
-      {isPopupOpen && (
-          <dialog open className="modal">
-            <div className="modal-box max-w-3xl p-10">
-              <p className="py-4 text-3xl">
-                Are you sure you want to delete this assignment?
-              </p>
-              <div className="modal-action">
-                <button
-                  className="btn bg-red-400 text-white text-2xl"
-                  onClick={closeDeleteModal}
-                >
-                  Cancel
-                </button>
-                <button
-                  className="btn bg-blue text-white text-2xl"
-                  
-                >
-                  Delete
-                </button>
+      <div className="min-h-screen">
+        <div className="flex justify-between mx-48 my-12">
+        {isPopupOpen && (
+            <dialog open className="modal">
+              <div className="modal-box max-w-3xl p-10">
+                <p className="py-4 text-3xl">
+                  Are you sure you want to delete this assignment?
+                </p>
+                <div className="modal-action">
+                  <button
+                    className="btn bg-red-400 text-white text-2xl"
+                    onClick={closeDeleteModal}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    className="btn bg-blue text-white text-2xl"
+                    
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
-            </div>
-          </dialog>
-        )}
-        {isViewPopup && (
-          <dialog open className="modal">
-            <div className="modal-box max-w-3xl p-10">
-              <DetailesView/>
-            </div>
-          </dialog>
-        )}
-        <div>
-          <h1>My Assignments</h1>
-          <hr className="border-yellow border-t-4 w-full hover:border-white transition duration-300 ease-in-out"></hr>
+            </dialog>
+          )}
+          {isViewPopup && (
+            <dialog open className="modal">
+              <div className="modal-box max-w-3xl p-10">
+                <DetailesView/>
+              </div>
+            </dialog>
+          )}
+          <div>
+            <h1>My Assignments</h1>
+            <hr className="border-yellow border-t-4 w-full hover:border-white transition duration-300 ease-in-out"></hr>
+          </div>
+          <div>
+            <Link to="/createAssignments">
+              <button className="bg-yellow text-white rounded-xl p-4 text-3xl">
+                Create Assignment
+              </button>
+            </Link>
+          </div>
         </div>
+        <TableRowHeader/>
+        <div>{currentRows}</div>
         <div>
-          <Link to="/createAssignments">
-            <button className="bg-blue text-white rounded-xl p-4 text-3xl">
-              Create Assignment
-            </button>
-          </Link>
+          <Pagination
+            totalPages={totalPages}
+            currentPage={currentPage}
+            onPageChange={handlePageChange}
+          />
         </div>
       </div>
-      <TableRowHeader/>
-      <div>{currentRows}</div>
-      <div>
-        <Pagination
-          totalPages={totalPages}
-          currentPage={currentPage}
-          onPageChange={handlePageChange}
-        />
-      </div>
+     
       <Footer />
     </div>
   );

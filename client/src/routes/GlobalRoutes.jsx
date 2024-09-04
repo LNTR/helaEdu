@@ -8,11 +8,9 @@ import CreateAssignments from "@pages/assignments/CreateAssignments";
 import QuizFormat from "@pages/assignments/QuizFormat";
 import TProfile from "@pages/profiles/TProfile";
 import SProfile from "@pages/profiles/SProfile";
-
 import LeaderBoard from "@pages/leaderboard/LeaderBoard";
 import History from "@pages/quizes/History";
 import Friends from "@pages/quizes/Friends";
-
 import AllNotes from "@pages/personalNotes/AllNotes";
 import NewNote from "@pages/personalNotes/NewNote";
 import Dashboard from "@pages/admin/Dashboard";
@@ -40,13 +38,12 @@ import Votes from "@pages/reputation/Votes";
 import Comments from "@pages/reputation/Comments";
 import Badges from "@pages/reputation/Badges";
 import ReviewdQuiz from "@pages/assignments/ReviewdQuiz";
-
-
+import QuestionsList from "@pages/assignments/QuestionsList";
+import Complaints from "@pages/admin/Complaints";
 function GlobalRoutes() {
   return (
     <Routes>
       <Route path="/" element={<HeroLanding />} />
-
       <Route path="/auth" element={<Auth />} />
       <Route path="/quiz" element={<QuizHome />} />
       <Route path="/quiz/:subject" element={<Quiz />} />
@@ -63,8 +60,7 @@ function GlobalRoutes() {
       <Route path="/moderatorDetails" element={<ModeratorDetails />} />
       {/* <Route path="/moderatorManagement" element={<ModeratorManagement />} /> */}
       <Route path="/notifications" element={<Notifications />} />
-      {/* <Route path="/approveTeachers" element={<ApproveTeachers />} /> */}
-      {/* <Route path="/topTeachers" element={<TopTeachers />} /> */}
+    
       <Route
         path="/viewArticleMyself/:articleId"
         element={<ViewArticleMyself />}
@@ -87,6 +83,8 @@ function GlobalRoutes() {
       <Route path="/comments" element={<Comments/>} />
       <Route path="/badges" element={<Badges/>} />
       <Route path="/reviewQuizzes" element={<ReviewdQuiz/>} />
+      <Route path="/questionList" element={<QuestionsList/>}/>
+      <Route path="/complaints" element={<Complaints/>}/>
     </Routes>
   );
 }

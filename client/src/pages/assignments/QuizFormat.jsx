@@ -11,8 +11,8 @@ export default function QuizFormat() {
 
   const navigate = useNavigate();
   const params = useParams();
-  const assignmentId = params.assginmentId; 
-
+  const assignmentId = params.assignmentId; 
+  console.log(params);
   console.log("Assignment ID:", assignmentId); 
   
   const addQuestion = () => {

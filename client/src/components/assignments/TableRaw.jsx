@@ -52,8 +52,8 @@ export default function TableRaw({ assignmentId, title, instruction,publishedDat
           </div>
         </div>
       </div>
-      {showPopup && <SharePopup closePopup={closePopup} />}
-      {startPopup && <StartPopup closePopup={closeStartPopup} />}
+      {showPopup && <SharePopup closePopup={closePopup} assignmentId={assignmentId}/>}
+      {startPopup && <StartPopup closePopup={closeStartPopup} assignmentId={assignmentId}/>}
     </div>
   );
 }

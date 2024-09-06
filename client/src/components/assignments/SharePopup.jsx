@@ -13,7 +13,7 @@ function SharePopup({ closePopup ,assignmentId }) {
       ];
       const [copied, setCopied] = useState(false);
      
-      const baseURL = "https://yourdomain.com/assignment/";
+      const baseURL = `${import.meta.env.VITE_FRONTEND_API_BASE_URL}/quizStart/`;
       const assignmentURL = `${baseURL}${assignmentId}`;
       const copyToClipboard = () => {
         navigator.clipboard.writeText(assignmentURL);

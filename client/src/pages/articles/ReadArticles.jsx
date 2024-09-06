@@ -112,7 +112,7 @@ export default function ReadArticle() {
             date={article.publishedTimestamp}
             imageRef={article.imageRef}
             additionalFilesRefs={article.additionalFilesRefs}
-            userId={article.userId}
+            articleAuthorId={article.userId}
             upvote={article.upvote}
           />
         </div>

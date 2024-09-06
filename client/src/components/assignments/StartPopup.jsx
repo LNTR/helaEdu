@@ -12,7 +12,7 @@ function StartPopup({ closePopup ,assignmentId }) {
       ];
       const [copied, setCopied] = useState(false);
       
-      const baseURL = `${import.meta.env.VITE_REST_API_BASE_URL}/quizStart/`;
+      const baseURL = `${import.meta.env.VITE_FRONTEND_API_BASE_URL}/quizStart/`;
       const assignmentURL = `${baseURL}${assignmentId}`;
       const copyToClipboard = () => {
         navigator.clipboard.writeText(assignmentURL);

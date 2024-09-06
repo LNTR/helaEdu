@@ -18,14 +18,12 @@ const QuizBegin = ({ assignmentId }) => {
   const [showPopup, setShowPopup] = useState(false);
   const [totalTime, setTotalTime] = useState(0);
 
- 
   const timeToMilliseconds = (time) => {
     const [hours, minutes] = time.split(":").map(Number);
     const totalMilliseconds = (hours * 3600000) + (minutes * 60000);
     return totalMilliseconds;
   };
 
-  
   const formatTime = (milliseconds) => {
     const totalMinutes = Math.floor(milliseconds / 60000);
     const hours = Math.floor(totalMinutes / 60);
@@ -82,7 +80,6 @@ const QuizBegin = ({ assignmentId }) => {
 
   const handleNextQuestion = (remainingTime) => {
     console.log("Time remaining: ", remainingTime);
-
     setCurrentQuestion((prevQuestion) => prevQuestion + 1);
   };
 
@@ -109,36 +106,42 @@ const QuizBegin = ({ assignmentId }) => {
       style={{ backgroundImage: `url(${background})` }}
     >
       <Header />
-      <div>
-        {!quizStarted && !showPopup ? (
-          <div>
-            <Guidlines assignmentId={assignmentId}/>
-            <div className="text-center m-10">
-              <div className="button-29 mt-10" onClick={startQuiz}>
-                Start Quiz!
+      <div className="min-h-screen">
+        {assignment.started ? (
+          !quizStarted && !showPopup ? (
+            <div>
+              <Guidlines assignmentId={assignmentId}/>
+              <div className="text-center m-10">
+                <div className="button-29 mt-10" onClick={startQuiz}>
+                  Start Quiz!
+                </div>
               </div>
             </div>
-          </div>
-        ) : quizStarted && currentQuestion < questions.length ? (
-          <div>
-           
-            <div className="timer-display"></div>
-            <Questions
-              questions={questions}
-              handleNextQuestion={handleNextQuestion}
-              currentQuestion={currentQuestion}
-              handleAnswerClick={handleAnswerClick}
-              initialTimer={globalTimer}
-              isLastQuestion={isLastQuestion}
+          ) : quizStarted && currentQuestion < questions.length ? (
+            <div>
+              <div className="timer-display"></div>
+              <Questions
+                questions={questions}
+                handleNextQuestion={handleNextQuestion}
+                currentQuestion={currentQuestion}
+                handleAnswerClick={handleAnswerClick}
+                initialTimer={globalTimer}
+                isLastQuestion={isLastQuestion}
+              />
+            </div>
+          ) : (
+            <Score
+              score={score}
+              setScore={setScore}
+              setCurrentQuestion={setCurrentQuestion}
+              setQuizStarted={setQuizStarted}
             />
-          </div>
+          )
         ) : (
-          <Score
-            score={score}
-            setScore={setScore}
-            setCurrentQuestion={setCurrentQuestion}
-            setQuizStarted={setQuizStarted}
-          />
+          <div className="flex justify-center my-20">
+              <p className="text-3xl ">Assignment is not started yet</p>
+          </div> 
+         
         )}
       </div>
       <Footer />

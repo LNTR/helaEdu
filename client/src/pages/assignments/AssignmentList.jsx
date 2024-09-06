@@ -71,6 +71,7 @@ export default function AssignmentList() {
         totalTime={data.totalTime}
         onClose={openDeleteModal}
         onView={openViewModal}
+        started={data.started}
       />
     ));
   const handlePageChange = (pageNumber) => {

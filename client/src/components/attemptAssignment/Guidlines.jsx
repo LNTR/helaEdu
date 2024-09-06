@@ -37,12 +37,12 @@ const Guidelines = ({ assignmentId }) => {
     <>
       <div className="bg-white max-w-4xl mx-auto py-8 shadow-2xl rounded-xl border relative mt-10">
       
-        <h1 className=" text-4xl text-blue text-center mb-6">{assignment.title}</h1>
-        <h3 className="special-text text-blue text-center -mb-2">
+        {/* <h1 className=" text-4xl text-blue text-center mb-6">{assignment.title}</h1> */}
+        <h3 className="text-3xl text-blue text-center mb-4">
           Start Your Assignment!
         </h3>
        
-        <p className="s-text text-gray-600 text-center">
+        <p className="text-2xl text-gray-600 text-center">
           Read the following instructions carefully before you start the quiz
         </p>
 
@@ -60,7 +60,9 @@ const Guidelines = ({ assignmentId }) => {
           ) : (
             <p className="n-text">Loading instructions...</p>
           )}
-
+            <div className="flex justify-center">
+                {/* <p>Total time : <span>{assignment.totalTime}</span></p> */}
+            </div>
           <div className="special-text text-blue text-center mx-20 mt-10">
             Each question you conquer is a step closer to mastery—keep moving,
             keep learning!"

@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -20,6 +21,9 @@ public class AssignmentQuizDto {
 
     @NotEmpty(message = "Correct answer is required")
     private String correctAnswer;
+
+    //userId, provided answer
+    private Map<String, String> givenAnswers;
 
     private String assignmentId;
 

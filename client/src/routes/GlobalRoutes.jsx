@@ -34,6 +34,7 @@ import Reports from "@pages/admin/Reports";
 import ModDashboard from "@pages/profiles/ModDashboard";
 import HeroLanding from "@pages/landing/HeroLanding";
 import PremiumPlan from "@pages/landing/PremiumPlan";
+
 function GlobalRoutes() {
   return (
     <Routes>
@@ -49,6 +50,7 @@ function GlobalRoutes() {
       <Route path="/tProfile" element={<TProfile />} />
       <Route path="/sProfile" element={<SProfile />} />
       <Route path="/createAssignments" element={<CreateAssignments />} />
+
       <Route path="/quizFormat" element={<QuizFormat />} />
       <Route path="/test" element={<Test />} />
       <Route path="/dashboard" element={<Dashboard />} />
@@ -73,6 +75,12 @@ function GlobalRoutes() {
       <Route path="/notes/new" element={<NewNote />} />
       <Route path="/land" element={<HeroLanding />} />
       <Route path="/premiumPlan" element={<PremiumPlan />} />
+      <Route path="/reputationPoints" element={<ReputationPoints />} />
+      <Route path="/summary" element={<Summary />} />
+      <Route path="/votes" element={<Votes />} />
+      <Route path="/comments" element={<Comments />} />
+      <Route path="/badges" element={<Badges />} />
+      <Route path="/reviewQuizzes" element={<ReviewdQuiz />} />
     </Routes>
   );
 }

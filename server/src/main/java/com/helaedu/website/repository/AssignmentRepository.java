@@ -47,7 +47,9 @@ public class AssignmentRepository {
     public void updateAssignment(String assignmentId, Assignment assignment) throws ExecutionException, InterruptedException {
         Firestore dbFirestore = FirestoreClient.getFirestore();
         DocumentReference documentReference = dbFirestore.collection("assignments").document(assignmentId);
-        documentReference.set(assignment);
+        ApiFuture<WriteResult> future = documentReference.set(assignment);
+        WriteResult result = future.get();
+        System.out.println("Update time: " + result.getUpdateTime());
     }
 
     public List<Assignment> getAssignmentsByTM(String teacherId) throws ExecutionException, InterruptedException {

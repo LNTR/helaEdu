@@ -11,7 +11,7 @@ import java.util.Map;
 @Getter
 @Setter
 @AllArgsConstructor
-public class AssignmentQuizDto {
+public class AssignmentQuestionDto {
     private String quizId;
 
     @NotEmpty(message = "Question is required")

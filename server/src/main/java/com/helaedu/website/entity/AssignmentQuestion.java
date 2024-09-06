@@ -11,7 +11,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class AssignmentQuiz {
+public class AssignmentQuestion {
     private String quizId;
     private String question;
     private List<String> options;

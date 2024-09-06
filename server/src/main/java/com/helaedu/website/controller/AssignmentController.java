@@ -36,6 +36,7 @@ public class AssignmentController {
             }
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         }
+
         try {
             String email = UserUtil.getCurrentUserEmail();
             String userId = tmService.getTMByEmail(email).getUserId();

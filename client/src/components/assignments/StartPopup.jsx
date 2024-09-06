@@ -1,6 +1,5 @@
-// SharePopup.js
+
 import React , {useState} from 'react';
-import QR from "@assets/img/assignments/QR.png"
 import { QRCodeCanvas } from "qrcode.react";
 
 function StartPopup({ closePopup ,assignmentId }) {
@@ -13,7 +12,7 @@ function StartPopup({ closePopup ,assignmentId }) {
       ];
       const [copied, setCopied] = useState(false);
       
-      const baseURL = `${import.meta.env.VITE_REST_API_BASE_URL}/`;
+      const baseURL = `${import.meta.env.VITE_REST_API_BASE_URL}/quizStart/`;
       const assignmentURL = `${baseURL}${assignmentId}`;
       const copyToClipboard = () => {
         navigator.clipboard.writeText(assignmentURL);

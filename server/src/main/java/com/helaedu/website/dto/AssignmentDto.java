@@ -34,6 +34,7 @@ public class AssignmentDto {
     private Map<String, Double> studentMarks;
     private Map<String, Long> studentRemainingTimes;
     private Long publishedTimestamp;
+    private Long EndedTimestamp;
     private String userId;
     private List<AssignmentQuestion> quizzes;
 }

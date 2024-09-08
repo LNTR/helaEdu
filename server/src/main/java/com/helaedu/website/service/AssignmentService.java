@@ -26,8 +26,6 @@ public class AssignmentService {
     @Autowired
     private WebSocketService webSocketService;
 
-    private Map<String, Long> remainingTimeMap = new HashMap<>();
-
     private Map<String, Map<String, Long>> assignmentStudentRemainingTimeMap = new HashMap<>();
 
     public AssignmentService(AssignmentRepository assignmentRepository) {
@@ -39,92 +37,75 @@ public class AssignmentService {
         if(assignment != null && !assignment.isStarted()) {
             assignment.setStarted(true);
             assignment.setPublishedTimestamp(System.currentTimeMillis());
-            assignment.setRemainingTime(assignment.getOpenTime());
             assignmentRepository.updateAssignment(assignmentId, assignment);
-            remainingTimeMap.put(assignmentId, assignment.getOpenTime());
         } else {
             throw new IllegalArgumentException("Assignment not found or already started.");
         }
     }
 
-    public long getRemainingTime(String assignmentId) throws ExecutionException, InterruptedException {
-        Assignment assignment = assignmentRepository.getAssignmentById(assignmentId);
-        if (assignment != null) {
-            Long publishedTimestamp = assignment.getPublishedTimestamp();
-            if(publishedTimestamp == null) {
-                throw new IllegalArgumentException("Published timestamp is not set.");
-            }
+//    public long getRemainingTime(String assignmentId) throws ExecutionException, InterruptedException {
+//        Assignment assignment = assignmentRepository.getAssignmentById(assignmentId);
+//        if (assignment != null) {
+//            Long publishedTimestamp = assignment.getPublishedTimestamp();
+//            if(publishedTimestamp == null) {
+//                throw new IllegalArgumentException("Published timestamp is not set.");
+//            }
+//
+//            long currentTime = System.currentTimeMillis();
+//            long endTime = assignment.getPublishedTimestamp() + assignment.getRemainingTime();
+//            long remainingTime = endTime - currentTime;
+//
+//            return remainingTime > 0 ? remainingTime / 1000 : 0;
+//        } else {
+//            throw new IllegalArgumentException("Assignment not found.");
+//        }
+//    }
 
-            long currentTime = System.currentTimeMillis();
-            long endTime = assignment.getPublishedTimestamp() + assignment.getRemainingTime();
-            long remainingTime = endTime - currentTime;
-
-            return remainingTime > 0 ? remainingTime / 1000 : 0;
-        } else {
-            throw new IllegalArgumentException("Assignment not found.");
-        }
-    }
-
-    @Scheduled(fixedRate = 1000)
-    public void updateRemainingTime() {
-        remainingTimeMap.forEach((assignmentId, remainingTime) -> {
-            if (remainingTime > 0) {
-                remainingTime -= 1;
-                System.out.println("Remaining time: " + remainingTime);  // Debugging print
-
-                webSocketService.sendTimeUpdate(assignmentId, remainingTime);
-
-                try {
-                    Assignment assignment = assignmentRepository.getAssignmentById(assignmentId);
-                    assignment.setRemainingTime(remainingTime);
-                    assignmentRepository.updateAssignment(assignmentId, assignment);
-                    remainingTimeMap.put(assignmentId, remainingTime);  // Update map after updating DB
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
+//    @Scheduled(fixedRate = 1000)
+//    public void updateRemainingTime() {
+//        remainingTimeMap.forEach((assignmentId, remainingTime) -> {
+//            if (remainingTime > 0) {
+//                remainingTime -= 1;
+//                System.out.println("Remaining time: " + remainingTime);
+//
+//                webSocketService.sendTimeUpdate(assignmentId, remainingTime);
+//
+//                try {
+//                    Assignment assignment = assignmentRepository.getAssignmentById(assignmentId);
+//                    assignment.setRemainingTime(remainingTime);
+//                    assignmentRepository.updateAssignment(assignmentId, assignment);
+//                    remainingTimeMap.put(assignmentId, remainingTime);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
+//    }
 
     public void studentStartAssignment(String assignmentId, String studentId) throws ExecutionException, InterruptedException {
-        // Retrieve the assignment from the repository
         Assignment assignment = assignmentRepository.getAssignmentById(assignmentId);
 
         if (assignment != null) {
-            long currentTime = System.currentTimeMillis();
-
-            // Calculate assignment's open time and ensure the assignment is within the allowed timeframe
-            long assignmentOpenTime = assignment.getPublishedTimestamp();
-            long assignmentCloseTime = assignmentOpenTime + assignment.getOpenTime(); // The time when the assignment closes
-
-            // Check if the assignment is open
-            if (currentTime < assignmentOpenTime || currentTime > assignmentCloseTime) {
-                throw new IllegalStateException("Assignment is not open at this time.");
-            }
-
-            // Initialize the in-memory map for assignment student remaining times if not present
             assignmentStudentRemainingTimeMap.computeIfAbsent(assignmentId, k -> new HashMap<>());
             Map<String, Long> studentRemainingTimes = assignmentStudentRemainingTimeMap.get(assignmentId);
 
-            // Check if the student has already started the assignment
-            if (!studentRemainingTimes.containsKey(studentId)) {
-                // Initialize the student's remaining time based on the assignment time
-                studentRemainingTimes.put(studentId, assignment.getAssignmentTime());
+            if(!assignment.isStarted()) {
+                throw new IllegalArgumentException("Assignment has not started yet.");
+            }
+            else if (!studentRemainingTimes.containsKey(studentId)) {
 
-                // Update the student's remaining time in the database (Assignment entity)
+                studentRemainingTimes.put(studentId, assignment.getTotalTime());
+
                 if (assignment.getStudentRemainingTimes() == null) {
                     assignment.setStudentRemainingTimes(new HashMap<>());
+                } else {
+                    assignment.getStudentRemainingTimes().put(studentId, assignment.getTotalTime());
                 }
-                assignment.getStudentRemainingTimes().put(studentId, assignment.getAssignmentTime());
-
-                // Save the updated assignment back to the database
                 assignmentRepository.updateAssignment(assignmentId, assignment);
             } else {
-                // If the student has already started the assignment, throw an exception
                 throw new IllegalArgumentException("Student has already started the assignment.");
             }
         } else {
-            // Throw an exception if the assignment was not found
             throw new IllegalArgumentException("Assignment not found.");
         }
     }
@@ -158,9 +139,7 @@ public class AssignmentService {
                 assignmentId,
                 assignmentDto.getTitle(),
                 assignmentDto.getInstructions(),
-                assignmentDto.getOpenTime(),
-                assignmentDto.getOpenTime(),
-                assignmentDto.getAssignmentTime(),
+                assignmentDto.getTotalTime(),
                 false,
                 new HashMap<>(),
                 new HashMap<>(),
@@ -180,9 +159,7 @@ public class AssignmentService {
                                 assignment.getAssignmentId(),
                                 assignment.getTitle(),
                                 assignment.getInstructions(),
-                                assignment.getOpenTime(),
-                                assignment.getAssignmentTime(),
-                                assignment.getRemainingTime(),
+                                assignment.getTotalTime(),
                                 assignment.isStarted(),
                                 assignment.getStudentMarks(),
                                 assignment.getStudentRemainingTimes(),
@@ -202,9 +179,7 @@ public class AssignmentService {
                                 assignment.getAssignmentId(),
                                 assignment.getTitle(),
                                 assignment.getInstructions(),
-                                assignment.getOpenTime(),
-                                assignment.getAssignmentTime(),
-                                assignment.getRemainingTime(),
+                                assignment.getTotalTime(),
                                 assignment.isStarted(),
                                 assignment.getStudentMarks(),
                                 assignment.getStudentRemainingTimes(),
@@ -223,9 +198,7 @@ public class AssignmentService {
                     assignment.getAssignmentId(),
                     assignment.getTitle(),
                     assignment.getInstructions(),
-                    assignment.getOpenTime(),
-                    assignment.getAssignmentTime(),
-                    assignment.getRemainingTime(),
+                    assignment.getTotalTime(),
                     assignment.isStarted(),
                     assignment.getStudentMarks(),
                     assignment.getStudentRemainingTimes(),

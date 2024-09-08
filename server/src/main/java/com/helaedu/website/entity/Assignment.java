@@ -16,9 +16,7 @@ public class Assignment {
     private String assignmentId;
     private String title;
     private String instructions;
-    private Long openTime;
-    private Long assignmentTime;
-    private Long remainingTime;
+    private Long totalTime;
     private boolean started;
     private Map<String, Double> studentMarks;
     private Map<String, Long> studentRemainingTimes;

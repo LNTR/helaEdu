@@ -21,6 +21,7 @@ public class Assignment {
     private Map<String, Double> studentMarks;
     private Map<String, Long> studentRemainingTimes;
     private Long publishedTimestamp;
+    private Long endedTimestamp;
     private String userId;
     private List<AssignmentQuestion> quizzes;
 }

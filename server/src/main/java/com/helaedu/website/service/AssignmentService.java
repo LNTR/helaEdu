@@ -43,6 +43,17 @@ public class AssignmentService {
         }
     }
 
+    public void endAssignment(String assignmentId) throws ExecutionException, InterruptedException {
+        Assignment assignment = assignmentRepository.getAssignmentById(assignmentId);
+        if(assignment != null && assignment.isStarted()) {
+            assignment.setStarted(false);
+            assignment.setEndedTimestamp(System.currentTimeMillis());
+            assignmentRepository.updateAssignment(assignmentId, assignment);
+        } else {
+            throw new IllegalArgumentException("Assignment not found or already ended.");
+        }
+    }
+
 //    public long getRemainingTime(String assignmentId) throws ExecutionException, InterruptedException {
 //        Assignment assignment = assignmentRepository.getAssignmentById(assignmentId);
 //        if (assignment != null) {
@@ -144,6 +155,7 @@ public class AssignmentService {
                 new HashMap<>(),
                 new HashMap<>(),
                 assignmentDto.getPublishedTimestamp(),
+                assignmentDto.getEndedTimestamp(),
                 userId,
                 new ArrayList<>()
         );
@@ -164,6 +176,7 @@ public class AssignmentService {
                                 assignment.getStudentMarks(),
                                 assignment.getStudentRemainingTimes(),
                                 assignment.getPublishedTimestamp(),
+                                assignment.getEndedTimestamp(),
                                 assignment.getUserId(),
                                 assignment.getQuizzes()
                         )
@@ -184,6 +197,7 @@ public class AssignmentService {
                                 assignment.getStudentMarks(),
                                 assignment.getStudentRemainingTimes(),
                                 assignment.getPublishedTimestamp(),
+                                assignment.getEndedTimestamp(),
                                 assignment.getUserId(),
                                 assignment.getQuizzes()
                         )
@@ -203,6 +217,7 @@ public class AssignmentService {
                     assignment.getStudentMarks(),
                     assignment.getStudentRemainingTimes(),
                     assignment.getPublishedTimestamp(),
+                    assignment.getEndedTimestamp(),
                     assignment.getUserId(),
                     assignment.getQuizzes()
                     );

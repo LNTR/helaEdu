@@ -9,6 +9,14 @@ import StartPopup from '@components/assignments/StartPopup';
 export default function TableRaw({ assignmentId, title, instruction,publishedDate,totalTime,onClose ,onView ,started}) {
   const [showPopup, setShowPopup] = useState(false);
   const [startPopup, setStartPopup] =useState(false);
+  const [showEndQuizPopup, setShowendQuizPopup]= useState(false);
+
+  const openEndQuiz=()=>{
+    setShowendQuizPopup(true);
+  }
+  const closeEndQuiz=()=>{
+    setShowendQuizPopup(false);
+  }
   const handleShareClick = () => {
     setShowPopup(true);
   };
@@ -26,7 +34,29 @@ export default function TableRaw({ assignmentId, title, instruction,publishedDat
   const spllitedTitle = title.split(" ").slice(0,4).join(" ");
   return (
     <div>
-     
+      {showEndQuizPopup && (
+            <dialog open className="modal ">
+              <div className="modal-box max-w-3xl p-10">
+                <p className="py-4 text-3xl">
+                  Are you sure you want to end this assignment?
+                </p>
+                <div className="modal-action">
+                  <button
+                    className="btn bg-red-400 text-white text-2xl"
+                    onClick={closeEndQuiz}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    className="btn bg-blue text-white text-2xl"
+                    
+                  >
+                    End
+                  </button>
+                </div>
+              </div>
+            </dialog>
+          )}
       <div className='border border-blue rounded-3xl w-10/12 mx-auto my-4 px-7 py-4'>
         <div className='flex justify-between items-center'>
          
@@ -45,7 +75,7 @@ export default function TableRaw({ assignmentId, title, instruction,publishedDat
         
           <div className='flex justify-end w-3/12'>
           {started ? (
-              <button className='bg-blue text-white rounded-xl p-2 text-lg mx-2' >End Quiz</button>
+              <button className='bg-blue text-white rounded-xl p-2 text-lg mx-2' onClick={openEndQuiz} >End Quiz</button>
           ):(
             <button className='bg-blue text-white rounded-xl p-2 text-lg mx-2' onClick={openStartClick}>Start Quiz</button>
           )}

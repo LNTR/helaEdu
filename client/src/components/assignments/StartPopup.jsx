@@ -1,6 +1,7 @@
 
 import React , {useState} from 'react';
 import { QRCodeCanvas } from "qrcode.react";
+import { startAssignment } from '@services/AssignmentService';
 
 function StartPopup({ closePopup ,assignmentId }) {
     const teachers = [
@@ -19,6 +20,21 @@ function StartPopup({ closePopup ,assignmentId }) {
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
       };
+
+      // start assignment
+      const [isStarted,setIsStarted] =useState(null);
+      const handleStartAssignment = async () => {
+        try {
+          const response = await startAssignment(assignmentId);
+          console.log('Assignment started:', response.data);
+          alert("Assignment is started");
+          setIsStarted(true);
+
+        } catch (error) {
+          console.error('Error starting the assignment:', error);
+          alert("error starting assignment");
+        }
+      };
   return (
     <div className='fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 p-10'>
       <div className='bg-white rounded-lg p-6 '>
@@ -26,7 +42,7 @@ function StartPopup({ closePopup ,assignmentId }) {
           <div className='w-1/2 pr-4'>
             <h2 className='text-3xl my-6'>Do you want to start your assignment ? </h2>
 
-            <button className='text-white bg-blue  text-xl px-6 py-3 rounded-lg flex-c flex-col m-2 '>Start Assignemnt</button>
+            <button className='text-white bg-blue  text-xl px-6 py-3 rounded-lg flex-c flex-col m-2 ' onClick={handleStartAssignment} disabled={isStarted} >{isStarted ?"Already Started" : "Start Assignemnt"}</button>
 
             <div className=' p-2  mb-4'>
                 <span className='text-xl '>Assignment Link</span>

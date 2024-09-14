@@ -5,7 +5,10 @@ const CREATE_ASSIGNMENT =`${import.meta.env.VITE_REST_API_BASE_URL}/assignments/
 
 export const listAssignment=(userId)=>axios.get(`${LIST_ARTICLES_BY_TEACHERID}/${userId}`);
 export const createAssignment=(assignment,headers) =>axios.post(CREATE_ASSIGNMENT,assignment,{headers});
+// export const createAssignment=(assignment) =>axios.post(CREATE_ASSIGNMENT,assignment);
 export const addQuizzes =(assignment,assignmentId)=>axios.post(`${REST_API_BASE_URL}/${assignmentId}/quizzes`,assignment);
 export const getAssignment=(assignmentId)=>axios.get(`${REST_API_BASE_URL}/${assignmentId}`)
 export const startAssignment=(assignmentId)=>axios.post(`${REST_API_BASE_URL}/${assignmentId}/start`);
-export const startAssignmentByStudent=(assignmentId)=>axios.post(`${REST_API_BASE_URL}/${assignmentId}/student/start`);
+export const startAssignmentByStudent = (assignmentId, headers) =>
+    axios.post(`${REST_API_BASE_URL}/${assignmentId}/student/start`, null, { headers });
+  

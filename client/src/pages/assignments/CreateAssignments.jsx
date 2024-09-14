@@ -1,9 +1,9 @@
 import { Header, Footer } from "@components/common";
 import React , {useState,useEffect} from "react";
-import { Link } from "react-router-dom";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import { useNavigate } from "react-router-dom";
 import { createAssignment } from "@services/AssignmentService";
+
 export default function CreateAssignments() {
 
   const [title,setTitle]=useState("");
@@ -16,6 +16,7 @@ export default function CreateAssignments() {
   const headers = {
     Authorization: authHeader(),
   };
+
   const handleTitle = (e) => {
     setTitle(e.target.value);
   };
@@ -31,20 +32,21 @@ export default function CreateAssignments() {
 
   const saveAssignment = async (e) => {
     e.preventDefault();
+    if (!title.trim() || !instructions.trim() || (hours === 0 && minutes === 0)) {
 
-    if (!title.trim() || !instructions.trim() || (hours === "" && minutes === "")) {
       setError("All the fileds are required.");
       return;
     }
-    const formattedTotalTime = `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
+    const formattedTotalTime =(hours*60*60)+(minutes*60) ;
     const assignment = {
       title,
       instructions,
       totalTime: formattedTotalTime,
     };
-
+    console.log(assignment);
     try {
       const response = await createAssignment(assignment, headers);
+      // const response = await createAssignment(assignment);
       console.log("Create Assignment Response:", response);
       const assignmentId = response.data;
       navigate(`/quizFormat/${assignmentId}`);

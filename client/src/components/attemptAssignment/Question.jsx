@@ -15,7 +15,9 @@ const formatTime = (time) => {
 const Question = ({ question_no, question, timer, totalQuizTime, questionLength }) => {
   const [progress, setProgress] = useState(0);
   const navigate = useNavigate();  // Initialize useNavigate hook
-
+  console.log(question_no);
+  console.log(question);
+  console.log( totalQuizTime);
   useEffect(() => {
     console.log("Timer:", timer);
     if (totalQuizTime > 0) {

@@ -7,7 +7,7 @@ const Questions = ({
   handleNextQuestion,
   currentQuestion,
   handleAnswerClick,
-  initialTimer, // This will now be the total time for the quiz
+  initialTimer, 
   isLastQuestion,
 }) => {
   const optionIds = ["A", "B", "C", "D"];

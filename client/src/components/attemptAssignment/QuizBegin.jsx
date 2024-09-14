@@ -6,8 +6,15 @@ import Score from "@components/Quiz/Score";
 import StartPopup from "@components/Quiz/StartPopup";
 import { Header, Footer } from "@components/common";
 import { getAssignment } from '@services/AssignmentService';
-
+import { startAssignmentByStudent } from "@services/AssignmentService";
+import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
 const QuizBegin = ({ assignmentId }) => {
+
+  
+  const authHeader = useAuthHeader();
+  const headers = {
+    Authorization: authHeader,
+  };
   const [assignment, setAssignment] = useState(null);
   const [questions, setQuestions] = useState([]);
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -19,8 +26,7 @@ const QuizBegin = ({ assignmentId }) => {
   const [totalTime, setTotalTime] = useState(0);
 
   const timeToMilliseconds = (time) => {
-    const [hours, minutes] = time.split(":").map(Number);
-    const totalMilliseconds = (hours * 3600000) + (minutes * 60000);
+    const totalMilliseconds = time* 60;
     return totalMilliseconds;
   };
 
@@ -35,7 +41,7 @@ const QuizBegin = ({ assignmentId }) => {
   useEffect(() => {
     const fetchAssignment = async () => {
       try {
-        const response = await getAssignment(assignmentId);
+        const response = await getAssignment(assignmentId,headers);
         const assignmentData = response.data;
 
         const fetchedQuestions = assignmentData.quizzes.map(quiz => ({
@@ -87,19 +93,26 @@ const QuizBegin = ({ assignmentId }) => {
     console.log("Selected Option: ", option);
   };
 
-  const startQuiz = () => {
-    setQuizStarted(true);
-    setShowPopup(false);
-    setScore(0);
-    setCurrentQuestion(0);
-    setGlobalTimer(totalTime);
-    setIsLastQuestion(false);
+  const startQuiz = async () => {
+    try {
+      await startAssignmentByStudent(assignmentId,headers);
+      setQuizStarted(true);
+      setShowPopup(false);
+      setScore(0);
+      setCurrentQuestion(0);
+      setGlobalTimer(totalTime);
+      setIsLastQuestion(false);
+    } catch (error) {
+      console.error("Failed to start assignment", error);
+    }
   };
 
   if (!assignment) {
     return <div>Loading...</div>;
   }
-
+  const showStartPopup = () => {
+    setShowPopup(true);
+  };
   return (
     <div
       className="relative min-h-screen bg-cover bg-fixed"
@@ -112,11 +125,15 @@ const QuizBegin = ({ assignmentId }) => {
             <div>
               <Guidlines assignmentId={assignmentId}/>
               <div className="text-center m-10">
-                <div className="button-29 mt-10" onClick={startQuiz}>
+             
+                <div className="button-29 mt-10" onClick={showStartPopup}>
                   Start Quiz!
-                </div>
+              </div>
               </div>
             </div>
+       
+          ) : showPopup && !quizStarted ? (
+            <StartPopup onComplete={startQuiz} />
           ) : quizStarted && currentQuestion < questions.length ? (
             <div>
               <div className="timer-display"></div>

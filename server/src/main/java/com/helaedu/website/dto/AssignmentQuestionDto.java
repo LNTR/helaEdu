@@ -16,12 +16,9 @@ public class AssignmentQuestionDto {
 
     @NotEmpty(message = "Question is required")
     private String question;
-
     private List<String> options;
-
     @NotEmpty(message = "Correct answer is required")
     private String correctAnswer;
-
     //userId, provided answer
     private Map<String, String> givenAnswers;
 

@@ -35,7 +35,7 @@ public class AssignmentController {
         this.studentService = studentService;
     }
 
-    @PreAuthorize("hasRole('TEACHER') or hasRole('MODERATOR')")
+//    @PreAuthorize("hasRole('TEACHER') or hasRole('MODERATOR')")
     @PostMapping("/create")
     public ResponseEntity<Object> createAssignment(@Valid @RequestBody AssignmentDto assignmentDto, BindingResult bindingResult) throws ExecutionException, InterruptedException {
         if (bindingResult.hasErrors()) {
@@ -56,14 +56,14 @@ public class AssignmentController {
         }
     }
 
-    @PreAuthorize("hasRole('TEACHER') or hasRole('MODERATOR')")
+//    @PreAuthorize("hasRole('TEACHER') or hasRole('MODERATOR')")
     @PostMapping("/{assignmentId}/start")
     public ResponseEntity<String> startAssignment(@PathVariable String assignmentId) throws ExecutionException, InterruptedException {
         assignmentService.startAssignment(assignmentId);
         return ResponseEntity.ok("Assignment started");
     }
 
-    @PreAuthorize("hasRole('TEACHER') or hasRole('MODERATOR')")
+//    @PreAuthorize("hasRole('TEACHER') or hasRole('MODERATOR')")
     @PostMapping("/{assignmentId}/end")
     public ResponseEntity<String> endAssignment(@PathVariable String assignmentId) throws ExecutionException, InterruptedException {
         assignmentService.endAssignment(assignmentId);
@@ -94,13 +94,13 @@ public class AssignmentController {
         return ResponseEntity.ok(assignments);
     }
 
-    @PreAuthorize("hasRole('TEACHER') or hasRole('MODERATOR')")
+//    @PreAuthorize("hasRole('TEACHER') or hasRole('MODERATOR')")
     @PostMapping("/{assignmentId}/quizzes")
     public String addQuizzesToAssignment(@PathVariable String assignmentId, @RequestBody List<AssignmentQuestionDto> quizzes) throws ExecutionException, InterruptedException {
         return assignmentService.addQuizzesToAssignment(assignmentId, quizzes);
     }
 
-    @PreAuthorize("hasRole('STUDENT')")
+//    @PreAuthorize("hasRole('STUDENT')")
     @PostMapping("/{assignmentId}/student/start")
     public ResponseEntity<String> studentStartAssignment(@PathVariable String assignmentId) {
         try {

@@ -5,16 +5,17 @@ import Questions from "@components/attemptAssignment/Questions";
 import Score from "@components/Quiz/Score";
 import StartPopup from "@components/Quiz/StartPopup";
 import { Header, Footer } from "@components/common";
-import { getAssignment } from '@services/AssignmentService';
-import { startAssignmentByStudent } from "@services/AssignmentService";
+import { getAssignment, startAssignmentByStudent } from "@services/AssignmentService";
 import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
+import { currentStudent } from "@services/StudentService";
+
 const QuizBegin = ({ assignmentId }) => {
 
-  
   const authHeader = useAuthHeader();
   const headers = {
     Authorization: authHeader,
   };
+
   const [assignment, setAssignment] = useState(null);
   const [questions, setQuestions] = useState([]);
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -24,11 +25,23 @@ const QuizBegin = ({ assignmentId }) => {
   const [isLastQuestion, setIsLastQuestion] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [totalTime, setTotalTime] = useState(0);
+  const [studentId, setStudentId] = useState(null);
 
-  const timeToMilliseconds = (time) => {
-    const totalMilliseconds = time* 60;
-    return totalMilliseconds;
-  };
+  useEffect(() => {
+    const fetchStudent = async () => {
+      try {
+        const response = await currentStudent(headers);
+        setStudentId(response.data.userId); 
+        console.log("studentId", response.data.userId);
+      } catch (error) {
+        console.error("Failed to fetch student information", error);
+      }
+    };
+
+    fetchStudent();
+  }, [headers]);
+
+  const timeToMilliseconds = (time) => time * 1000;
 
   const formatTime = (milliseconds) => {
     const totalMinutes = Math.floor(milliseconds / 60000);
@@ -41,14 +54,14 @@ const QuizBegin = ({ assignmentId }) => {
   useEffect(() => {
     const fetchAssignment = async () => {
       try {
-        const response = await getAssignment(assignmentId,headers);
+        const response = await getAssignment(assignmentId, headers);
         const assignmentData = response.data;
 
         const fetchedQuestions = assignmentData.quizzes.map(quiz => ({
           question: quiz.question,
           options: quiz.options,
           answer: quiz.correctAnswer,
-          id: quiz.quizId 
+          id: quiz.quizId,
         }));
 
         setAssignment(assignmentData);
@@ -57,14 +70,13 @@ const QuizBegin = ({ assignmentId }) => {
         const totalQuizTime = timeToMilliseconds(assignmentData.totalTime);
         setGlobalTimer(totalQuizTime);  
         setTotalTime(totalQuizTime);  
-
       } catch (error) {
         console.error("Failed to fetch assignment", error);
       }
     };
 
     fetchAssignment();
-  }, [assignmentId]);
+  }, [assignmentId, headers]);
 
   useEffect(() => {
     if (quizStarted && globalTimer > 0) {
@@ -75,27 +87,19 @@ const QuizBegin = ({ assignmentId }) => {
           } else {
             setQuizStarted(false);
             clearInterval(interval);
-            return 0; 
+            return 0;
           }
         });
-      }, 1000); 
+      }, 1000);
 
       return () => clearInterval(interval);
     }
   }, [quizStarted, globalTimer]);
 
-  const handleNextQuestion = (remainingTime) => {
-    console.log("Time remaining: ", remainingTime);
-    setCurrentQuestion((prevQuestion) => prevQuestion + 1);
-  };
-
-  const handleAnswerClick = (option) => {
-    console.log("Selected Option: ", option);
-  };
-
   const startQuiz = async () => {
     try {
-      await startAssignmentByStudent(assignmentId,headers);
+      console.log("Starting quiz...");
+      
       setQuizStarted(true);
       setShowPopup(false);
       setScore(0);
@@ -107,36 +111,83 @@ const QuizBegin = ({ assignmentId }) => {
     }
   };
 
+  const handleNextQuestion = (remainingTime) => {
+    console.log("Time remaining: ", remainingTime);
+    setCurrentQuestion((prevQuestion) => prevQuestion + 1);
+  };
+
+  const handleAnswerClick = (option) => {
+    console.log("Selected Option: ", option);
+  };
+
+  const showStartPopup = () => {
+    try{
+      startAssignmentByStudent(assignmentId, headers);
+      setShowPopup(true);
+    }catch(error){
+      console.log("error to start assignmnt by student");
+    }
+    
+  };
+
   if (!assignment) {
     return <div>Loading...</div>;
   }
-  const showStartPopup = () => {
-    setShowPopup(true);
-  };
+
+  // Check if remaining time exists for the student
+  const remainingTimesForUser = assignment.studentRemainingTimes && assignment.studentRemainingTimes.hasOwnProperty(studentId)
+    ? assignment.studentRemainingTimes[studentId]
+    : undefined;
+
+  console.log("Remaining time:", remainingTimesForUser);
+  const isTimeRemainingDefined = typeof remainingTimesForUser !== 'undefined';
+  console.log("Is time remaining defined:", isTimeRemainingDefined);
+
+  // Conditional rendering based on whether the student has time or not
   return (
-    <div
-      className="relative min-h-screen bg-cover bg-fixed"
-      style={{ backgroundImage: `url(${background})` }}
-    >
+    <div className="relative min-h-screen bg-cover bg-fixed" style={{ backgroundImage: `url(${background})` }}>
       <Header />
       <div className="min-h-screen">
         {assignment.started ? (
-          !quizStarted && !showPopup ? (
-            <div>
-              <Guidlines assignmentId={assignmentId}/>
-              <div className="text-center m-10">
-             
-                <div className="button-29 mt-10" onClick={showStartPopup}>
-                  Start Quiz!
+          isTimeRemainingDefined ? (
+            remainingTimesForUser > 0 ? (
+              
+                currentQuestion < questions.length ? (
+                <Questions
+                  questions={questions}
+                  handleNextQuestion={handleNextQuestion}
+                  currentQuestion={currentQuestion}
+                  handleAnswerClick={handleAnswerClick}
+                  initialTimer={globalTimer}
+                  isLastQuestion={isLastQuestion}
+              />
+              ) : (
+                <Score
+                  score={score}
+                  setScore={setScore}
+                  setCurrentQuestion={setCurrentQuestion}
+                  setQuizStarted={setQuizStarted}
+                />
+              )
+            ) : (
+              <div className="flex justify-center my-20">
+                <p className="text-3xl">You have already attempted the quiz and have no remaining time.</p>
               </div>
+            )
+          ) : (
+            !quizStarted && !showPopup ? (
+              <div>
+                <Guidlines assignmentId={assignmentId}/>
+                <div className="text-center m-10">
+                  <div className="button-29 mt-10" onClick={showStartPopup}>
+                    Start Quiz!
+                  </div>
+                </div>
               </div>
-            </div>
-       
-          ) : showPopup && !quizStarted ? (
-            <StartPopup onComplete={startQuiz} />
-          ) : quizStarted && currentQuestion < questions.length ? (
-            <div>
-              <div className="timer-display"></div>
+            ) : showPopup && !quizStarted ? (
+              <StartPopup onComplete={startQuiz} />
+            ) 
+            : quizStarted && currentQuestion < questions.length ? (
               <Questions
                 questions={questions}
                 handleNextQuestion={handleNextQuestion}
@@ -145,20 +196,19 @@ const QuizBegin = ({ assignmentId }) => {
                 initialTimer={globalTimer}
                 isLastQuestion={isLastQuestion}
               />
-            </div>
-          ) : (
-            <Score
-              score={score}
-              setScore={setScore}
-              setCurrentQuestion={setCurrentQuestion}
-              setQuizStarted={setQuizStarted}
+            ) : (
+              <Score
+                score={score}
+                setScore={setScore}
+                setCurrentQuestion={setCurrentQuestion}
+                setQuizStarted={setQuizStarted}
             />
+            )
           )
         ) : (
           <div className="flex justify-center my-20">
-              <p className="text-3xl ">Assignment is not started yet</p>
-          </div> 
-         
+            <p className="text-3xl">Assignment is not started yet</p>
+          </div>
         )}
       </div>
       <Footer />

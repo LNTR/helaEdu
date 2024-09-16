@@ -89,7 +89,7 @@ def load_vectorstore(embedding_model, storing_path="Chatbot/vectorstore/10"):
     )
 
     # Returning the retriever
-    return vectorstore.as_retriever()
+    return vectorstore
 
 
 def add_history(llm, retriever):
@@ -162,6 +162,7 @@ def get_references(context):
             "source": document.metadata["source"],
             "page": document.metadata["page"],
             "citation": document.page_content,
+            "all": document.metadata,
         }
         references.append(reference)
     return references

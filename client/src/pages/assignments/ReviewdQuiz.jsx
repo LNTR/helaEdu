@@ -1,22 +1,22 @@
 import { Footer, Header } from '@components/common';
 import React from 'react';
-import Banner from '@assets/img/articles/bannerP.jpg';
 import AverageScoreChart from '@components/assignments/AverageScoreChart';
 import TopScore from '@components/assignments/TopScore';
 import Participants from '@components/assignments/Participants';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClock } from '@fortawesome/free-solid-svg-icons';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
+import { useParams } from 'react-router-dom';
+
 export default function ReviewdQuiz() {
     const averageScore=65;
+    const assignmentId=useParams();
    
   return (
     <div>
       <Header />
       <div className="min-h-screen">
-      
         <div className='mx-64 my-14'>
-          {/* <img src={Banner} className="w-full h-128 object-cover" alt="Banner" /> */}
           <div className=" flex justify-start space-x-6 ">
             <div className="">
               <h1 className='text-blue'>Geography - weekly remind II</h1>

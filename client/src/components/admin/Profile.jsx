@@ -1,53 +1,160 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ProfilePhoto from '@/assets/img/articles/profile.jpg';
 
 const AdminDetails = () => {
-  const admin = {
-    name: 'Pathumi Ahinsa', 
+  const [isEditing, setIsEditing] = useState(false);
+  const [isEditingPassword, setIsEditingPassword] = useState(false);
+  const [formData, setFormData] = useState({
+    username: 'Pathumi Ahinsa',
     email: 'pathuahinsa@example.com',
-    role: 'Admin',
-    lastLogin: '2024-07-20',
-    phone: '+94 705760057',
-    address: '123 Main Street, Colombo,Sri Lanka',
+    password: '2423535',
+    currentPassword: '',
+    newPassword: '',
+    confirmNewPassword: '',
+  });
+
+  const admin = {
     profilePhoto: ProfilePhoto, 
   };
 
+  const handleInputChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleEdit = () => {
+    setIsEditing(!isEditing);
+  };
+
+  const handlePasswordEdit = () => {
+    setIsEditingPassword(!isEditingPassword);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Implement form submission logic here (e.g., API call)
+    console.log('Form Data:', formData);
+  };
+
   return (
-    <div className="flex justify-start items-start h-screen" style={{ marginLeft: '50px', marginTop: '50px' }}>
-      <div 
-        className="bg-white shadow-2xl rounded-lg p-12 w-[600px] h-[600px]" 
-        style={{ boxShadow: '0 15px 30px rgba(0, 0, 0, 0.3)', outline: '2px solid blue' }}
-      >
-        {/* Profile Photo and Name */}
-        <div className="flex flex-col items-center mb-8">
-          <img 
-            src={admin.profilePhoto} 
-            alt="Profile Photo" 
-            className="w-60 h-60 rounded-full object-cover border-4 border-blue-500"
-          />
-          <p className="text-3xl font-semibold mt-4">{admin.name}</p> {/* Display name below photo */}
-        </div>
-        
-        {/* Admin Details */}
-        <div className="text-left w-full">
-          <h2 className="text-4xl font-semibold text-gray-800 mb-6">Admin Details</h2>
-          <div className="text-gray-600 space-y-4"> {/* Increased gap between text items */}
-            <p className="text-2xl font-medium">Email: {admin.email}</p>
-            <p className="text-2xl font-medium">Role: {admin.role}</p>
-            <p className="text-2xl font-medium">Phone: {admin.phone}</p>
-            <p className="text-2xl font-medium">Address: {admin.address}</p>
-            
-            <p className="text-2xl font-medium">Last Login: {admin.lastLogin}</p>
+    <div className="my-20">
+      <div className="bg-white shadow-2xl rounded-lg p-12">
+        <div className="flex justify-start">
+          <div className="w-1/3 flex justify-center">
+            <img
+              src={admin.profilePhoto}
+              alt="Profile Photo"
+              className="w-72 h-72 rounded-full object-cover border-4 border-blue shadow-xl"
+            />
+          </div>
+          <div className="w-2/3">
+            <form onSubmit={handleSubmit}>
+              {/* Username */}
+              <div className="mb-4">
+                <label className="block mb-2 text-2xl">Username</label>
+                {isEditing ? (
+                  <input
+                    type="text"
+                    name="username"
+                    value={formData.username}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue"
+                  />
+                ) : (
+                  <input
+                    type="text"
+                    name="username"
+                    value={formData.username}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue"
+                  disabled/>
+                )}
+              </div>
+              <div className="mb-4">
+                <label className="block mb-2 text-2xl">Email</label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue"
+                    disabled
+                  />
+               
+              </div>
+              
+              {isEditingPassword && (
+                <>
+                  <div className="mb-4">
+                    <label className="block mb-2 text-2xl">Current Password</label>
+                    <input
+                      type="password"
+                      name="currentPassword"
+                      value={formData.currentPassword}
+                      onChange={handleInputChange}
+                      placeholder="Enter current password"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue"
+                    />
+                  </div>
+
+                  <div className="mb-4">
+                    <label className="block mb-2 text-2xl">New Password</label>
+                    <input
+                      type="password"
+                      name="newPassword"
+                      value={formData.newPassword}
+                      onChange={handleInputChange}
+                      placeholder="Enter new password"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue"
+                    />
+                  </div>
+
+                  <div className="mb-4">
+                    <label className="block mb-2 text-2xl">Confirm New Password</label>
+                    <input
+                      type="password"
+                      name="confirmNewPassword"
+                      value={formData.confirmNewPassword}
+                      onChange={handleInputChange}
+                      placeholder="Confirm new password"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue"
+                    />
+                  </div>
+                </>
+              )}
+
+              <div className="flex justify-between items-center mt-6 ">
+                <div className='flex justify-start items-center w-3/5'>
+                  <button
+                    type="button"
+                    className="text-2xl bg-blue text-white py-2 px-4 mr-7 rounded-md hover:bg-blue-600 transition-colors"
+                    onClick={handleEdit}
+                  >
+                    {isEditing ? 'Cancel' : 'Update'}
+                  </button>
+                  {isEditing && (
+                    <button
+                      type="submit"
+                      className="text-2xl bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 transition-colors"
+                    >
+                      Save
+                    </button>
+                  )}
+                </div>
+                <div  className='flex justify-between items-center w-2/5'>
+                  <button
+                    type="button"
+                    className="text-2xl bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600 transition-colors"
+                    onClick={handlePasswordEdit}
+                  >
+                    {isEditingPassword ? 'Cancel Password Update' : 'Update Password'}
+                  </button>
+                </div>
+                
+               
+              </div>
+            </form>
           </div>
         </div>
-
-        {/* Edit Button */}
-        <button
-          onClick={() => alert('Edit functionality to be implemented')}
-          className="bg-blue-500 text-white px-6 py-2 rounded-lg text-xl mt-6"
-        >
-          Edit
-        </button>
       </div>
     </div>
   );

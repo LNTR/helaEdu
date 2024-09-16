@@ -5,17 +5,34 @@ import { faSearch, faShare, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { faEdit } from '@fortawesome/fontawesome-free-regular';
 import SharePopup from '@components/assignments/SharePopup';
 import StartPopup from '@components/assignments/StartPopup';
+import { endAssignment } from '@services/AssignmentService';
+import { useNavigate } from 'react-router-dom';
 
 export default function TableRaw({ assignmentId, title, instruction,publishedDate,totalTime,onClose ,onView ,started}) {
+  const navigate = useNavigate();
   const [showPopup, setShowPopup] = useState(false);
   const [startPopup, setStartPopup] =useState(false);
   const [showEndQuizPopup, setShowendQuizPopup]= useState(false);
+  const [isStarted,setIsStarted] =useState(started);
+  
+  const endQuiz= async () =>{
+    try {
+      const response = await endAssignment(assignmentId);
+      console.log('Assignment ended:', response.data);
+      alert("Assignment is ended");
+      closeEndQuiz();
+      setIsStarted(false);
 
-  const openEndQuiz=()=>{
-    setShowendQuizPopup(true);
+    } catch (error) {
+      console.error('Error ending the assignment:', error);
+      alert("error ending assignment");
+    }
   }
   const closeEndQuiz=()=>{
     setShowendQuizPopup(false);
+  }
+  const openEndQuiz=()=>{
+    setShowendQuizPopup(true);
   }
   const handleShareClick = () => {
     setShowPopup(true);
@@ -30,6 +47,10 @@ export default function TableRaw({ assignmentId, title, instruction,publishedDat
   const closePopup = () => {
     setShowPopup(false);
   };
+  const openReview = () => {
+    navigate(`/reviewQuizzes/${assignmentId}`); 
+  };
+  
   const spllitedInstruction = instruction.split(" ").slice(0,6).join(" ");
   const spllitedTitle = title.split(" ").slice(0,4).join(" ");
   return (
@@ -47,10 +68,7 @@ export default function TableRaw({ assignmentId, title, instruction,publishedDat
                   >
                     Cancel
                   </button>
-                  <button
-                    className="btn bg-blue text-white text-2xl"
-                    
-                  >
+                  <button className="btn bg-blue text-white text-2xl" onClick={endQuiz}>
                     End
                   </button>
                 </div>
@@ -72,18 +90,25 @@ export default function TableRaw({ assignmentId, title, instruction,publishedDat
           <div className='w-1/12 text-left '>
             <p className='text-2xl'>{totalTime}</p>
           </div>
-        
-          <div className='flex justify-end w-3/12'>
-          {started ? (
-              <button className='bg-blue text-white rounded-xl p-2 text-lg mx-2' onClick={openEndQuiz} >End Quiz</button>
-          ):(
-            <button className='bg-blue text-white rounded-xl p-2 text-lg mx-2' onClick={openStartClick}>Start Quiz</button>
-          )}
-           
-            <FontAwesomeIcon icon={faShare} onClick={handleShareClick} className='text-xl m-2 hover:text-yellow hover:translate-x-1' />
-            <FontAwesomeIcon icon={faSearch} onClick={onView} className='text-2xl m-2 hover:text-yellow hover:translate-x-1' />
-            <FontAwesomeIcon icon={faEdit} className='text-2xl m-2 hover:text-yellow hover:translate-x-1' />
-            <FontAwesomeIcon icon={faTrash} onClick={onClose} className='text-2xl m-2 hover:text-yellow hover:translate-x-1' />
+          
+          <div className='flex justify-end w-4/12'>
+              <div className='w-2/5  text-right'>
+                <button className='bg-blue text-white rounded-xl p-2 my-1  text-lg mx-2' onClick={openReview}>Review answers</button>
+              </div>
+              <div  className='w-3/5 text-right'>
+                {isStarted ? (
+                    <button className='bg-red-500 text-white rounded-xl p-2 text-lg mx-2' onClick={openEndQuiz} >End Quiz</button>
+                ):(
+                  <button className='bg-blue text-white rounded-xl p-2 text-lg mx-2' onClick={openStartClick}>Start Quiz</button>
+                )}
+              
+                <FontAwesomeIcon icon={faShare} onClick={handleShareClick} className='text-xl m-2 hover:text-yellow hover:translate-x-1' />
+                <FontAwesomeIcon icon={faSearch} onClick={onView} className='text-2xl m-2 hover:text-yellow hover:translate-x-1' />
+                <FontAwesomeIcon icon={faEdit} className='text-2xl m-2 hover:text-yellow hover:translate-x-1' />
+                <FontAwesomeIcon icon={faTrash} onClick={onClose} className='text-2xl m-2 hover:text-yellow hover:translate-x-1' />
+              </div>
+
+            
           </div>
         </div>
       </div>

@@ -41,8 +41,6 @@ const QuizBegin = ({ assignmentId }) => {
     fetchStudent();
   }, [headers]);
 
-  const timeToMilliseconds = (time) => time * 1000;
-
   const formatTime = (milliseconds) => {
     const totalMinutes = Math.floor(milliseconds / 60000);
     const hours = Math.floor(totalMinutes / 60);
@@ -67,7 +65,7 @@ const QuizBegin = ({ assignmentId }) => {
         setAssignment(assignmentData);
         setQuestions(fetchedQuestions);
 
-        const totalQuizTime = timeToMilliseconds(assignmentData.totalTime);
+        const totalQuizTime = assignmentData.totalTime;
         setGlobalTimer(totalQuizTime);  
         setTotalTime(totalQuizTime);  
       } catch (error) {
@@ -105,7 +103,7 @@ const QuizBegin = ({ assignmentId }) => {
       setScore(0);
       setCurrentQuestion(0);
       setGlobalTimer(totalTime);
-      setIsLastQuestion(false);
+      setIsLastQuestion(false); // Reset last question state
     } catch (error) {
       console.error("Failed to start assignment", error);
     }
@@ -113,7 +111,19 @@ const QuizBegin = ({ assignmentId }) => {
 
   const handleNextQuestion = (remainingTime) => {
     console.log("Time remaining: ", remainingTime);
-    setCurrentQuestion((prevQuestion) => prevQuestion + 1);
+    
+    setCurrentQuestion((prevQuestion) => {
+      const nextQuestion = prevQuestion + 1;
+
+      // Check if it's the last question
+      if (nextQuestion === questions.length - 1) {
+        setIsLastQuestion(true);
+      } else {
+        setIsLastQuestion(false);
+      }
+
+      return nextQuestion;
+    });
   };
 
   const handleAnswerClick = (option) => {
@@ -121,29 +131,24 @@ const QuizBegin = ({ assignmentId }) => {
   };
 
   const showStartPopup = () => {
-    try{
+    try {
       startAssignmentByStudent(assignmentId, headers);
       setShowPopup(true);
-    }catch(error){
-      console.log("error to start assignmnt by student");
+    } catch (error) {
+      console.log("error to start assignment by student");
     }
-    
   };
 
   if (!assignment) {
     return <div>Loading...</div>;
   }
 
-  // Check if remaining time exists for the student
   const remainingTimesForUser = assignment.studentRemainingTimes && assignment.studentRemainingTimes.hasOwnProperty(studentId)
     ? assignment.studentRemainingTimes[studentId]
     : undefined;
-
-  console.log("Remaining time:", remainingTimesForUser);
   const isTimeRemainingDefined = typeof remainingTimesForUser !== 'undefined';
-  console.log("Is time remaining defined:", isTimeRemainingDefined);
+  const timet = assignment.studentRemainingTimes[studentId];
 
-  // Conditional rendering based on whether the student has time or not
   return (
     <div className="relative min-h-screen bg-cover bg-fixed" style={{ backgroundImage: `url(${background})` }}>
       <Header />
@@ -151,8 +156,7 @@ const QuizBegin = ({ assignmentId }) => {
         {assignment.started ? (
           isTimeRemainingDefined ? (
             remainingTimesForUser > 0 ? (
-              
-                currentQuestion < questions.length ? (
+              currentQuestion < questions.length ? (
                 <Questions
                   questions={questions}
                   handleNextQuestion={handleNextQuestion}
@@ -160,7 +164,8 @@ const QuizBegin = ({ assignmentId }) => {
                   handleAnswerClick={handleAnswerClick}
                   initialTimer={globalTimer}
                   isLastQuestion={isLastQuestion}
-              />
+                  timet={timet}
+                />
               ) : (
                 <Score
                   score={score}
@@ -177,7 +182,7 @@ const QuizBegin = ({ assignmentId }) => {
           ) : (
             !quizStarted && !showPopup ? (
               <div>
-                <Guidlines assignmentId={assignmentId}/>
+                <Guidlines assignmentId={assignmentId} />
                 <div className="text-center m-10">
                   <div className="button-29 mt-10" onClick={showStartPopup}>
                     Start Quiz!
@@ -186,8 +191,7 @@ const QuizBegin = ({ assignmentId }) => {
               </div>
             ) : showPopup && !quizStarted ? (
               <StartPopup onComplete={startQuiz} />
-            ) 
-            : quizStarted && currentQuestion < questions.length ? (
+            ) : quizStarted && currentQuestion < questions.length ? (
               <Questions
                 questions={questions}
                 handleNextQuestion={handleNextQuestion}
@@ -202,7 +206,7 @@ const QuizBegin = ({ assignmentId }) => {
                 setScore={setScore}
                 setCurrentQuestion={setCurrentQuestion}
                 setQuizStarted={setQuizStarted}
-            />
+              />
             )
           )
         ) : (

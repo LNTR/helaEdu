@@ -9,6 +9,7 @@ export const createAssignment=(assignment,headers) =>axios.post(CREATE_ASSIGNMEN
 export const addQuizzes =(assignment,assignmentId)=>axios.post(`${REST_API_BASE_URL}/${assignmentId}/quizzes`,assignment);
 export const getAssignment=(assignmentId)=>axios.get(`${REST_API_BASE_URL}/${assignmentId}`)
 export const startAssignment=(assignmentId)=>axios.post(`${REST_API_BASE_URL}/${assignmentId}/start`);
+export const endAssignment=(assignmentId)=>axios.post(`${REST_API_BASE_URL}/${assignmentId}/end`);
 export const startAssignmentByStudent = (assignmentId, headers) =>
     axios.post(`${REST_API_BASE_URL}/${assignmentId}/student/start`, null, { headers });
   

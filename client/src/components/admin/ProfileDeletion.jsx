@@ -8,7 +8,7 @@ const DeleteProfileSection = () => {
   return (
     <div
       className="p-8 bg-white rounded-lg shadow-lg"
-      style={{marginLeft: '700px', marginTop: '50px', width: '300px' }} // Adjusted margins and reduced width
+      style={{marginTop: '50px', width: '300px' }} // Adjusted margins and reduced width
     >
       <h2 className="text-4xl font-extrabold mb-6 text-red-600">Delete Profile</h2> {/* Increased font size */}
       <p className="mb-4 text-lg text-gray-800">Are you sure you want to delete your profile? This action cannot be undone.</p>

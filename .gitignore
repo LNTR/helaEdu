@@ -47,9 +47,6 @@ __pycache__/
 *.pyc 
 __pycache__/
 */*/__pycache__/*
-<<<<<<< master
 **/firebase-service-account.json
-=======
 
 /resources
->>>>>>> chatbot-backend

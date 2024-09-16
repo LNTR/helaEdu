@@ -49,4 +49,5 @@ __pycache__/
 */*/__pycache__/*
 **/firebase-service-account.json
 
+/service/config/credentials.json
 /resources

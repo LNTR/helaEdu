@@ -1,0 +1,68 @@
+$small-text: 0.875rem;
+$normal-text: 1.25rem;
+$big-text: 2.5rem;
+$large-text: 3.75rem;
+$header1: 2.5rem;
+$header2: $large-text;
+$header3: 2.5rem;
+$header4: 1.75rem;
+$header5: 1.5rem;
+$text: 2.5rem;
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 500;
+}
+
+html {
+    font-size: 62.5%;
+}
+
+h1 {
+    font-size: $header1;
+}
+
+button,
+label,
+p,
+li,
+a {
+    font-size: $header2;
+}
+
+h2 {
+    font-size: $header2;
+}
+
+h3 {
+    font-size: $header3;
+}
+
+h4,
+input,
+p {
+    font-size: $header4;
+
+}
+
+h5 {
+    font-size: $header5;
+}
+
+ul {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+}
+
+input {
+    &:focus-visible {
+        outline: none;
+    }
+}

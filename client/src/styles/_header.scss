@@ -1,0 +1,150 @@
+header {
+    background: $primary-color;
+    min-height: 5vh;
+
+    nav {
+        z-index: 1;
+    }
+
+    .header-wrapper {
+        width: 95%;
+        margin: auto;
+        flex-wrap: wrap;
+
+        &>div {
+            flex: 1 1 40rem;
+        }
+
+        &>nav {
+            flex: 1 1 40rem;
+        }
+    }
+
+    .logo-wrapper {
+        flex-grow: 1;
+    }
+
+    .nav-text {
+        color: $white-color;
+        background-clip: text;
+        background-image: linear-gradient(to right,
+                $secondary-color,
+                $secondary-color 50%,
+                $white-color 50%);
+        background-size: 200% 100%;
+        background-position: 100%;
+        transition: all 0.3s ease-in-out;
+
+        h4 {
+            color: transparent;
+        }
+
+        &:hover {
+            background-position: 0;
+        }
+
+    }
+
+    .nav-link-wrapper {
+        width: 100%;
+    }
+
+    .auth-control {
+        display: flex;
+    }
+
+    .profile-icon {
+        border-radius: 100%;
+        background: $white-color;
+    }
+
+    .logged-in-header {
+        display: flex;
+        align-items: center;
+        position: relative;
+
+        svg {
+            cursor: pointer;
+        }
+
+        div:not(.theme-toggle) {
+            width: 46px;
+            height: 46px;
+        }
+
+        .notification-bell {
+            color: $white-color;
+        }
+
+    }
+
+    .dropdown-wrapper {
+        display: flex;
+        flex-grow: 1;
+        justify-content: flex-end;
+        margin: 1rem;
+
+
+        li {
+            padding: 0.5rem;
+            text-align: center;
+
+            &:hover {
+                background: #e3e6e8;
+            }
+
+            h4 {
+                cursor: pointer;
+
+                &:hover {
+                    background: none;
+                }
+            }
+        }
+
+
+
+        .dropdown-content {
+            width: 100%;
+            border-radius: 1.5rem;
+            background: $white-color;
+            padding: 0.75rem 0;
+            z-index: 5;
+            margin-top: 1rem;
+            width: 13rem;
+            overflow: hidden;
+        }
+
+        .dropdown {
+            margin: 0;
+        }
+    }
+
+    .toggle-wrapper {
+        padding: 0;
+        justify-content: center !important;
+    }
+
+
+    // .dark & {
+    //     background: $black-color; 
+    //     .nav-text {
+    //       color: $white-color; 
+    //     }
+    //   }
+
+    @media screen and (max-width: 800px) {
+        .logo-wrapper {
+            display: flex;
+            width: 100%;
+            align-items: center;
+            justify-content: center;
+
+            #logo {
+                width: 40%;
+            }
+        }
+
+    }
+
+}

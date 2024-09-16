@@ -1,0 +1,163 @@
+.auth {
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+
+    .signup {
+        .form-header {
+            margin: 0 auto;
+        }
+
+        .form-wrapper {
+            margin: 2rem;
+            padding: 2rem;
+        }
+
+
+    }
+
+    .form-header {
+        width: 100%;
+        display: flex;
+        align-items: stretch;
+        justify-content: stretch;
+
+
+        h3.active {
+            color: $secondary-color;
+            border-bottom: 2px solid $secondary-color;
+        }
+
+        h3 {
+            cursor: pointer;
+            flex-grow: 1;
+            color: $gray-color;
+            border-bottom: 2px solid $gray-color;
+            padding: 0.25rem 1rem;
+            text-align: center;
+            font-size: 2rem;
+        }
+    }
+
+    .form-wrapper {
+        margin: 0.75rem;
+        width: 100%;
+
+    }
+
+    .left-pannel {
+        width: 50%;
+
+        .details {
+            width: 60%;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            flex-direction: column;
+        }
+
+        .placeholder {
+            padding: 2.1rem;
+        }
+
+        .gold-button {
+            margin: 0;
+        }
+
+    }
+
+    .upload-verfication {
+        h4 {
+
+            text-align: end;
+            padding: 0.5rem;
+            text-wrap: nowrap;
+            margin: 1rem;
+            cursor: pointer;
+            color: rgb(8 145 178);
+        }
+    }
+
+    .right-pannel {
+        width: 60%;
+        position: relative;
+        z-index: 0;
+        background: $primary-color;
+        color: $white-color;
+        border-top-left-radius: 50%;
+        border-bottom-right-radius: 50%;
+        overflow: hidden;
+
+        p {
+            text-align: center;
+        }
+
+        .banner {
+            width: 70%;
+        }
+    }
+
+    .banner-image {
+        transform: scale(1.2);
+        position: absolute;
+        bottom: 0;
+        z-index: -1;
+    }
+
+    .input-wrapper {
+        label {
+            left: 2px;
+        }
+
+
+    }
+
+
+    .icon {
+        color: $primary-color;
+        padding-bottom: .2rem;
+        color: $black-color;
+    }
+
+    .input-wrapper {
+        margin: 0.2rem;
+        padding: 0 0.5rem;
+        border-bottom: 2px solid $gray-color;
+
+
+        input {
+            border: none;
+        }
+
+
+        svg {
+            margin: 0.125rem;
+        }
+
+        &:focus {
+            color: $primary-color;
+        }
+
+    }
+
+    .floating-input-label {
+        input {
+            padding: 4px 0;
+        }
+    }
+
+    .error-msg {
+        font-size: 1.4rem;
+        width: 80%;
+    }
+
+    .success-msg {
+        font-size: 1.4rem;
+        width: 80%;
+    }
+
+    .navigate {
+        color: $primary-color;
+        cursor: pointer;
+    }
+}

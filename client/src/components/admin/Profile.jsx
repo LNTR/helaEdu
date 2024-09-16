@@ -37,7 +37,7 @@ const AdminDetails = () => {
 
   return (
     <div className="my-20">
-      <div className="bg-white shadow-2xl rounded-lg p-12">
+      <div className="bg-white shadow-xl rounded-lg p-12">
         <div className="flex justify-start">
           <div className="w-1/3 flex justify-center">
             <img

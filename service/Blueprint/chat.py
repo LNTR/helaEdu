@@ -41,3 +41,49 @@ def get_history():
     }
 
     return jsonify(response_payload)
+
+@chat.route("/quizgen", methods=["POST"])
+@chat.route("/quizgen/", methods=["POST"])
+# @authenticate
+def get_quiz():
+    request_payload = request.get_json(silent=True)
+    grade = request_payload["grade"]
+    number = request_payload["number"]
+    quiz_response = quiz_gen(grade, number)
+    response_payload = {
+        "response": quiz_response,
+    }
+
+    return jsonify(response_payload)
+
+@chat.route("/embed", methods=["POST"])
+@chat.route("/embed/", methods=["POST"])
+# @authenticate
+def get_textbook():
+    request_payload = request.get_json(silent=True)
+    grade = request_payload["grade"]
+    subject = request_payload["subject"] 
+    toc = request_payload["toc"] 
+    type = request_payload["type"]
+    embeddings = embeddings_gen(grade, subject, toc, type)
+    response_payload = {
+        "response": embeddings,
+    }
+
+    return jsonify(response_payload)
+
+@chat.route("/contents", methods=["POST"])
+@chat.route("/contents/", methods=["POST"])
+# @authenticate
+def get_contents():
+    request_payload = request.get_json(silent=True)
+    grade = request_payload["grade"]
+    book_info = request_payload["info"]
+    subject = request_payload["subject"] 
+    type = request_payload["type"]
+    contents = contents_gen(grade, subject, book_info, type)
+    response_payload = {
+        "response": contents,
+    }
+
+    return jsonify(response_payload)

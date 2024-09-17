@@ -234,6 +234,7 @@ public class AssignmentService {
                             quizDto.getQuestion(),
                             quizDto.getOptions(),
                             quizDto.getCorrectAnswer(),
+                            quizDto.getGivenAnswers(),
                             quizDto.getAssignmentId(),
                             quizDto.getMarks()
                     ))
@@ -245,4 +246,20 @@ public class AssignmentService {
         }
         return "Assignment not found";
     }
+
+    public void submitAnswer(String assignmentId, String quizId, String userId, String providedAnswer) throws Exception {
+        Assignment assignment = assignmentRepository.getAssignmentById(assignmentId);
+        AssignmentQuestion question = getQuestionById(assignment, quizId);
+        question.getGivenAnswers().put(userId, providedAnswer);
+        assignmentRepository.updateAssignment(assignmentId, assignment);
+    }
+
+    public AssignmentQuestion getQuestionById(Assignment assignment, String quizId) throws Exception {
+        return assignment.getQuizzes().stream()
+                .filter(q -> q.getQuizId().equals(quizId))
+                .findFirst()
+                .orElseThrow(() -> new Exception("Question not found with quizId: " + quizId));
+    }
+
+
 }

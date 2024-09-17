@@ -39,18 +39,20 @@ def split_docs(documents, chunk_size=1000, chunk_overlap=200):
     # returning the document chunks
     return chunks
 
-def create_embeddings(chunks, embedding_model, storing_path="service/Chatbot/vectorstore/10"):
+def create_embeddings(chunks, type, grade, subject):
+    storing_path=f"service/Chatbot/vectorstore"
+    embedding_model = load_embedding_model(model_path="all-MiniLM-L6-v2")
+
+    os.makedirs(os.path.dirname(storing_path), exist_ok=True) #ensure dir exists
     # Creating the embeddings using FAISS
     if os.path.exists(storing_path):
-        embeddings = load_embedding_model(model_path="all-MiniLM-L6-v2")
         # Load the existing vectorstore
-        vectorstore = FAISS.load_local(storing_path, embeddings, allow_dangerous_deserialization=True)
+        vectorstore = FAISS.load_local(storing_path, embedding_model, allow_dangerous_deserialization=True)
         # Add new embeddings to the existing vectorstore
         # vectorstore.add_documents(chunks)
-        if   vectorstore.add_documents(chunks):
-            # Save the updated vectorstore
-            
-            print("Updated vectorstore")
+        vectorstore.add_documents(chunks)
+        # Save the updated vectorstore
+        print("Updated vectorstore")
 
     else:
         # Create a new vectorstore
@@ -87,6 +89,8 @@ def remove_pages(input_pdf, output_pdf, pages_to_remove):
     reader = PdfReader(input_pdf)
     writer = PdfWriter()
 
+    pages_to_remove = [x-1 for x in pages_to_remove]
+
     # Add pages to the writer except the ones to remove
     for i in range(len(reader.pages)):
         if i not in pages_to_remove:
@@ -98,5 +102,66 @@ def remove_pages(input_pdf, output_pdf, pages_to_remove):
 
     return True
 
-# remove_pages("/Users/helaEdu/textbooks/grade10/HealthScience.pdf","/Users/helaEdu/textbooks/10/HealthScience.pdf", [])
+def embed(grade, subject, toc, type):
+    for part, content in toc.items():
+        pdf_path = f"/Users/helaEdu/resources/{type}/{grade}/{subject}_{part}.pdf"
+        
+         #remove pages
+        remove_pages(pdf_path, pdf_path, content['remove_pages'])
+
+        docs = load_pdf_data(file_path=pdf_path) #load doc
+
+        #nameing the source
+        if len(toc) > 1:
+            source = f"{subject} {type} Part {part} - Grade {grade}"
+        elif len(toc) == 1:
+            source = f"{subject} {type} - Grade {grade}"
+
+        final_page = len(docs)
+
+        toc = add_chapter_end_page(content['response'], final_page)
+        #split chunks
+        documents = split_docs(documents=docs) 
+
+        #add new metadata to the chunks
+        doc_with_metadata = add_metadata(documents, toc, type, grade, subject, part, source)
+
+        vectorstore = create_embeddings(documents, type, grade, subject)
+
+    return toc
+
+def add_metadata(chunks, toc, type, grade, subject, part, source):
+    
+    page_with_chapter = chapter_of_the_page(toc)
+
+    for chunk in chunks:
+        chunk.metadata['source'] = source
+        chunk.metadata['type'] = type
+        chunk.metadata['grade'] = grade
+        chunk.metadata['subject'] = subject
+        chunk.metadata['part'] = part
+
+        page = chunk.metadata['page']
+        if page in page_with_chapter:
+            chunk.metadata['chapter'] = page_with_chapter[page]      
+    return chunks
+
+    
+
+def chapter_of_the_page(toc):
+    chapter_of_page = {}
+    for chapter in toc:
+        for page in range(chapter['start'], chapter['end']+1):
+            chapter_of_page[page] = chapter['chapter']
+    return chapter_of_page
+        
+     
+def add_chapter_end_page(toc, final_page):
+    for index, chapter in enumerate(toc):
+        if index < len(toc) - 1:
+            chapter['end'] = toc[index + 1]['start'] - 1
+        else:
+            chapter['end'] = final_page
+
+    return toc
 

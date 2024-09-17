@@ -111,4 +111,20 @@ public class AssignmentController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @PreAuthorize("hasRole('STUDENT')")
+    @PostMapping("/{assignmentId}/question/{quizId}/answer")
+    public ResponseEntity<String> submitAnswer(@PathVariable String assignmentId, @PathVariable String quizId,
+                                               @RequestParam String providedAnswer) {
+        try {
+            String email = UserUtil.getCurrentUserEmail();
+            StudentDto student = studentService.getStudentByEmail(email);
+
+            assignmentService.submitAnswer(assignmentId, quizId, student.getUserId(), providedAnswer);
+
+            return ResponseEntity.ok("Answer submitted and moved to the next question");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }

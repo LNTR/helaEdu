@@ -1,14 +1,17 @@
 package com.helaedu.website.dto;
 
+import com.helaedu.website.entity.AssignmentQuestion;
+import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -20,34 +23,18 @@ public class AssignmentDto {
     @NotEmpty(message = "Title is required")
     private String title;
 
-
-
-    @NotEmpty(message="Due date is required")
-    private String dueDate;
-
-
     @NotEmpty(message = "Instructions are required")
     private String instructions;
 
-    private Integer noOfQuestions;
+    @NotNull(message = "Total time cannot be null")
+    @Positive(message = "Total time must be greater than zero")
+    private Long totalTime;
 
-    @NotEmpty(message = "time period is required")
-    private String totalTime;
-
-
-    private String publishedTimestamp;
+    private boolean started;
+    private Map<String, Double> studentMarks;
+    private Map<String, Long> studentRemainingTimes;
+    private Long publishedTimestamp;
+    private Long EndedTimestamp;
     private String userId;
-    private List<AssignmentQuizDto> quizzes = new ArrayList<>();
-
-
-
-    @Getter
-    @Setter
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class QuizDto {
-        private String questionText;
-        private List<String> options;
-        private String correctAnswer;
-    }
+    private List<AssignmentQuestion> quizzes;
 }

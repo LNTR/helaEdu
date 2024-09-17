@@ -6,11 +6,12 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
 @AllArgsConstructor
-public class AssignmentQuizDto {
+public class AssignmentQuestionDto {
     private String quizId;
 
     @NotEmpty(message = "Question is required")
@@ -21,5 +22,11 @@ public class AssignmentQuizDto {
     @NotEmpty(message = "Correct answer is required")
     private String correctAnswer;
 
-    private String assignmentId; // to link it with the assignment
+    //userId, provided answer
+    private Map<String, String> givenAnswers;
+
+    private String assignmentId;
+
+    @NotEmpty(message = "Marks is required")
+    private int marks;
 }

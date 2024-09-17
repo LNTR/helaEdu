@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import ProfilePhoto from '@/assets/img/articles/profile.jpg';
-import { currentAdmin, addProfileImageToAdmin } from '@services/AdminService'; 
+import { currentAdmin, addProfileImageToAdmin, updateAdmin } from '@services/AdminService'; 
 import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPencil } from '@fortawesome/free-solid-svg-icons';
+import ProfileImagePopup from '@components/admin/ProfileImagePopup';
+import EditPasswordPopup from '@components/admin/EditPasswordPopup';
+import EditProfilePopup from '@components/admin/EditProfilePopup';
 
 const AdminDetails = () => {
   const authHeader = useAuthHeader();
@@ -11,49 +13,60 @@ const AdminDetails = () => {
     Authorization: authHeader,
   };
 
-  const [profileImage, setProfileImage] = useState(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const [previewSrc, setPreviewSrc] = useState(ProfilePhoto);
+  const [isProfilePopupOpen, setIsProfilePopupOpen] = useState(false);
+  const [isPasswordPopupOpen, setIsPasswordPopupOpen] = useState(false);
   const [formData, setFormData] = useState({
-    username: '',
+    firstName: '',
+    lastName: '',
     email: '',
     password: '',
     currentPassword: '',
     newPassword: '',
     confirmNewPassword: '',
+    profilePictureUrl: '', 
   });
-  const [isEditing, setIsEditing] = useState(false);
-  const [isEditingPassword, setIsEditingPassword] = useState(false);
+
+  
   const [loading, setLoading] = useState(true); 
 
   useEffect(() => {
     const fetchAdminDetails = async () => {
       try {
         const adminData = await currentAdmin(headers);
-        setFormData({
-          username: adminData.firstname,
-          email: adminData.email,
-          password: '',
-          currentPassword: '',
-          newPassword: '',
-          confirmNewPassword: '',
-        });
+        console.log('Fetched Admin Data:', adminData);
+        setFormData((prevData) => ({
+          ...prevData,
+          firstName: prevData.firstName || adminData.data.firstName,
+          lastName: prevData.lastName || adminData.data.lastName,
+          email: adminData.data.email,
+          password:adminData.data.password,
+          profilePictureUrl: adminData.data.profilePictureUrl,
+        }));
+  
         setLoading(false);
       } catch (error) {
         console.error('Error fetching admin details:', error);
         setLoading(false);
       }
     };
-
-    fetchAdminDetails();
-  }, [headers]);
-
-  const handleProfileImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const src = URL.createObjectURL(file);
-      setPreviewSrc(src);
-      setProfileImage(file);
+  
+    if (loading) {
+      fetchAdminDetails();
+    }
+  }, [loading, headers]); 
+  
+  const handleSaveImage = async (imageFile) => {
+    const formDataToSubmit = new FormData();
+    formDataToSubmit.append('profilePicture', imageFile); 
+    formDataToSubmit.append('email', formData.email); 
+  
+    try {
+      const response = await addProfileImageToAdmin(formData.email, formDataToSubmit, headers);
+      console.log('Image uploaded successfully:', response.data);
+      window.location.reload(); 
+    } catch (error) {
+      console.error('Error uploading image:', error);
     }
   };
 
@@ -65,114 +78,57 @@ const AdminDetails = () => {
     setIsPopupOpen(false);
   };
 
-  const saveImage = async (e) => {
-    e.preventDefault();
-    if (!profileImage) {
-      alert("Please select an image before uploading.");
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append('profilePicture', profileImage);
-    formData.append('email', formData.email);
-
+  const handleProfileSave = async (updatedData) => {
     try {
-      const response = await addProfileImageToAdmin(formData.email, formData, headers);
-      console.log('Image uploaded successfully:', response.data);
+      await updateAdmin(updatedData, headers);
+      alert("Edited successfully");
+      window.location.reload();
+
+    } catch (error) {
+      console.error('Error updating profile:', error);
+    }
+  };
+
+  const handlePasswordSave = async (passwordData) => {
+    try {
+      await updateAdminPassword(formData.email, passwordData, headers);
       window.location.reload();
     } catch (error) {
-      console.error('Error uploading image:', error);
+      console.error('Error updating password:', error);
     }
   };
 
-  const handleInputChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleEdit = () => {
-    setIsEditing(!isEditing);
-  };
-
-  const handlePasswordEdit = () => {
-    setIsEditingPassword(!isEditingPassword);
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('Form Data:', formData);
-  };
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  if (loading) return <div>Loading...</div>;
+  
 
   return (
     <div className="my-20">
-      {isPopupOpen && (
-        <div className='fixed inset-0 flex items-center justify-center bg-gray1 z-50 bg-opacity-50'>
-          <div className='bg-white p-6 rounded-md shadow-md'>
-            <form onSubmit={saveImage}>
-              <div className="flex items-center space-x-6">
-                <div className="shrink-0">
-                  {previewSrc ? (
-                    <img
-                      id="preview_img"
-                      className="h-40 w-40 object-cover rounded-full"
-                      src={previewSrc}
-                      alt="Current profile photo"
-                    />
-                  ) : (
-                    <img
-                      id="preview_img"
-                      className="h-40 w-40 object-cover rounded-full"
-                      src={ProfilePhoto}
-                      alt="Current profile photo"
-                    />
-                  )}
-                </div>
-                <label className="block">
-                  <span className="sr-only text-2xl">Choose profile photo</span>
-                  <input
-                    type="file"
-                    onChange={handleProfileImageChange}
-                    className="block w-full text-2xl text-gray1
-                      file:mr-4 file:py-2 file:px-4
-                      file:rounded-full file:border-0
-                      file:text-2xl file:font-semibold
-                      file:bg-violet-50 file:text-violet-700
-                      hover:file:bg-violet-100"
-                    name="profilePicture"
-                  />
-                </label>
-              </div>
-              <div className="flex justify-end mt-4">
-                <button
-                  type="submit"
-                  className="bg-blue text-white px-2 py-1 rounded-md text-xl"
-                >
-                  Save
-                </button>
-                <button
-                  type="button"
-                  className="bg-red-500 text-white px-2 py-1 rounded-md text-xl ml-2"
-                  onClick={handleClosePopup}
-                >
-                  Close
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+      <EditProfilePopup
+        isOpen={isProfilePopupOpen}
+        onClose={() => setIsProfilePopupOpen(false)}
+        onSave={handleProfileSave}
+        initialData={formData}
+      />
+      <EditPasswordPopup
+        isOpen={isPasswordPopupOpen}
+        onClose={() => setIsPasswordPopupOpen(false)}
+        onSave={handlePasswordSave}
+      />
+      <ProfileImagePopup
+        isOpen={isPopupOpen}
+        onClose={handleClosePopup}
+        onSave={handleSaveImage}
+        initialPreviewSrc={formData.profilePictureUrl}
+      />
 
       <div className="bg-white shadow-xl rounded-lg p-12">
         <div className="flex justify-start">
-          <div className="pl-28 w-1/3 flex flex-col justify-center relative">
-            <div className="relative">
+          <div className="pl-28 w-1/3 flex  flex-col justify-center relative">
+            <div className="relative z-10">
               <img
-                src={ProfilePhoto}
+                src={formData.profilePictureUrl}
                 alt="Profile Photo"
-                className="w-72 h-72 rounded-full object-cover shadow-xl"
+                className=" w-72 h-72 rounded-full object-cover shadow-xl"
               />
               <div
                 className="absolute bottom-4 right-20 left-11 bg-yellow p-3 rounded-full w-12 h-12 cursor-pointer"
@@ -184,94 +140,24 @@ const AdminDetails = () => {
           </div>
 
           <div className="w-2/3">
-            <form onSubmit={handleSubmit}>
-              {/* Username */}
-              <div className="mb-4">
-                <label className="block mb-2 text-2xl">Username</label>
-                <input
-                  type="text"
-                  name="username"
-                  value={formData.username}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue"
-                  disabled={!isEditing}
-                />
-              </div>
-
-              {/* Email */}
-              <div className="mb-4">
-                <label className="block mb-2 text-2xl">Email</label>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue"
-                  disabled
-                />
-              </div>
-
-              {/* Password Update Fields */}
-              {isEditingPassword && (
-                <>
-                  <div className="mb-4">
-                    <label className="block mb-2 text-2xl">Current Password</label>
-                    <input
-                      type="password"
-                      name="currentPassword"
-                      value={formData.currentPassword}
-                      onChange={handleInputChange}
-                      placeholder="Enter current password"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue"
-                    />
-                  </div>
-
-                  <div className="mb-4">
-                    <label className="block mb-2 text-2xl">New Password</label>
-                    <input
-                      type="password"
-                      name="newPassword"
-                      value={formData.newPassword}
-                      onChange={handleInputChange}
-                      placeholder="Enter new password"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue"
-                    />
-                  </div>
-
-                  <div className="mb-4">
-                    <label className="block mb-2 text-2xl">Confirm New Password</label>
-                    <input
-                      type="password"
-                      name="confirmNewPassword"
-                      value={formData.confirmNewPassword}
-                      onChange={handleInputChange}
-                      placeholder="Confirm new password"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue"
-                    />
-                  </div>
-                </>
-              )}
-
-              <div className="flex justify-between items-center mt-6">
-                <div className="flex justify-start items-center w-3/5">
-                  <button
-                    type="button"
-                    className="text-2xl bg-blue text-white px-5 py-2 rounded-md"
-                    onClick={handleEdit}
-                  >
-                    {isEditing ? 'Save' : 'Edit'}
-                  </button>
-
-                  <button
-                    type="button"
-                    className="ml-4 text-2xl bg-blue text-white px-5 py-2 rounded-md"
-                    onClick={handlePasswordEdit}
-                  >
-                    {isEditingPassword ? 'Save Password' : 'Edit Password'}
-                  </button>
-                </div>
-              </div>
-            </form>
+            <div className="mb-4">
+              <label className="block mb-2 text-2xl">First Name</label>
+              <input type="text" value={formData.firstName} className="w-full px-3 py-2 border rounded-md" disabled />
+            </div>
+            <div className="mb-4">
+              <label className="block mb-2 text-2xl">Last Name</label>
+              <input type="text" value={formData.lastName} className="w-full px-3 py-2 border rounded-md" disabled />
+            </div>
+            <div className="mb-4">
+              <label className="block mb-2 text-2xl">Email</label>
+              <input type="text" value={formData.email} className="w-full px-3 py-2 border rounded-md" disabled />
+            </div>
+            <div className="flex space-x-4">
+              <button onClick={() => setIsProfilePopupOpen(true)} className="bg-blue text-xl text-white px-4 py-2 rounded-md">Edit Profile</button>
+              <button onClick={() => setIsPasswordPopupOpen(true)} className="bg-gray-700 text-xl text-white px-4 py-2 rounded-md">Edit Password</button>
+            </div>
           </div>
+         
         </div>
       </div>
     </div>

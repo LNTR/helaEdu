@@ -56,7 +56,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 if (!admin.isEmailVerified()) {
                     throw new UsernameNotFoundException("Email not verified");
                 }
-                return new User(admin.getEmail(), admin.getPassword(),
+                return new CustomUserDetails(admin.getEmail(), admin.getPassword(), admin.getRole(), admin.getProfilePictureUrl(),
                         Collections.singletonList(new SimpleGrantedAuthority(admin.getRole())));
             }
 

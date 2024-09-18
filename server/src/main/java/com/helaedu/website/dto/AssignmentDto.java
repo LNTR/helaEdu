@@ -26,29 +26,15 @@ public class AssignmentDto {
     @NotEmpty(message = "Instructions are required")
     private String instructions;
 
-    @NotNull(message = "Open time cannot be null")
-    @Positive(message = "Open time must be greater than zero")
-    private Long openTime;
-
-    @NotNull(message = "Assignment time cannot be null")
-    @Positive(message = "Assignment time must be greater than zero")
-    private Long assignmentTime;
-
-    private Long remainingTime;
+    @NotNull(message = "Total time cannot be null")
+    @Positive(message = "Total time must be greater than zero")
+    private Long totalTime;
 
     private boolean started;
     private Map<String, Double> studentMarks;
     private Map<String, Long> studentRemainingTimes;
-
     private Long publishedTimestamp;
+    private Long EndedTimestamp;
     private String userId;
     private List<AssignmentQuestion> quizzes;
-
-    @AssertTrue(message = "Open time must be greater than assignment time")
-    public boolean isOpenTimeGreaterThanAssignmentTime() {
-        if (openTime != null && assignmentTime != null) {
-            return openTime > assignmentTime;
-        }
-        return true;
-    }
 }

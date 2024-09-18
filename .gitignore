@@ -43,5 +43,10 @@ __pycache__/
 */Activate.ps1
 *.pyc 
 **/__pycache__/*
+<<<<<<< master
 **/firebase-service-account.json
+=======
+
+/resources
+>>>>>>> chatbot-backend
 **/credentials.json

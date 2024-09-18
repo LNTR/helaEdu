@@ -29,8 +29,6 @@
 *.Dockerfile
 docker-compose.yml
 compose.yml
-*/__pycache__
-*/__pycache__/*
 
 
 
@@ -44,6 +42,6 @@ __pycache__/
 */activate.bat
 */Activate.ps1
 *.pyc 
-__pycache__/
-*/*/__pycache__/*
+**/__pycache__/*
 **/firebase-service-account.json
+**/credentials.json

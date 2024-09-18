@@ -16,12 +16,16 @@ import java.util.List;
 @AllArgsConstructor
 public class ArticleDto {
     private String articleId;
+    private String cluster;
+
 
     @NotEmpty(message = "Title is required")
     private String title;
 
     @NotEmpty(message = "Content is required")
     private String content;
+
+
 //    @NotEmpty(message = "An image is required")
     private String imageRef;
 
@@ -32,6 +36,7 @@ public class ArticleDto {
     private String status;
     private String reviewedModeratorId;
     private String rejectedReason;
+
 
     private String userId;
     

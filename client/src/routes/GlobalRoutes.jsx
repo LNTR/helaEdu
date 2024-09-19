@@ -34,6 +34,9 @@ import Reports from "@pages/admin/Reports";
 import ModDashboard from "@pages/profiles/ModDashboard";
 import HeroLanding from "@pages/landing/HeroLanding";
 import PremiumPlan from "@pages/landing/PremiumPlan";
+import ReputationPoints from "@pages/reputation/ReputationPoints";
+import Summary from "@components/reputation/Summary";
+import Votes from "@pages/reputation/Votes";
 
 function GlobalRoutes() {
   return (
@@ -78,9 +81,8 @@ function GlobalRoutes() {
       <Route path="/reputationPoints" element={<ReputationPoints />} />
       <Route path="/summary" element={<Summary />} />
       <Route path="/votes" element={<Votes />} />
-      <Route path="/comments" element={<Comments />} />
-      <Route path="/badges" element={<Badges />} />
-      <Route path="/reviewQuizzes" element={<ReviewdQuiz />} />
+      {/* <Route path="/comments" element={<Comments />} /> */}
+      <Route path="/reviewQuizzes" element={<ReviewQuiz />} />
     </Routes>
   );
 }

@@ -20,6 +20,8 @@ public class ArticleDto {
     private String title;
     @NotEmpty(message = "Content is required")
     private String content;
+
+
 //    @NotEmpty(message = "An image is required")
     private String imageRef;
     private List<String> additionalFilesRefs;

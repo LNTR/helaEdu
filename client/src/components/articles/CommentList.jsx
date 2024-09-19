@@ -1,25 +1,25 @@
-import React, { useState } from 'react';
-import Comments from '@components/articles/Comments';
-import AddComment from './AddComment';
-import Profile from '@assets/img/articles/profile.jpg'
+import React, { useState } from "react";
+import Comments from "@components/articles/Comments";
+import AddComment from "./AddComment";
+import Profile from "@assets/img/articles/profile.jpg";
 
 const commentsData = [
   {
-    author: 'M.Perera',
-    date: '20 hours ago',
-    text: 'Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it.',
+    author: "M.Perera",
+    date: "20 hours ago",
+    text: "Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it.",
     avatar: Profile,
     replies: [
       {
-        author: 'J.Doe',
-        date: '18 hours ago',
-        text: 'This is a reply to the original comment. Lorem Ipsum is not simply random text.',
+        author: "J.Doe",
+        date: "18 hours ago",
+        text: "This is a reply to the original comment. Lorem Ipsum is not simply random text.",
         avatar: Profile,
         replies: [
           {
-            author: 'A.Smith',
-            date: '16 hours ago',
-            text: 'This is a nested reply. Lorem Ipsum is not simply random text.',
+            author: "A.Smith",
+            date: "16 hours ago",
+            text: "This is a nested reply. Lorem Ipsum is not simply random text.",
             avatar: Profile,
             replies: [],
           },
@@ -28,9 +28,9 @@ const commentsData = [
     ],
   },
   {
-    author: 'S.Jones',
-    date: '22 hours ago',
-    text: 'Another comment without replies. Lorem Ipsum is not simply random text.',
+    author: "S.Jones",
+    date: "22 hours ago",
+    text: "Another comment without replies. Lorem Ipsum is not simply random text.",
     avatar: Profile,
     replies: [],
   },
@@ -44,10 +44,10 @@ function CommentList() {
     const newComments = [
       ...comments,
       {
-        author: 'M.Perera',
-        date: 'Just now',
+        author: "M.Perera",
+        date: "Just now",
         text: commentText,
-        avatar: {Profile},
+        avatar: { Profile },
         replies: [],
       },
     ];
@@ -59,10 +59,10 @@ function CommentList() {
     // For simplicity, this example just adds a reply to the first comment
     const newComments = [...comments];
     newComments[0].replies.push({
-      author: 'M.Perera',
-      date: 'Just now',
+      author: "M.Perera",
+      date: "Just now",
       text: replyText,
-      avatar: {Profile},
+      avatar: { Profile },
       replies: [],
     });
     setComments(newComments);
@@ -72,7 +72,8 @@ function CommentList() {
   return (
     <div className="m-12 mt-10">
       <h1>Discussion</h1>
-      <hr className="border-yellow border-t-4 w-56"></hr><br></br>
+      <hr className="border-yellow border-t-4 w-56"></hr>
+      <br></br>
       {comments.map((comment, index) => (
         <Comments
           key={index}

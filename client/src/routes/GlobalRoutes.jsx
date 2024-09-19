@@ -8,11 +8,9 @@ import CreateAssignments from "@pages/assignments/CreateAssignments";
 import QuizFormat from "@pages/assignments/QuizFormat";
 import TProfile from "@pages/profiles/TProfile";
 import SProfile from "@pages/profiles/SProfile";
-
 import LeaderBoard from "@pages/leaderboard/LeaderBoard";
 import History from "@pages/quizes/History";
 import Friends from "@pages/quizes/Friends";
-
 import AllNotes from "@pages/personalNotes/AllNotes";
 import NewNote from "@pages/personalNotes/NewNote";
 import Dashboard from "@pages/admin/Dashboard";
@@ -35,14 +33,20 @@ import ModDashboard from "@pages/profiles/ModDashboard";
 import HeroLanding from "@pages/landing/HeroLanding";
 import PremiumPlan from "@pages/landing/PremiumPlan";
 import ReputationPoints from "@pages/reputation/ReputationPoints";
-import Summary from "@components/reputation/Summary";
+import Summary from "@pages/reputation/Summary";
 import Votes from "@pages/reputation/Votes";
+import Comments from "@pages/reputation/Comments";
+import Badges from "@pages/reputation/Badges";
+import ReviewdQuiz from "@pages/assignments/ReviewdQuiz";
+import QuestionsList from "@pages/assignments/QuestionsList";
+import Complaints from "@pages/admin/Complaints";
+import QuizA from "@pages/attemptAssignment/Quiz";
+
 
 function GlobalRoutes() {
   return (
     <Routes>
       <Route path="/" element={<HeroLanding />} />
-
       <Route path="/auth" element={<Auth />} />
       <Route path="/quiz" element={<QuizHome />} />
       <Route path="/quiz/:subject" element={<Quiz />} />
@@ -54,14 +58,13 @@ function GlobalRoutes() {
       <Route path="/sProfile" element={<SProfile />} />
       <Route path="/createAssignments" element={<CreateAssignments />} />
 
-      <Route path="/quizFormat" element={<QuizFormat />} />
+      <Route path="/quizFormat/:assignmentId" element={<QuizFormat />} />
       <Route path="/test" element={<Test />} />
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/moderatorDetails" element={<ModeratorDetails />} />
       {/* <Route path="/moderatorManagement" element={<ModeratorManagement />} /> */}
       <Route path="/notifications" element={<Notifications />} />
-      {/* <Route path="/approveTeachers" element={<ApproveTeachers />} /> */}
-      {/* <Route path="/topTeachers" element={<TopTeachers />} /> */}
+    
       <Route
         path="/viewArticleMyself/:articleId"
         element={<ViewArticleMyself />}
@@ -78,11 +81,16 @@ function GlobalRoutes() {
       <Route path="/notes/new" element={<NewNote />} />
       <Route path="/land" element={<HeroLanding />} />
       <Route path="/premiumPlan" element={<PremiumPlan />} />
-      <Route path="/reputationPoints" element={<ReputationPoints />} />
-      <Route path="/summary" element={<Summary />} />
-      <Route path="/votes" element={<Votes />} />
-      {/* <Route path="/comments" element={<Comments />} /> */}
-      <Route path="/reviewQuizzes" element={<ReviewQuiz />} />
+      <Route path="/reputationPoints" element={<ReputationPoints/>} />
+      <Route path="/summary" element={<Summary/>} />
+      <Route path="/votes" element={<Votes/>} />
+      <Route path="/comments" element={<Comments/>} />
+      <Route path="/badges" element={<Badges/>} />
+      <Route path="/reviewQuizzes" element={<ReviewdQuiz/>} />
+      <Route path="/questionList" element={<QuestionsList/>}/>
+      <Route path="/complaints" element={<Complaints/>}/>
+      <Route path="/quizStart/:assignmentId" element={<QuizA/>}/>
+
     </Routes>
   );
 }

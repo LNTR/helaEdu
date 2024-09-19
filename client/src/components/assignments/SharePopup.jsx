@@ -1,8 +1,9 @@
 // SharePopup.js
-import React from 'react';
+import React , {useState} from 'react';
 import QR from "@assets/img/assignments/QR.png"
+import { QRCodeCanvas } from "qrcode.react";
 
-function SharePopup({ closePopup }) {
+function SharePopup({ closePopup ,assignmentId }) {
     const teachers = [
         { email: 'userd@gmail.com'},
         { email: 'kasun3435@gmail.com'},
@@ -10,31 +11,42 @@ function SharePopup({ closePopup }) {
         { email: 'helor56@gmail.com'},
         
       ];
+      const [copied, setCopied] = useState(false);
+     
+      const baseURL = `${import.meta.env.VITE_FRONTEND_API_BASE_URL}/quizStart/`;
+      const assignmentURL = `${baseURL}${assignmentId}`;
+      const copyToClipboard = () => {
+        navigator.clipboard.writeText(assignmentURL);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      };
   return (
     <div className='fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 p-10'>
       <div className='bg-white rounded-lg p-6 '>
         <div className='flex justify-between mb-4'>
           <div className='w-1/2 pr-4'>
-            {/* <h2 className='text-3xl mb-4'>Your Assignment is published</h2> */}
+            
+
             <div className=' p-2  mb-4'>
-                <span className='text-xl m-2'>Assignment Link</span>
+                <span className='text-xl '>Assignment Link</span>
                 <div className='flex justify-between  mt-7'>
                     <div className='w-10/12 mx-3' >
                         <input
                             type='text'
-                            value='sales.untitledui.com'
+                            value={assignmentURL}
                             readOnly
                             className='w-full border border-blue p-3 rounded-lg '
                         />
                     </div>
-                    <div className='w-2/12'><button className='text-white bg-blue  text-xl px-6 py-3 rounded-lg '>Copy</button></div>
+                    <div className='w-2/12'><button onClick={copyToClipboard} className='text-white bg-blue  text-xl px-6 py-3 rounded-lg '>{copied ? "Copied" : "Copy"}</button></div>
                 </div>
               
               
             </div>
             <p className='mb-4'>Scan to open in Assignment</p>
             <div className=' flex justify-center' >
-                <img src={QR} alt='QR Code' className='w-96' />
+              
+                <QRCodeCanvas value={assignmentURL} className='w-128' />
             </div>
             
           </div>
@@ -65,7 +77,7 @@ function SharePopup({ closePopup }) {
                                     </div>
 
                                 </div>
-                                <div className='flex-1 mx-4 bg-gray-400 p-2 rounded-lg flex-1'>
+                                <div className='flex-1 mx-4 bg-gray-400 p-2 rounded-lg '>
                                     <p className='text-sm'>Invite Sent</p>
                                 </div>
 

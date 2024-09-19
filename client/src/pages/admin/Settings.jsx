@@ -2,10 +2,11 @@ import React from "react";
 import { Header, Footer } from "@/components/common";
 import Sidebar from "@/components/admin/Sidebar";
 import Profile from "@/components/admin/Profile";
-import Password from "@/components/admin/Password";
 import ProfileDeletion from "@/components/admin/ProfileDeletion";
 
+
 const Settings = () => {
+
   return (
   
     <>

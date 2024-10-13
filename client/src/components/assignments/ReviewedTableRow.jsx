@@ -1,16 +1,19 @@
 import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faSearch } from '@fortawesome/free-solid-svg-icons';
+import Profile from '@assets/img/articles/profile.jpg';
+import { Link } from 'react-router-dom';
 export default function ReviewedTableRow({ name,email,score }) {
   return (
     <div>
       <div>
      
-     <div className='border border-blue rounded-3xl  mx-auto my-4 px-7 py-4'>
+     <div className='border border-blue rounded-3xl  mx-auto my-4 px-7 py-3'>
        <div className='flex justify-between items-center'>
         
-         <div className='w-1/4 text-left '>
-           <p className='text-2xl'>{name}</p>
+         <div className='w-1/4 text-left flex justify-start'>
+           <img src={Profile} className='w-14 h-14 rounded-full'/>
+           <p className='text-2xl pt-4'> {name}</p>
          </div>        
          <div className='w-1/4 text-left  '>
            <p className='text-2xl'>{email}</p>
@@ -20,9 +23,13 @@ export default function ReviewedTableRow({ name,email,score }) {
          </div>
         
          <div className=' w-1/4 flex justify-center'>
-           
-          <button className='bg-blue text-white text-xl rounded-xl px-4 py-1'>Reviewed</button>
-           <FontAwesomeIcon icon={faSearch} className='text-2xl m-2 hover:text-yellow hover:translate-x-1' />
+        
+            <button className='bg-blue text-white text-xl rounded-xl px-4 py-1 mr-7'>Reviewed</button>
+       
+          <Link to="/questionList" className='bg-blue text-white text-xl rounded-xl px-4 py-1' >
+             view
+          </Link>
+         
           
          </div>
        </div>

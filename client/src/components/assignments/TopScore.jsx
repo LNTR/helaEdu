@@ -4,7 +4,7 @@ export default function TopScore() {
   return (
     <div>
             <h3 className="text-4xl  mb-4">Top Scores</h3>
-              <div className='justify-center mt-5'>
+              <div className='justify-center mt-14'>
                <div className='rounded-2xl border border-blue w-3/4 mx-40 h-20 flex justify-start px-5 py-2 my-3'>
                     <div className='w-14 mr-10 h-14 p-2 rounded-full bg-blue text-white'><p>1</p></div>
                     <div className='w-3/5 flex justify-start'>

@@ -47,7 +47,8 @@ public class ArticleService {
                 articleDto.getReviewedModeratorId(),
                 articleDto.getRejectedReason(),
                 articleDto.getUserId(),
-                new ArrayList<>()
+                new ArrayList<>(),
+                null
         );
 
         return articleRepository.createArticle(article);
@@ -101,7 +102,8 @@ public class ArticleService {
                                 article.getReviewedModeratorId(),
                                 article.getRejectedReason(),
                                 article.getUserId(),
-                                article.getUpvote()
+                                article.getUpvote(),
+                                article.getCluster()
                         )
                 )
                 .collect(Collectors.toList());
@@ -123,7 +125,8 @@ public class ArticleService {
                     article.getReviewedModeratorId(),
                     article.getRejectedReason(),
                     article.getUserId(),
-                    article.getUpvote()
+                    article.getUpvote(),
+                    article.getCluster()
             );
         }
         return null;
@@ -181,7 +184,8 @@ public class ArticleService {
                         article.getReviewedModeratorId(),
                         article.getRejectedReason(),
                         article.getUserId(),
-                        article.getUpvote()
+                        article.getUpvote(),
+                        article.getCluster()
                 )
         ).collect(Collectors.toList());
     }
@@ -202,7 +206,8 @@ public class ArticleService {
                         article.getReviewedModeratorId(),
                         article.getRejectedReason(),
                         article.getUserId(),
-                        article.getUpvote()
+                        article.getUpvote(),
+                        article.getCluster()
                 )
         ).collect(Collectors.toList());
     }
@@ -231,7 +236,8 @@ public class ArticleService {
                                 article.getReviewedModeratorId(),
                                 article.getRejectedReason(),
                                 article.getUserId(),
-                                article.getUpvote()
+                                article.getUpvote(),
+                                article.getCluster()
                         )
                 )
                 .collect(Collectors.toList());

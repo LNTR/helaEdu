@@ -24,8 +24,9 @@ public class AdminDto {
 
     @NotEmpty(message = "Password is required")
     private String password;
-
+    private String profilePictureUrl;
     private String regTimestamp;
+
     private String role;
     private boolean emailVerified;
 }

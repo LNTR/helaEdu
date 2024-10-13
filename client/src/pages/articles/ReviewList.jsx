@@ -5,10 +5,11 @@ import { pendingArticles } from "@services/ArticleService";
 import { getUserDetails } from "@services/TeacherService";
 import { Link } from "react-router-dom";
 import Sort from "@components/articles/Sort";
-import Sidebar from "@components/teacher_com/ModeratorSidebar";
+import Sidebar from "@components/moderator_com/ModeratorSidebar";
 
 export default function reviewList() {
   const [articles, setArticles] = useState([]); // Initialize articles state
+  const [sidebar, setSidebar] = useState(false);
 
   useEffect(() => {
     const fetchApprovedArticles = async () => {
@@ -43,11 +44,8 @@ export default function reviewList() {
   return (
     <>
       <Header />
-      <div className="dashboard">
-        <div className="dashboard-wrapper mb-9">
-          <div className="sidebar-wrapper">
-            <Sidebar />
-          </div>
+      <div className="dashboard h-screen mx-auto" style={{ width: sidebar ? `calc(100vw - 384px)` : '100vw' }} onClick={() => setSidebar(false)}>
+          <Sidebar value={sidebar} setValue={setSidebar} />
           <div className="content-wrapper mx-32">
             <div className="flex ">
               <div className="my-16 ">
@@ -80,7 +78,7 @@ export default function reviewList() {
             </div>
           </div>
         </div>
-      </div>
+    
     </>
   );
 }

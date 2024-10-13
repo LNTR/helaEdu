@@ -6,10 +6,13 @@ export default function ArticleHead() {
   const grades = ['Grade 1', 'Grade 2', 'Grade 3', 'Grade 4', 'Grade 5'];
 
   return (
-    <div className='mt-10'>
-      <h1 className='text-center text-5xl font-bold '>Review Quizes</h1>
-      <hr className='my-4 border-yellow leading-8' />
-      <div className='flex justify-end items-center m-20'>
+    <div className='mx-64 mt-12 '>
+        <div className='m-10 h-1/5'>
+          <div className='s-topic'>Review Quizes</div>
+          <div className='n-text'>The following quizzes are required to to be review by Sunday 11:59 pm</div>
+          <hr className='my-4 border-yellow leading-8' />
+        </div>
+        <div className='flex justify-end items-center m-20'>
         <div className='flex space-x-4 text-sm'>
           <span className='text-gray text-3xl'>Sort By</span>
           <button className='text-xl px-6 py-2 rounded-lg border border-blue text-blue hover:bg-blue hover:text-white transition-colors'>
@@ -42,6 +45,8 @@ export default function ArticleHead() {
           </div>
         </div>
       </div>
-    </div>
+     </div>
+    
+
   );
 }

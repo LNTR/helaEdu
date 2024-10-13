@@ -1,53 +1,164 @@
-import React from 'react';
-import ProfilePhoto from '@/assets/img/articles/profile.jpg';
+import React, { useState, useEffect } from 'react';
+import { currentAdmin, addProfileImageToAdmin, updateAdmin } from '@services/AdminService'; 
+import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPencil } from '@fortawesome/free-solid-svg-icons';
+import ProfileImagePopup from '@components/admin/ProfileImagePopup';
+import EditPasswordPopup from '@components/admin/EditPasswordPopup';
+import EditProfilePopup from '@components/admin/EditProfilePopup';
 
 const AdminDetails = () => {
-  const admin = {
-    name: 'Pathumi Ahinsa', 
-    email: 'pathuahinsa@example.com',
-    role: 'Admin',
-    lastLogin: '2024-07-20',
-    phone: '+94 705760057',
-    address: '123 Main Street, Colombo,Sri Lanka',
-    profilePhoto: ProfilePhoto, 
+  const authHeader = useAuthHeader();
+  const headers = {
+    Authorization: authHeader,
   };
 
-  return (
-    <div className="flex justify-start items-start h-screen" style={{ marginLeft: '50px', marginTop: '50px' }}>
-      <div 
-        className="bg-white shadow-2xl rounded-lg p-12 w-[600px] h-[600px]" 
-        style={{ boxShadow: '0 15px 30px rgba(0, 0, 0, 0.3)', outline: '2px solid blue' }}
-      >
-        {/* Profile Photo and Name */}
-        <div className="flex flex-col items-center mb-8">
-          <img 
-            src={admin.profilePhoto} 
-            alt="Profile Photo" 
-            className="w-60 h-60 rounded-full object-cover border-4 border-blue-500"
-          />
-          <p className="text-3xl font-semibold mt-4">{admin.name}</p> {/* Display name below photo */}
-        </div>
-        
-        {/* Admin Details */}
-        <div className="text-left w-full">
-          <h2 className="text-4xl font-semibold text-gray-800 mb-6">Admin Details</h2>
-          <div className="text-gray-600 space-y-4"> {/* Increased gap between text items */}
-            <p className="text-2xl font-medium">Email: {admin.email}</p>
-            <p className="text-2xl font-medium">Role: {admin.role}</p>
-            <p className="text-2xl font-medium">Phone: {admin.phone}</p>
-            <p className="text-2xl font-medium">Address: {admin.address}</p>
-            
-            <p className="text-2xl font-medium">Last Login: {admin.lastLogin}</p>
-          </div>
-        </div>
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [isProfilePopupOpen, setIsProfilePopupOpen] = useState(false);
+  const [isPasswordPopupOpen, setIsPasswordPopupOpen] = useState(false);
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    currentPassword: '',
+    newPassword: '',
+    confirmNewPassword: '',
+    profilePictureUrl: '', 
+  });
 
-        {/* Edit Button */}
-        <button
-          onClick={() => alert('Edit functionality to be implemented')}
-          className="bg-blue-500 text-white px-6 py-2 rounded-lg text-xl mt-6"
-        >
-          Edit
-        </button>
+  
+  const [loading, setLoading] = useState(true); 
+
+  useEffect(() => {
+    const fetchAdminDetails = async () => {
+      try {
+        const adminData = await currentAdmin(headers);
+        console.log('Fetched Admin Data:', adminData);
+        setFormData((prevData) => ({
+          ...prevData,
+          firstName: prevData.firstName || adminData.data.firstName,
+          lastName: prevData.lastName || adminData.data.lastName,
+          email: adminData.data.email,
+          password:adminData.data.password,
+          profilePictureUrl: adminData.data.profilePictureUrl,
+        }));
+  
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching admin details:', error);
+        setLoading(false);
+      }
+    };
+  
+    if (loading) {
+      fetchAdminDetails();
+    }
+  }, [loading, headers]); 
+  
+  const handleSaveImage = async (imageFile) => {
+    const formDataToSubmit = new FormData();
+    formDataToSubmit.append('profilePicture', imageFile); 
+    formDataToSubmit.append('email', formData.email); 
+  
+    try {
+      const response = await addProfileImageToAdmin(formData.email, formDataToSubmit, headers);
+      console.log('Image uploaded successfully:', response.data);
+      window.location.reload(); 
+    } catch (error) {
+      console.error('Error uploading image:', error);
+    }
+  };
+
+  const handleEditClick = () => {
+    setIsPopupOpen(true);
+  };
+
+  const handleClosePopup = () => {
+    setIsPopupOpen(false);
+  };
+
+  const handleProfileSave = async (updatedData) => {
+    try {
+      await updateAdmin(updatedData, headers);
+      alert("Edited successfully");
+      window.location.reload();
+
+    } catch (error) {
+      console.error('Error updating profile:', error);
+    }
+  };
+
+  const handlePasswordSave = async (passwordData) => {
+    try {
+      await updateAdminPassword(formData.email, passwordData, headers);
+      window.location.reload();
+    } catch (error) {
+      console.error('Error updating password:', error);
+    }
+  };
+
+  if (loading) return <div>Loading...</div>;
+  
+
+  return (
+    <div className="my-20">
+      <EditProfilePopup
+        isOpen={isProfilePopupOpen}
+        onClose={() => setIsProfilePopupOpen(false)}
+        onSave={handleProfileSave}
+        initialData={formData}
+      />
+      <EditPasswordPopup
+        isOpen={isPasswordPopupOpen}
+        onClose={() => setIsPasswordPopupOpen(false)}
+        onSave={handlePasswordSave}
+      />
+      <ProfileImagePopup
+        isOpen={isPopupOpen}
+        onClose={handleClosePopup}
+        onSave={handleSaveImage}
+        initialPreviewSrc={formData.profilePictureUrl}
+      />
+
+      <div className="bg-white shadow-xl rounded-lg p-12">
+        <div className="flex justify-start">
+          <div className="pl-28 w-1/3 flex  flex-col justify-center relative">
+            <div className="relative z-10">
+              <img
+                src={formData.profilePictureUrl}
+                alt="Profile Photo"
+                className=" w-72 h-72 rounded-full object-cover shadow-xl"
+              />
+              <div
+                className="absolute bottom-4 right-20 left-11 bg-yellow p-3 rounded-full w-12 h-12 cursor-pointer"
+                onClick={handleEditClick}
+              >
+                <FontAwesomeIcon icon={faPencil} className="size-5" />
+              </div>
+            </div>
+          </div>
+
+          <div className="w-2/3">
+            <div className="mb-4">
+              <label className="block mb-2 text-2xl">First Name</label>
+              <input type="text" value={formData.firstName} className="w-full px-3 py-2 border rounded-md" disabled />
+            </div>
+            <div className="mb-4">
+              <label className="block mb-2 text-2xl">Last Name</label>
+              <input type="text" value={formData.lastName} className="w-full px-3 py-2 border rounded-md" disabled />
+            </div>
+            <div className="mb-4">
+              <label className="block mb-2 text-2xl">Email</label>
+              <input type="text" value={formData.email} className="w-full px-3 py-2 border rounded-md" disabled />
+            </div>
+            <div className="flex space-x-4">
+              <button onClick={() => setIsProfilePopupOpen(true)} className="bg-blue text-xl text-white px-4 py-2 rounded-md">Edit Profile</button>
+              <button onClick={() => setIsPasswordPopupOpen(true)} className="bg-gray-700 text-xl text-white px-4 py-2 rounded-md">Edit Password</button>
+            </div>
+          </div>
+         
+        </div>
       </div>
     </div>
   );

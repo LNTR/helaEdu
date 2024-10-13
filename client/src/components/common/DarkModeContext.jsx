@@ -12,6 +12,7 @@ const DarkModeProvider = ({ children }) => {
   useEffect(() => {
     if (darkMode) {
       document.documentElement.classList.add("dark");
+      console.log("dark");
     } else {
       document.documentElement.classList.remove("dark");
     }

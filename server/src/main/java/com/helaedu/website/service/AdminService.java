@@ -96,6 +96,7 @@ public class AdminService {
                                 admin.getLastName(),
                                 admin.getEmail(),
                                 admin.getPassword(),
+                                admin.getProfilePictureUrl(),
                                 admin.getRegTimestamp(),
                                 admin.getRole(),
                                 admin.isEmailVerified()
@@ -112,6 +113,7 @@ public class AdminService {
                     admin.getLastName(),
                     admin.getEmail(),
                     admin.getPassword(),
+                    admin.getProfilePictureUrl(),
                     admin.getRegTimestamp(),
                     admin.getRole(),
                     admin.isEmailVerified()
@@ -129,6 +131,7 @@ public class AdminService {
                     admin.getLastName(),
                     admin.getEmail(),
                     admin.getPassword(),
+                    admin.getProfilePictureUrl(),
                     admin.getRegTimestamp(),
                     admin.getRole(),
                     admin.isEmailVerified()

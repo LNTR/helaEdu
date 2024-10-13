@@ -29,10 +29,7 @@
 *.Dockerfile
 docker-compose.yml
 compose.yml
-*/__pycache__
-*/__pycache__/*
 
-**/resources
 
 
 
@@ -45,11 +42,18 @@ __pycache__/
 */activate.bat
 */Activate.ps1
 *.pyc 
+<<<<<<< HEAD
 __pycache__/
 */*/__pycache__/*
-<<<<<<< master
-**/firebase-service-account.json
 =======
+**/__pycache__/*
+<<<<<<< master
+>>>>>>> 30d0c34a8dc3c7124c8ab783a807dc22663f1e87
+**/firebase-service-account.json
 
 /resources
+<<<<<<< HEAD
+=======
 >>>>>>> chatbot-backend
+**/credentials.json
+>>>>>>> 30d0c34a8dc3c7124c8ab783a807dc22663f1e87

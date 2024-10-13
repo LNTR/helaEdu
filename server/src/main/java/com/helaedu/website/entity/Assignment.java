@@ -1,14 +1,12 @@
 package com.helaedu.website.entity;
 
-import com.helaedu.website.dto.AssignmentQuizDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -17,11 +15,13 @@ import java.util.List;
 public class Assignment {
     private String assignmentId;
     private String title;
-    private String dueDate;
     private String instructions;
-    private Integer noOfQuestions;
-    private String totalTime;
-    private String publishedTimestamp;
+    private Long totalTime;
+    private boolean started;
+    private Map<String, Double> studentMarks;
+    private Map<String, Long> studentRemainingTimes;
+    private Long publishedTimestamp;
+    private Long endedTimestamp;
     private String userId;
-    private List<AssignmentQuizDto> quizzes = new ArrayList<>();
+    private List<AssignmentQuestion> quizzes;
 }

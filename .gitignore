@@ -35,7 +35,7 @@ compose.yml
 
 */.env
 
-/textbooks
+/resources
 __pycache__/
 .DS_Store
 

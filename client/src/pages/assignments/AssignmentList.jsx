@@ -66,16 +66,6 @@ export default function AssignmentList() {
     return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
   };
 
-  const formatTime = (time) => {
-    const hours = Math.floor(time / (1000 * 60 * 60));
-    const minutes = Math.floor((time % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((time % (1000 * 60)) / 1000);
-    const formattedHours = hours < 10 ? `0${hours}` : hours;
-    const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
-    const formattedSeconds = seconds < 10 ? `0${seconds}` : seconds;
-    return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
-  };
-
   const currentRows = assignment
     .slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)
     .map((data, index) => (

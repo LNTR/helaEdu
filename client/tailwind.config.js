@@ -7,11 +7,6 @@ export default {
         128: "32rem",
       },
       colors: {
-        // blue: "#0A6CF5",
-        // yellow: "#F5A711",
-        // white: "#FFFFFF",
-        // black: "#000000",
-        // blue2: '#B5D2FC'
         blue: "var(--color-primary)",
         yellow: "var(--color-secondary)",
         white: "var(--color-bg)",
@@ -19,7 +14,6 @@ export default {
         blue2: "var(--color-accent)",
         gray1: "var(--color-dark-gray)",
         gray2: "var(--color-light-gray)",
-
       },
       screens: {
         mw: { max: "800px" },
@@ -41,6 +35,6 @@ export default {
   plugins: [require("daisyui"), 
     require('tailwindcss-animated')
   ],
-  darkMode: "class", // Enable dark mode support
+  darkMode: "class"
 };
 

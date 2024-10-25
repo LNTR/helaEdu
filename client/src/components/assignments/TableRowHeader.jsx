@@ -18,7 +18,7 @@ export default function TableRowHeader() {
           <div className='w-1/12 text-left'>
             <p className='text-2xl'>Total Time</p>
           </div>
-          <div className='flex justify-center w-3/12 text-left'>
+          <div className='flex justify-center w-4/12 text-left'>
             <p className='text-2xl'>Actions</p>
           </div>
          

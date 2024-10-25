@@ -151,13 +151,15 @@ public class AdminController {
 
     @PutMapping("/me")
     public ResponseEntity<Object> updateCurrentAdmin(@Valid @RequestBody AdminDto adminDto, BindingResult bindingResult) throws ExecutionException, InterruptedException {
-        String userId = UserUtil.getCurrentUserEmail();
-        return updateAdmin(userId, adminDto, bindingResult);
+        String email= UserUtil.getCurrentUserEmail();
+        AdminDto admin=adminService.getAdminByEmail(email);
+        System.out.println(admin.getUserId());
+        return updateAdmin(admin.getUserId(), adminDto, bindingResult);
     }
-
     @DeleteMapping("/me")
     public ResponseEntity<Object> deleteCurrentAdmin() throws ExecutionException, InterruptedException {
-        String userId = UserUtil.getCurrentUserEmail();
-        return deleteAdmin(userId);
+        String email= UserUtil.getCurrentUserEmail();
+        AdminDto admin=adminService.getAdminByEmail(email);
+        return deleteAdmin(admin.getUserId());
     }
 }

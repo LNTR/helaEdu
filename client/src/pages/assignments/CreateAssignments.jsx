@@ -1,46 +1,52 @@
 import { Header, Footer } from "@components/common";
 import React , {useState,useEffect} from "react";
-import { Link } from "react-router-dom";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import { useNavigate } from "react-router-dom";
 import { createAssignment } from "@services/AssignmentService";
+
 export default function CreateAssignments() {
 
   const [title,setTitle]=useState("");
   const [instructions,setInstruction]=useState("");
-  const [totalTime,setTotalTime]=useState("");
+  const [hours, setHours] = useState(0);
+  const [minutes, setMinutes] = useState(0);
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const authHeader = useAuthHeader;
   const headers = {
     Authorization: authHeader(),
   };
+
   const handleTitle = (e) => {
     setTitle(e.target.value);
   };
   const handleInstruction = (e) => {
     setInstruction(e.target.value);
   };
-  const handleTotalTime = (e) => {
-    setTotalTime(e.target.value);
+  const handleHours = (e) => {
+    setHours(e.target.value);
+  };
+  const handleMinutes = (e) => {
+    setMinutes(e.target.value);
   };
 
   const saveAssignment = async (e) => {
     e.preventDefault();
+    if (!title.trim() || !instructions.trim() || (hours === 0 && minutes === 0)) {
 
-    if (!title.trim() || !instructions.trim() || !totalTime.trim()) {
       setError("All the fileds are required.");
       return;
     }
-
+    const formattedTotalTime =(hours*60*60)+(minutes*60) ;
     const assignment = {
       title,
       instructions,
-      totalTime,
+      totalTime: formattedTotalTime,
     };
-
+    console.log(assignment);
     try {
       const response = await createAssignment(assignment, headers);
+      // const response = await createAssignment(assignment);
       console.log("Create Assignment Response:", response);
       const assignmentId = response.data;
       navigate(`/quizFormat/${assignmentId}`);
@@ -76,7 +82,7 @@ export default function CreateAssignments() {
             </label>
             <textarea
               placeholder="Enter instructions"
-              className="border border-blue h-40 rounded-lg w-full px-4 text-xl"
+              className="border border-blue h-40 rounded-lg w-full px-4 py-4 text-xl"
               value={instructions}
                 onChange={handleInstruction}
                 name="instructions"
@@ -86,13 +92,13 @@ export default function CreateAssignments() {
           
             <div className="w-4/5">
               <label className="text-3xl block mb-2 ">Total Time</label>
-              <input
-                placeholder="Enter total time"
-                className="border border-blue h-16 rounded-lg w-full px-4 text-xl"
-                value={totalTime}
-                onChange={handleTotalTime}
-                name="totalTime"
-                required/>
+              <div className=" flex justify-start">
+                <input type="number" min="0" step="1"  id="hoursInput" placeholder="hours"className="border border-blue h-16 rounded-lg w-40 px-4 text-xl" value={hours} onChange={handleHours} required/>
+                <p className="text-3xl mx-6 py-4">:</p>
+                <input type="number" min="0" step="1"  max="59" id="minutesInput" placeholder="minutes" className="border border-blue h-16 rounded-lg w-40 px-4 text-xl" value={minutes} onChange={handleMinutes} required/>
+              
+            </div>
+
             </div>
             <div className="flex items-end">
               

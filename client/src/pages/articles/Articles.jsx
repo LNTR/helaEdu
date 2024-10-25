@@ -21,7 +21,7 @@ const Articles = () => {
         const articlesWithUserDetails = await Promise.all(
           articles.map(async (article) => {
             console.log(article.userId);
-            const userResponse = await getUserDetails(article.userId); // User ID is passed here
+            const userResponse = await getUserDetails(article.userId); 
             const userDetails = userResponse.data;
             return {
               ...article,
@@ -50,7 +50,6 @@ const Articles = () => {
       <Header />
       <div className="subject-catalog">
         <img className="catalog-img" src={banner} alt="" srcSet="" />
-
         <div className="">
           <ArticleHead />
           <div className="mx-44 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -71,9 +70,7 @@ const Articles = () => {
                 </Link>
               </div>
             ))}
-          </div>
-
-       
+          </div>       
           {visibleArticles < articles.length && (
             <div className="text-right mt-4">
               <button
@@ -90,5 +87,4 @@ const Articles = () => {
     </>
   );
 };
-
 export default Articles;

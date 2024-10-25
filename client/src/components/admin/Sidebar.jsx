@@ -72,6 +72,17 @@ const Sidebar = () => {
             Notifications
           </Link>
           <Link
+            to="/complaints"
+            className={`text-2xl flex items-center p-4 rounded transition-colors duration-300 ${
+              isActive("/complaints")
+                ? "bg-blue text-white"
+                : "hover:bg-gray-200 text-black"
+            }`}
+          >
+            <FontAwesomeIcon icon={faBell} className="mr-4" />
+            Complaints
+          </Link>
+          <Link
             to="/settings"
             className={`text-2xl flex items-center p-4 rounded transition-colors duration-300 ${
               isActive("/settings")

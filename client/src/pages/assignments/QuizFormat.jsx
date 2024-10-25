@@ -11,12 +11,15 @@ export default function QuizFormat() {
 
   const navigate = useNavigate();
   const params = useParams();
-  const assignmentId = params.assginmentId; 
+  const assignmentId = params.assginmentId;
 
-  console.log("Assignment ID:", assignmentId); 
-  
+  console.log("Assignment ID:", assignmentId);
+
   const addQuestion = () => {
-    setQuestions([...questions, { question: "", options: ["", "", "", ""], correctAnswer: "", marks: 0 }]);
+    setQuestions([
+      ...questions,
+      { question: "", options: ["", "", "", ""], correctAnswer: "", marks: 0 },
+    ]);
   };
 
   const removeQuestion = (index) => {
@@ -54,7 +57,7 @@ export default function QuizFormat() {
         const response = await addQuizzes(questions, assignmentId);
         if (response.status === 200) {
           console.log(response);
-          navigate("/assignmentList");
+          navigate("/assignment/assignmentList");
         }
       } else {
         console.error("Assignment ID is not defined.");

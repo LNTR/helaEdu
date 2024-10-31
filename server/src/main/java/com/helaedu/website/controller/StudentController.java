@@ -4,6 +4,7 @@ import com.google.firebase.auth.FirebaseAuthException;
 import com.helaedu.website.dto.*;
 import com.helaedu.website.service.NoteService;
 import com.helaedu.website.service.StudentService;
+import com.helaedu.website.service.SubjectService;
 import com.helaedu.website.service.SubscriptionService;
 import com.helaedu.website.util.UserUtil;
 import com.helaedu.website.util.RequestUtil;
@@ -30,10 +31,13 @@ public class StudentController {
     private final NoteService noteService;
     private final SubscriptionService subscriptionService;
 
-    public StudentController(StudentService studentService, NoteService noteService, SubscriptionService subscriptionService) {
+    private final SubjectService subjectService;
+
+    public StudentController(StudentService studentService, NoteService noteService, SubscriptionService subscriptionService, SubjectService subjectService) {
         this.studentService = studentService;
         this.noteService = noteService;
         this.subscriptionService = subscriptionService;
+        this.subjectService = subjectService;
     }
 
     @PostMapping("/create")
@@ -307,6 +311,32 @@ public class StudentController {
             return new ResponseEntity<>("Unsubscribed successfully", HttpStatus.OK);
         } catch (ExecutionException | InterruptedException e) {
             return new ResponseEntity<>("Error unsubscribing student", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("/enrollSubject")
+    public ResponseEntity<Object> enrollSubject(@RequestBody Map<String, String> requestBody) throws ExecutionException, InterruptedException{
+        String email = requestBody.get("email");
+        StudentDto studentDto = studentService.getStudentByEmail(email);
+        if(studentDto == null) {
+            ValidationErrorResponse errorResponse = new ValidationErrorResponse();
+            errorResponse.addViolation("UserId", "Student not found");
+            return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        }
+
+        String subjectId = requestBody.get("subjectId");
+        SubjectDto subjectDto = subjectService.getSubject(subjectId);
+        if(studentDto == null) {
+            ValidationErrorResponse errorResponse = new ValidationErrorResponse();
+            errorResponse.addViolation("SubjectId", "Subject not found");
+            return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        }
+
+        try {
+            studentService.enrollSubject(studentDto.getUserId(), subjectDto);
+            return new ResponseEntity<>("Enrolled successfully", HttpStatus.OK);
+        } catch (ExecutionException | InterruptedException e) {
+            return new ResponseEntity<>("Error enrolling student", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

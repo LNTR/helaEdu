@@ -3,7 +3,9 @@ package com.helaedu.website.service;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.UserRecord;
+import com.helaedu.website.dto.SubjectDto;
 import com.helaedu.website.dto.SubscriptionDto;
+import com.helaedu.website.entity.Subject;
 import com.helaedu.website.entity.Subscription;
 import com.helaedu.website.repository.SubscriptionRepository;
 import com.helaedu.website.util.UniqueIdGenerator;
@@ -20,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 
 import java.util.concurrent.ExecutionException;
@@ -66,6 +69,7 @@ public class StudentService {
                 Instant.now().toString(),
                 noteId,
                 studentDto.getSubscriptionId(),
+                new ArrayList<>(),
                 "ROLE_STUDENT",
                 null
         );
@@ -141,6 +145,7 @@ public class StudentService {
                                 student.getRegTimestamp(),
                                 student.getNoteId(),
                                 student.getSubscriptionId(),
+                                student.getEnrolledSubjects(),
                                 student.getRole(),
                                 student.isEmailVerified(),
                                 null
@@ -161,6 +166,7 @@ public class StudentService {
                         student.getRegTimestamp(),
                         student.getNoteId(),
                         student.getSubscriptionId(),
+                        student.getEnrolledSubjects(),
                         student.getRole(),
                         student.isEmailVerified(),
                         null
@@ -180,6 +186,7 @@ public class StudentService {
                     student.getRegTimestamp(),
                     student.getNoteId(),
                     student.getSubscriptionId(),
+                    student.getEnrolledSubjects(),
                     student.getRole(),
                     student.isEmailVerified(),
                     null
@@ -200,6 +207,7 @@ public class StudentService {
                     student.getRegTimestamp(),
                     student.getNoteId(),
                     student.getSubscriptionId(),
+                    student.getEnrolledSubjects(),
                     student.getRole(),
                     student.isEmailVerified(),
                     null
@@ -313,6 +321,14 @@ public class StudentService {
         studentRepository.updateStudent(userId, student);
     }
 
+    public void enrollSubject(String userId, SubjectDto subjectDto) throws ExecutionException, InterruptedException {
+        Student student = studentRepository.getStudentById(userId);
+        ArrayList<String> enrolledSubjects = new ArrayList<>();
+        enrolledSubjects.add(subjectDto.getSubjectId());
+        student.setEnrolledSubjects(enrolledSubjects);
+        studentRepository.updateStudent(userId, student);
+    }
+
     public List<StudentDto> getStudentsWithActiveSubscriptions() throws ExecutionException, InterruptedException {
         List<Student> students = studentRepository.getAllStudents();
         Instant now = Instant.now();
@@ -341,6 +357,7 @@ public class StudentService {
                         student.getRegTimestamp(),
                         student.getNoteId(),
                         student.getSubscriptionId(),
+                        student.getEnrolledSubjects(),
                         student.getRole(),
                         student.isEmailVerified(),
                         null

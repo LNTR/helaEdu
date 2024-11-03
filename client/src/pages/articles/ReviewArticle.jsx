@@ -1,18 +1,14 @@
-import { Footer } from "@components/common";
-import Header from "@components/common/Header";
-import React, { useState, useEffect } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFile } from "@fortawesome/free-solid-svg-icons";
-import { useParams, useNavigate } from "react-router-dom";
-import {
-  getArticleById,
-  approveArticle,
-  rejectArticle,
-} from "@/services/ArticleService";
-import Default from "@assets/img/articles/defaultArticle.jpg";
-import HTMLReactParser from "html-react-parser";
-import Sidebar from "@components/teacher_com/ModeratorSidebar";
-import { getUserDetails } from "@services/TeacherService";
+import { Footer } from '@components/common';
+import Header from '@components/common/Header';
+import React, { useState, useEffect } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFile } from '@fortawesome/free-solid-svg-icons';
+import { useParams, useNavigate } from 'react-router-dom';
+import { getArticleById, approveArticle, rejectArticle } from '@/services/ArticleService';
+import Default from '@assets/img/articles/defaultArticle.jpg';
+import HTMLReactParser from 'html-react-parser';
+import Sidebar from '@components/moderator_com/ModeratorSidebar';
+import { getUserDetails } from '@services/TeacherService';
 
 export default function ReviewArticle() {
   const { articleId } = useParams();

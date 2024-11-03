@@ -17,8 +17,13 @@ import Dashboard from "@pages/admin/Dashboard";
 import ModeratorDetails from "@pages/admin/ModeratorDetails";
 // import ModeratorManagement from "@pages/admin/ModeratorManagement";
 import Notifications from "@pages/admin/Notifications";
-import ReviewQuiz from "@pages/quizes/ReviewQuiz";
-import ReviewQuizList from "@pages/quizes/ReviewQuizList";
+
+import ReviewQuiz from "@pages/moderator/ReviewQuiz";
+import ReviewQuizList from "@pages/moderator/ReviewQuizList";
+import Resources from "@pages/moderator/Resources";
+import ModNotifications from "@pages/moderator/ModNotifications";
+import ModDashboard from "@pages/moderator/ModDashboard";
+
 
 // import ApproveTeachers from "@pages/admin/ApproveTeachers";
 // import TopTeachers from "@pages/admin/TopTeachers";
@@ -29,7 +34,6 @@ import Subject from "@pages/subjects/Subject";
 import UserManagement from "@pages/admin/UserManagement";
 import Settings from "@pages/admin/Settings";
 import Reports from "@pages/admin/Reports";
-import ModDashboard from "@pages/profiles/ModDashboard";
 import HeroLanding from "@pages/landing/HeroLanding";
 import PremiumPlan from "@pages/landing/PremiumPlan";
 import ReputationPoints from "@pages/reputation/ReputationPoints";
@@ -74,9 +78,13 @@ function GlobalRoutes() {
       <Route path="/Settings" element={<Settings />}></Route>
       <Route path="/Reports" element={<Reports />}></Route>
       <Route path="/subject/:subject" element={<Subject />} />
+
       <Route path="/reviewQuiz" element={<ReviewQuiz />} />
       <Route path="/reviewQuizList" element={<ReviewQuizList />} />
+      <Route path="/resources" element={<Resources />} />
       <Route path="/modDashboard" element={<ModDashboard />} />
+      <Route path="/modNotifications" element={<ModNotifications />} />
+      
       <Route path="/notes" element={<AllNotes />} />
       <Route path="/notes/new" element={<NewNote />} />
       <Route path="/land" element={<HeroLanding />} />

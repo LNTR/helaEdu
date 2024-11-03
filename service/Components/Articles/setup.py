@@ -26,18 +26,21 @@ def recreate_model():
     create_classifier(df)
 
 
-def _get_related_articles(cluster):
-    articles_req = Article.collection.filter(cluster=cluster)
+def _get_related_articles(article_id):
+    article = Article.collection.get(article_id)
+
+    articles_req = Article.collection.filter(cluster=article.cluster)
     candidate_articles_req = articles_req.limit(4)
     candidate_articles = candidate_articles_req.fetch()
     data = []
-    for article in candidate_articles:
-        data.append(
-            {
-                "articleId": article.articleId,
-                "title": article.title,
-                "imageRef": article.imageRef,
-                "publishedpublishedTimestamp": article.publishedTimestamp,
-            }
-        )
+    for candidate_article in candidate_articles:
+        if article.articleId != candidate_article.articleId:
+            data.append(
+                {
+                    "articleId": candidate_article.articleId,
+                    "title": candidate_article.title,
+                    "imageRef": candidate_article.imageRef,
+                    "publishedpublishedTimestamp": candidate_article.publishedTimestamp,
+                }
+            )
     return data

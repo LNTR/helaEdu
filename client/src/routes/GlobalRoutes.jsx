@@ -42,6 +42,7 @@ import QuestionsList from "@pages/assignments/QuestionsList";
 import Complaints from "@pages/admin/Complaints";
 import QuizA from "@pages/attemptAssignment/Quiz";
 
+
 function GlobalRoutes() {
   return (
     <Routes>
@@ -89,7 +90,7 @@ function GlobalRoutes() {
       <Route path="/questionList" element={<QuestionsList/>}/>
       <Route path="/complaints" element={<Complaints/>}/>
       <Route path="/quizStart/:assignmentId" element={<QuizA/>}/>
-     
+      
     </Routes>
   );
 }

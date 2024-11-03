@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 from utils import authenticate
 from firebase_admin import firestore
 from Models.Articles import Article
-from Components.Articles.constructor import (
+from Components.Articles.setup import (
     recreate_model as _recreate_model,
     _get_related_articles,
 )

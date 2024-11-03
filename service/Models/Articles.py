@@ -29,7 +29,7 @@ class Article(Model):
     def classify_article(self):
         soup = BeautifulSoup(self.content, "lxml")
         content = soup.get_text()
-        classify(content)
+        self.cluster = str(classify(content))
 
     class Meta:
         collection_name = "articles"

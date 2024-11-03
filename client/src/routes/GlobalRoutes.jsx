@@ -80,7 +80,7 @@ function GlobalRoutes() {
       <Route path="/votes" element={<Votes />} />
       <Route path="/comments" element={<Comments />} />
       <Route path="/badges" element={<Badges />} />
-      <Route path="/reviewQuizzes" element={<ReviewdQuiz />} />
+      <Route path="/reviewQuizzes/:assignmentId" element={<ReviewdQuiz />} />
       <Route path="/questionList" element={<QuestionsList />} />
       <Route path="/complaints" element={<Complaints />} />
       <Route path="/quizStart/:assignmentId" element={<QuizA />} />

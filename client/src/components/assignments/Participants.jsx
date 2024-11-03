@@ -3,7 +3,7 @@ import TableRowHeaderReviewed from './TableRowHeaderReviewed';
 import ReviewedTableRow from '@components/assignments/ReviewedTableRow';
 import Pagination from '@components/articles/Pagination';
 
-export default function Participants() {
+export default function Participants(assignmentId) {
     const participants = [
         { name: 'John Doe', email: 'john.doe@example.com', score: 85 },
         { name: 'Jane Smith', email: 'jane.smith@example.com', score: 92 },

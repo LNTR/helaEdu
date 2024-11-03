@@ -107,7 +107,7 @@ export default function ViewArticle({
                     )}
                 </div>
                 <div className='text-xl mt-10'>
-                    <p className='text-2xl'>
+                    <p className='text-2xl '>
                         {HTMLReactParser(content)}
                     </p>
                     <br />

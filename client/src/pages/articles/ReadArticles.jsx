@@ -112,7 +112,7 @@ export default function ReadArticle() {
         </div>
       </div>
       <div className="mx-24">
-        <CommentList />
+        <CommentList  articleId={article.articleId}/>
       </div>
       <Footer />
     </div>

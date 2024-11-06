@@ -1,90 +1,81 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Comments from "@components/articles/Comments";
 import AddComment from "./AddComment";
 import Profile from "@assets/img/articles/profile.jpg";
+import { listCommentsByArticleId } from "@services/ArticleService";
+import { getUserDetails } from "@services/TeacherService";
+function CommentList({ articleId }) {
+  const [comments, setComments] = useState([]);
+  const [error, setError] = useState("");
 
-const commentsData = [
-  {
-    author: "M.Perera",
-    date: "20 hours ago",
-    text: "Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it.",
-    avatar: Profile,
-    replies: [
-      {
-        author: "J.Doe",
-        date: "18 hours ago",
-        text: "This is a reply to the original comment. Lorem Ipsum is not simply random text.",
-        avatar: Profile,
-        replies: [
-          {
-            author: "A.Smith",
-            date: "16 hours ago",
-            text: "This is a nested reply. Lorem Ipsum is not simply random text.",
-            avatar: Profile,
-            replies: [],
-          },
-        ],
-      },
-    ],
-  },
-  {
-    author: "S.Jones",
-    date: "22 hours ago",
-    text: "Another comment without replies. Lorem Ipsum is not simply random text.",
-    avatar: Profile,
-    replies: [],
-  },
-];
+  useEffect(() => {
+    const fetchComments = async () => {
+      try {
+        const response = await listCommentsByArticleId(articleId);
+        const commentsData = response.data;
+        const structuredComments = await Promise.all(
+          commentsData.map(async (comment) => {
+            const userId = comment.userId;
+            const userDetails = await getUserDetails(userId); 
+            return {
+              ...comment,
+              author: userDetails.data.firstName + userDetails.data.lastName,
+              avatar: userDetails.data.profilePictureUrl || Profile, 
+              replies: [],
+            };
+          })
+        );
+        const structuredCommentTree = buildCommentTree(structuredComments);
+        setComments(structuredCommentTree);
+      } catch (err) {
+        setError("Error fetching comments");
+      }
+    };
 
-function CommentList() {
-  const [comments, setComments] = useState(commentsData);
-  const [showAddReply, setShowAddReply] = useState(false);
+    fetchComments();
+  }, [articleId]);
+  const buildCommentTree = (comments) => {
+    const map = {};
+    const roots = [];
 
-  const handleAddComment = (commentText) => {
-    const newComments = [
-      ...comments,
-      {
-        author: "M.Perera",
-        date: "Just now",
-        text: commentText,
-        avatar: { Profile },
-        replies: [],
-      },
-    ];
-    setComments(newComments);
+    comments.forEach((comment) => {
+      map[comment.commentId] = { ...comment, replies: [] };
+    });
+
+    comments.forEach((comment) => {
+      if (comment.parentId === null || comment.parentId === "0") {
+        roots.push(map[comment.commentId]);
+      } else if (map[comment.parentId]) {
+        map[comment.parentId].replies.push(map[comment.commentId]);
+      }
+    });
+
+    return roots;
   };
 
-  const handleAddReply = (replyText) => {
-    // Logic to add reply to the appropriate comment
-    // For simplicity, this example just adds a reply to the first comment
-    const newComments = [...comments];
-    newComments[0].replies.push({
+  const handleAddComment = (commentText) => {
+    const newComment = {
+      commentId: `fo${Math.random().toString(36).substr(2, 9)}`,  // generate a random ID
+      parentId: "0",  // Assuming this is a top-level comment for simplicity
       author: "M.Perera",
       date: "Just now",
-      text: replyText,
-      avatar: { Profile },
+      comment: commentText,  // Ensure 'comment' is passed here
+      avatar: Profile,
       replies: [],
-    });
-    setComments(newComments);
-    setShowAddReply(false);
+    };
+    setComments([...comments, newComment]);
   };
 
   return (
     <div className="m-12 mt-10">
       <h1>Discussion</h1>
       <hr className="border-yellow border-t-4 w-56"></hr>
-      <br></br>
-      {comments.map((comment, index) => (
-        <Comments
-          key={index}
-          comment={comment}
-          onAddReply={(replyText) => {
-            setShowAddReply(false);
-            handleAddReply(replyText);
-          }}
-        />
+      <br />
+      {comments.map((comment) => (
+        <Comments key={comment.commentId} comment={comment} onAddReply={handleAddComment} />
       ))}
-      {!showAddReply && <AddComment onAddComment={handleAddComment} />}
+      <AddComment onAddComment={handleAddComment} />
+      {error && <p>{error}</p>}
     </div>
   );
 }

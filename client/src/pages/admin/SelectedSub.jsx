@@ -47,8 +47,9 @@ export default function SelectedSub() {
                 <FontAwesomeIcon icon={faArrowLeft} size="2x" className="text-gray-700 hover:text-black" />
               </div>
               <h1>{grade}</h1>
+              <hr className="border-yellow border-t-4 w-40"></hr>
               <div className='flex justify-end'>
-                  <button className='bg-blue px-6 py-3 rounded-xl text-2xl text-white' onClick={openPopupFunc}>Add Subjects</button>
+                  <button className='bg-blue px-6 py-3 rounded-xl text-2xl text-white' onClick={openPopupFunc}>Add Text Books</button>
               </div>
               <div className='grid grid-cols-6 gap-6 my-20'>
                 {Subjects.map((subjects,index)=>(

@@ -17,6 +17,8 @@ const Resources = () => {
           <div className="content-wrapper">
             <div className="mx-32 mt-10">
               <h1>Resources</h1>
+              <p className="text-2xl">Upload updated or newly published textbooks and teachers resources</p>
+              <hr className="border-yellow border-t-4 w-2/5"></hr>
               <div className="grid grid-cols-4 gap-4 my-20">
                 {Grades.map((grade, index) => (
                   

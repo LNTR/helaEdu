@@ -96,7 +96,7 @@ const Sidebar = () => {
           <Link
             to="/resourse"
             className={`text-2xl flex items-center p-4 rounded transition-colors duration-300 ${
-              isActive("/resourse")
+              isActive("/resourse") || isActive("/selectedSub")
                 ? "bg-blue text-white"
                 : "hover:bg-gray-200 text-black"
             }`}

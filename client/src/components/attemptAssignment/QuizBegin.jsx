@@ -103,7 +103,7 @@ const QuizBegin = ({ assignmentId }) => {
       setScore(0);
       setCurrentQuestion(0);
       setGlobalTimer(totalTime);
-      setIsLastQuestion(false); // Reset last question state
+      setIsLastQuestion(false); 
     } catch (error) {
       console.error("Failed to start assignment", error);
     }
@@ -114,8 +114,6 @@ const QuizBegin = ({ assignmentId }) => {
     
     setCurrentQuestion((prevQuestion) => {
       const nextQuestion = prevQuestion + 1;
-
-      // Check if it's the last question
       if (nextQuestion === questions.length - 1) {
         setIsLastQuestion(true);
       } else {

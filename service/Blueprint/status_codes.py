@@ -11,3 +11,8 @@ def forbidden():
 @status_codes.route("/500")
 def internal_error():
     return (jsonify({"error": "Internal server error"}), 500)
+
+
+@status_codes.route("/<path:path>")
+def not_found(path):
+    return (jsonify({"error": f"{path} not found"}), 404)

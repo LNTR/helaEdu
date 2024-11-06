@@ -7,7 +7,10 @@ import Users from "@assets/img/articles/social-media.png";
 import Notes from "@assets/img/articles/notes.png";
 import ProfileHero from "@components/teacher_com/ProfileHero";
 import { Header, Footer } from "@components/common";
-import { listTeacherDetails, editTeacherProfile } from "@services/TeacherService";
+import {
+  listTeacherDetails,
+  editTeacherProfile,
+} from "@services/TeacherService";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import { Link } from "react-router-dom";
 import EditProfileModal from "@components/teacher_com/EditProfileModal";
@@ -73,7 +76,12 @@ const TProfile = () => {
   return (
     <div>
       <Header />
-      <ProfileHero email={teacher.email} firstName={teacher.firstName} lastName={teacher.lastName}  profileImg={teacher.profilePictureUrl} />
+      <ProfileHero
+        email={teacher.email}
+        firstName={teacher.firstName}
+        lastName={teacher.lastName}
+        profileImg={teacher.profilePictureUrl}
+      />
       <div className="flex justify-between mr-32 ml-32 mt-32">
         <div className="w-1/2 mr-12 mt-12 shadow-2xl p-12">
           <p className="text-2xl m-4">
@@ -84,10 +92,12 @@ const TProfile = () => {
               <span className="text-blue">Email</span>: {teacher.email}
             </p>
             <p className="text-2xl m-4">
-              <span className="text-blue">Working Institute / School</span>: {teacher.school}
+              <span className="text-blue">Working Institute / School</span>:{" "}
+              {teacher.school}
             </p>
             <p className="text-2xl m-4">
-              <span className="text-blue">Teaching Subject</span>: {teacher.preferredSubjects}
+              <span className="text-blue">Teaching Subject</span>:{" "}
+              {teacher.preferredSubjects}
             </p>
           </div>
           <div className="flex justify-end">
@@ -100,7 +110,7 @@ const TProfile = () => {
           </div>
         </div>
         <div className="w-1/2 grid grid-cols-2 gap-8 mt-12">
-          <Link to="/assignmentList">
+          <Link to="/assignment/assignmentList">
             <div className="shadow-xl rounded-lg w-full h-56 flex flex-col items-center justify-center text-xl font-semibold">
               <img src={Assignment} className="w-20 h-20" alt="Assignments" />
               <p className="text-2xl">My Assignments</p>

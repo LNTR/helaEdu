@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.Instant;
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -14,6 +17,9 @@ public class Complaints {
     private String complaint;
     private String articleId;
     private String commentId;
+    private String userId;
+    private Instant publishedTimestamp;
+
 
 
 }

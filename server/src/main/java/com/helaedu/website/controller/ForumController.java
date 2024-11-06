@@ -1,10 +1,12 @@
 package com.helaedu.website.controller;
 
 import com.helaedu.website.dto.ForumDto;
+import com.helaedu.website.dto.StudentDto;
 import com.helaedu.website.dto.TeacherDto;
 import com.helaedu.website.dto.ValidationErrorResponse;
 import com.helaedu.website.service.ArticleService;
 import com.helaedu.website.service.ForumService;
+import com.helaedu.website.service.StudentService;
 import com.helaedu.website.service.TMService;
 import com.helaedu.website.util.UserUtil;
 import jakarta.validation.Valid;
@@ -22,10 +24,12 @@ import java.util.concurrent.ExecutionException;
 public class ForumController {
     private final ForumService forumService;
     private final TMService tmService;
+    private final StudentService studentService;
     private final ArticleService articleService;
-    public ForumController(ForumService forumService, TMService tmService, ArticleService articleService) {
+    public ForumController(ForumService forumService, TMService tmService, StudentService studentService, ArticleService articleService) {
         this.forumService = forumService;
         this.tmService = tmService;
+        this.studentService = studentService;
         this.articleService = articleService;
     }
 
@@ -53,7 +57,10 @@ public class ForumController {
             String email = UserUtil.getCurrentUserEmail();
             TeacherDto teacherDto = tmService.getTMByEmail(email);
             forumDto.setUserId(teacherDto.getUserId());
-
+//            if(!(teacherDto.getUserId())){
+//                StudentDto studentDto = studentService.getStudentByEmail(email);
+//                forumDto.setUserId(studentDto.getUserId());
+//            }
             boolean articleExists = articleService.doesArticleExist(forumDto.getArticleId());
             if (!articleExists) {
                 return new ResponseEntity<>("Article does not exist", HttpStatus.BAD_REQUEST);

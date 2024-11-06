@@ -1,23 +1,24 @@
 package com.helaedu.website.repository;
 
 import com.google.api.core.ApiFuture;
-import com.google.cloud.firestore.DocumentReference;
-import com.google.cloud.firestore.DocumentSnapshot;
-import com.google.cloud.firestore.Firestore;
+import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
+import com.helaedu.website.entity.Article;
 import com.helaedu.website.entity.Complaints;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 @Repository
 public class ComplaintsRepository {
-//    public String addComplaint(Complaints complaints) {
-//        Firestore dbFirestore = FirestoreClient.getFirestore();
-//        DocumentReference documentReference  = dbFirestore.collection("complaints").document(complaints.getComplaintsId());
-//        documentReference.set(complaints);
-//        return complaints.getComplaintsId();
-//    }
+    public String addComplaint(Complaints complaints) {
+        Firestore dbFirestore = FirestoreClient.getFirestore();
+        DocumentReference documentReference  = dbFirestore.collection("complaints").document(complaints.getComplaintId());
+        documentReference.set(complaints);
+        return complaints.getComplaintId();
+    }
     public Complaints getComplaintsById(String complaintId) throws ExecutionException, InterruptedException {
         Firestore dbFirestore = FirestoreClient.getFirestore();
         DocumentReference documentReference = dbFirestore.collection("complaints").document(complaintId);
@@ -29,4 +30,21 @@ public class ComplaintsRepository {
         }
         return complaints;
     }
+    public boolean exists(String complaintId) throws ExecutionException, InterruptedException {
+        return getComplaintsById(complaintId) != null;
+    }
+    public List<Complaints> getAllComplaints() throws ExecutionException, InterruptedException {
+        Firestore dbFirestore = FirestoreClient.getFirestore();
+        CollectionReference complaintsCollection = dbFirestore.collection("complaints");
+        ApiFuture<QuerySnapshot> future = complaintsCollection.get();
+        List<Complaints> complaints = new ArrayList<>();
+        QuerySnapshot querySnapshot = future.get();
+        for (DocumentSnapshot document : querySnapshot.getDocuments()) {
+            Complaints complaint = document.toObject(Complaints.class);
+            complaints.add(complaint);
+        }
+        return complaints;
+    }
+
+
 }

@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.Instant;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -12,4 +14,6 @@ public class ComplaintsDto {
     private String complaint;
     private String articleId;
     private String commentId;
+    private String userId;
+    private Instant publishedTimestamp;
 }

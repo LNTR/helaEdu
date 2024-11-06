@@ -77,6 +77,11 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.POST, "/forum/**").permitAll()
                                 .requestMatchers(HttpMethod.DELETE, "/forum/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/forum/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/complaints/**").permitAll()
+                                .requestMatchers(HttpMethod.PUT, "/complaints/**").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/complaints/**").permitAll()
+                                .requestMatchers(HttpMethod.DELETE, "/complaints/**").permitAll()
+
                         .anyRequest().permitAll()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

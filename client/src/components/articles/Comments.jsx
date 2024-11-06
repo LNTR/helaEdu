@@ -2,20 +2,18 @@ import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import AddReply from './AddReply'; 
+import AddReport from "@components/articles/AddReport"
 import { faThumbsUp as faThumbsUpRegular } from '@fortawesome/free-regular-svg-icons';
 import { faThumbsUp as faThumbsUpSolid } from '@fortawesome/free-solid-svg-icons';
 import { faThumbsDown as faThumbsDownRegular } from '@fortawesome/free-regular-svg-icons';
 import { faThumbsDown as faThumbsDownSolid } from '@fortawesome/free-solid-svg-icons';
 
-function Comment({ comment, onAddReply }) {
+function Comment({ comment }) {
   const [showReplies, setShowReplies] = useState(false);
   const [showAddReply, setShowAddReply] = useState(false);
+  const [showAddReport, setShowAddReport] = useState(false);
 
-  const handleAddReply = (replyText) => {
-    onAddReply(replyText);
-    setShowAddReply(false); 
-  };
-
+ 
   return (
     <div>
       <div className="flex mt-6">
@@ -31,7 +29,7 @@ function Comment({ comment, onAddReply }) {
               <span className="ml-4 text-gray-500 text-lg">{comment.date}</span>
             </div>
           </div>
-          <p className="mt-2 text-gray text-2xl">{comment.comment}</p> {/* Display comment.text correctly */}
+          <p className="mt-2 text-gray text-2xl">{comment.comment}</p>
           <div className="flex items-center mt-2 space-x-4 text-gray-600">
             <span
               className="flex items-center cursor-pointer"
@@ -43,19 +41,30 @@ function Comment({ comment, onAddReply }) {
             <p><FontAwesomeIcon icon={faThumbsUpRegular} /></p>
             <p><FontAwesomeIcon icon={faThumbsDownRegular} /></p>
             <span className="cursor-pointer" onClick={() => setShowAddReply(true)}>Reply</span>
-            <span className="cursor-pointer">Report</span>
+            <span className="cursor-pointer"onClick={() => setShowAddReport(true)}>Report</span>
           </div>
           {showReplies && comment.replies.length > 0 && (
             <div className="ml-10 mt-4">
               {comment.replies.map((reply, index) => (
-                <Comment key={index} comment={reply} onAddReply={onAddReply} />
+                <Comment key={index} comment={reply}  />
               ))}
             </div>
           )}
         </div>   
       </div>
       {showAddReply && (
-        <AddReply onCancel={() => setShowAddReply(false)} onPostReply={handleAddReply} />
+        <AddReply 
+          onCancel={() => setShowAddReply(false)} 
+          commentId={comment.commentId} 
+          articleId={comment.articleId} 
+        />
+      )}
+      {showAddReport && (
+        <AddReport 
+          onCancel={() => setShowAddReport(false)} 
+          commentId={comment.commentId} 
+          articleId={comment.articleId} 
+        />
       )}
     </div>
   );

@@ -4,6 +4,7 @@ import AddComment from "./AddComment";
 import Profile from "@assets/img/articles/profile.jpg";
 import { listCommentsByArticleId } from "@services/ArticleService";
 import { getUserDetails } from "@services/TeacherService";
+
 function CommentList({ articleId }) {
   const [comments, setComments] = useState([]);
   const [error, setError] = useState("");
@@ -52,19 +53,7 @@ function CommentList({ articleId }) {
 
     return roots;
   };
-
-  const handleAddComment = (commentText) => {
-    const newComment = {
-      commentId: `fo${Math.random().toString(36).substr(2, 9)}`,  // generate a random ID
-      parentId: "0",  // Assuming this is a top-level comment for simplicity
-      author: "M.Perera",
-      date: "Just now",
-      comment: commentText,  // Ensure 'comment' is passed here
-      avatar: Profile,
-      replies: [],
-    };
-    setComments([...comments, newComment]);
-  };
+ 
 
   return (
     <div className="m-12 mt-10">
@@ -72,10 +61,10 @@ function CommentList({ articleId }) {
       <hr className="border-yellow border-t-4 w-56"></hr>
       <br />
       {comments.map((comment) => (
-        <Comments key={comment.commentId} comment={comment} onAddReply={handleAddComment} />
+        <Comments key={comment.commentId} comment={comment}  />
       ))}
-      <AddComment onAddComment={handleAddComment} />
-      {error && <p>{error}</p>}
+      <AddComment articleId={articleId}/>
+      
     </div>
   );
 }

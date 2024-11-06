@@ -1,23 +1,22 @@
 import React, { useState } from 'react';
-import { addComment } from '@services/ArticleService';
 
-function AddReply({ onCancel, commentId, articleId }) {
-  const [replyText, setReplyText] = useState('');
+function AddReport({ onCancel, commentId, articleId }) {
+  const [reportText, setReportText] = useState('');
   const [isPopupOpen, setIsPopupOpen] = useState(true); 
   const [error, setError] = useState('');
 
   const handlePost = async (e) => {
     e.preventDefault();
 
-    if (!replyText.trim()) {
-      setError("Reply cannot be empty.");
+    if (!reportText.trim()) {
+      setError("Add your complaint");
       return;
     }
 
-    const commentData = {
-      comment: replyText,
+    const reportData = {
+      complaint: reportText,
       articleId: articleId,
-      parentId: commentId,
+      commentId: commentId,
     };
 
     try {
@@ -31,7 +30,7 @@ function AddReply({ onCancel, commentId, articleId }) {
     }
   };
 
-  const handleCancelReply = () => {
+  const handleCancelReport = () => {
     setIsPopupOpen(false);
     onCancel();
   };
@@ -41,11 +40,11 @@ function AddReply({ onCancel, commentId, articleId }) {
       {isPopupOpen && (
         <div className="popup-overlay fixed inset-0 flex items-center justify-center bg-gray-700 bg-opacity-50">
           <div className="popup-content bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
-            <h3 className="text-2xl font-semibold mb-4">Add Your Reply</h3>
+            <h3 className="text-2xl font-semibold mb-4">Add Your Complaint</h3>
             <textarea 
-              value={replyText}
+              value={reportText}
               onChange={(e) => {
-                setReplyText(e.target.value);
+                setReportText(e.target.value);
                 setError('');
               }}
               placeholder="Type your reply..."
@@ -57,10 +56,10 @@ function AddReply({ onCancel, commentId, articleId }) {
                 onClick={handlePost}
                 className="bg-blue text-2xl text-white px-4 py-2 rounded-md"
               >
-                Post Reply
+                Post Complaint
               </button>
               <button
-                onClick={handleCancelReply}
+                onClick={handleCancelReport}
                 className="bg-red-600 text-2xl text-white px-4 py-2 rounded-md"
               >
                 Cancel
@@ -73,4 +72,4 @@ function AddReply({ onCancel, commentId, articleId }) {
   );
 }
 
-export default AddReply;
+export default AddReport;

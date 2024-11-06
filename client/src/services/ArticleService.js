@@ -1,20 +1,11 @@
 import axios from "axios";
 const REST_API_BASE_URL = `${import.meta.env.VITE_REST_API_BASE_URL}/articles`;
-const TEACHER_ARTICLE_URL = `${
-  import.meta.env.VITE_REST_API_BASE_URL
-}/tm/me/articles`;
-const APPROVE_ARTICLE_URL = `${
-  import.meta.env.VITE_REST_API_BASE_URL
-}/articles/approved`;
-const PENDING_ARTICLE_URL = `${
-  import.meta.env.VITE_REST_API_BASE_URL
-}/articles/pending`;
-const CREATE_ARTICLE_URL = `${
-  import.meta.env.VITE_REST_API_BASE_URL
-}/articles/create`;
-const RECCOMEND_ARTICLE_URL = `${
-  import.meta.env.VITE_SERVICE_API
-}/articles/get-recommendation`;
+const TEACHER_ARTICLE_URL = `${import.meta.env.VITE_REST_API_BASE_URL}/tm/me/articles`;
+const APPROVE_ARTICLE_URL = `${import.meta.env.VITE_REST_API_BASE_URL}/articles/approved`;
+const PENDING_ARTICLE_URL = `${import.meta.env.VITE_REST_API_BASE_URL}/articles/pending`;
+const CREATE_ARTICLE_URL = `${import.meta.env.VITE_REST_API_BASE_URL}/articles/create`;
+const RECCOMEND_ARTICLE_URL = `${import.meta.env.VITE_SERVICE_API}/articles/get-recommendation`;
+const ADD_COMMENTS_ARTICLES_URL=`${import.meta.env.VITE_REST_API_BASE_URL}/forum/create`;
 
 export const listArticles = () => axios.get(REST_API_BASE_URL);
 export const listArticlesByTeacher = (headers) =>
@@ -51,3 +42,9 @@ export const deleteArticle = (articleId) =>
   axios.delete(`${REST_API_BASE_URL}/${articleId}`);
 export const addUpvote = (articleId, headers) =>
   axios.put(`${REST_API_BASE_URL}/${articleId}/upvote`, { headers });
+
+export const listCommentsByArticleId = (articleId) =>
+  axios.get(`${REST_API_BASE_URL}/${articleId}/comments`);
+
+export const addComment = (comment, headers) =>
+  axios.post(ADD_COMMENTS_ARTICLES_URL, comment, { headers });

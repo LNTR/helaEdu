@@ -5,17 +5,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.Instant;
-
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Forum {
-    private String commentId;
-    private String comment;
+public class Complaints {
+    private String complaintId;
+    private String complaint;
     private String articleId;
-    private String userId;
-    private String parentId;
-    private Instant publishedTimestamp;
+    private String commentId;
+
+
 }

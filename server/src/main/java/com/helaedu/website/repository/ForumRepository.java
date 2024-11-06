@@ -1,19 +1,19 @@
 package com.helaedu.website.repository;
 
 import com.google.api.core.ApiFuture;
-import com.google.cloud.firestore.DocumentReference;
-import com.google.cloud.firestore.DocumentSnapshot;
-import com.google.cloud.firestore.Firestore;
+import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
 import com.helaedu.website.entity.Article;
 import com.helaedu.website.entity.Forum;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 @Repository
-public class ForumRepositary {
-    public String createComment(Forum forum) {
+public class ForumRepository {
+    public String addComment(Forum forum) {
         Firestore dbFirestore = FirestoreClient.getFirestore();
         DocumentReference documentReference  = dbFirestore.collection("forum").document(forum.getCommentId());
         documentReference.set(forum);
@@ -36,5 +36,22 @@ public class ForumRepositary {
         }
         return forum;
     }
+
+    public List<Forum> getCommentsByArticleId(String articleId) throws ExecutionException, InterruptedException {
+        Firestore dbFirestore = FirestoreClient.getFirestore();
+        CollectionReference forumCollection = dbFirestore.collection("forum");
+        Query query = forumCollection.whereEqualTo("articleId", articleId);
+        ApiFuture<QuerySnapshot> future = query.get();
+
+        List<Forum> forums = new ArrayList<>();
+        QuerySnapshot querySnapshot = future.get();
+        for (DocumentSnapshot document : querySnapshot.getDocuments()) {
+            Forum forum = document.toObject(Forum.class);
+            forums.add(forum);
+        }
+        return forums;
+    }
+
+
 
 }

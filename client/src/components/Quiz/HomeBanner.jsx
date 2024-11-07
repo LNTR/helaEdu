@@ -11,12 +11,11 @@ import banner from "@assets/img/banner.png";
 import { useNavigate } from "react-router-dom";
 
 const HomeBanner = () => {
-
-  const navigator = useNavigate()
+  const navigator = useNavigate();
 
   const handleIconClick = (path) => {
-    navigator(`/${path}`)
-  }
+    navigator(`/${path}`);
+  };
 
   return (
     <div
@@ -29,12 +28,24 @@ const HomeBanner = () => {
     >
       <div className="flex-col">
         <div className="icon-circle text-black bg-white hover:text-white hover:bg-black">
-          <FontAwesomeIcon icon={faTrophy} size="3x" onClick={() => handleIconClick('leaderboard/1')} />
+          <FontAwesomeIcon
+            icon={faTrophy}
+            size="3x"
+            onClick={() => handleIconClick("quiz/leaderboard/1")}
+          />
         </div>
         <div className="icon-circle text-black bg-white hover:text-white hover:bg-black">
-          <FontAwesomeIcon icon={faUserGroup} size="3x" className="black" onClick={() => handleIconClick('friends/1')}/>
+          <FontAwesomeIcon
+            icon={faUserGroup}
+            size="3x"
+            className="black"
+            onClick={() => handleIconClick("quiz/friends/1")}
+          />
         </div>
-        <div className="icon-circle text-black bg-white hover:text-white hover:bg-black" onClick={() => handleIconClick('history/1')}>
+        <div
+          className="icon-circle text-black bg-white hover:text-white hover:bg-black"
+          onClick={() => handleIconClick("quiz/history/1")}
+        >
           <FontAwesomeIcon
             icon={faClockRotateLeft}
             size="3x"

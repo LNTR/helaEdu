@@ -68,6 +68,10 @@ public class FirebaseStorageService {
         return uploadFile(file, "article_additional_files/" + articleId);
     }
 
+    public String uploadSubjectPdf(MultipartFile file, String subjectId, String grade, String language) throws IOException {
+        return uploadFile(file, "subjects/" + grade + "/" + language + "/" + subjectId);
+    }
+
 //    public String uploadTeacherProof(MultipartFile file, String email) throws IOException {
 //        return uploadFile(file, "teacher_proofs/" + email);
 //    }

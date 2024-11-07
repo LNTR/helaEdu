@@ -2,7 +2,10 @@ from flask import Blueprint, request, jsonify
 from utils import authenticate
 from firebase_admin import firestore
 from Models.Articles import Article
-from Components.Articles import recreate_model as _recreate_model, _get_related_articles
+from Components.Articles.setup import (
+    recreate_model as _recreate_model,
+    _get_related_articles,
+)
 
 
 articles = Blueprint("articles", __name__)
@@ -13,6 +16,7 @@ articles = Blueprint("articles", __name__)
 def approve_article(article_id):
     article = Article.collection.get(article_id)
     article.approve()
+    article.classify_article()
     article.update()
     return jsonify({"message": "update complete"})
 
@@ -24,8 +28,8 @@ def recreate_model():
     return jsonify({"message": "Model recreated"})
 
 
-@articles.route("/get-recommendation", methods=["GET"])
-@articles.route("/get-recommendation/<cluster>", methods=["GET"])
-def get_reccomendation(cluster):
-    articles = _get_related_articles(cluster)
+@articles.route("<article_id>/get-recommendation", methods=["GET"])
+@articles.route("<article_id>/get-recommendation/", methods=["GET"])
+def get_reccomendation(article_id):
+    articles = _get_related_articles(article_id)
     return jsonify(articles)

@@ -1,5 +1,7 @@
 from fireo.models import Model
 from fireo.fields import TextField, ListField, DateTime
+from bs4 import BeautifulSoup
+from Components.Articles.classifier import classify
 
 
 class Article(Model):
@@ -23,6 +25,11 @@ class Article(Model):
 
     def approve(self):
         self.status = "APPROVED"
+
+    def classify_article(self):
+        soup = BeautifulSoup(self.content, "lxml")
+        content = soup.get_text()
+        self.cluster = str(classify(content))
 
     class Meta:
         collection_name = "articles"

@@ -4,8 +4,10 @@ export default function TableRowHeaderC() {
   return (
     <div className='bg-blue text-white rounded-3xl  mx-32 my-4 px-7 py-4'>
         <div className='flex justify-between items-center'>
-        
-            <div className='w-3/12 text-left'>
+            <div className='w-2/12 text-left'>
+                <p className='text-2xl'>Complaint</p>
+            </div>
+            <div className='w-2/12 text-left'>
                 <p className='text-2xl'>Comment</p>
             </div>
             

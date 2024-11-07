@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { addComment } from '@services/ArticleService';
-import useAuthHeader from "react-auth-kit/hooks/useAuthUser";
+import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 
 export default function AddComment({ articleId }) {
-  
+
   const authHeader = useAuthHeader();
   const headers = {
     Authorization: authHeader,
   };
+  
   const [commentText, setCommentText] = useState('');
 
   const handlePostComment = async (e) => {
@@ -23,6 +24,7 @@ export default function AddComment({ articleId }) {
       const response = await addComment(comments, headers);
       if (response.status === 200) {
         setCommentText('');
+        window.location.reload();
       }
     } catch (err) {
       if (err.response) {

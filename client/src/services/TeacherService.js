@@ -41,3 +41,5 @@ export const uploadTeacherProof = (proofFile, email) =>axios.post(`${TEACHER_PRO
 //   axios.put(`${TEACHER_BASE_URL}/${userId}/promote)`);
 // export const listAllTeachersDetails = (pageNo) =>
   // axios.get(`${GET_TEACHER_DETAILS_URL}/${pageNo}`);
+export const listAllUsersDetails = (userId)  =>axios.get(`${GET_USER_DETAILS_URL}/${userId}/all`);
+

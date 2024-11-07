@@ -257,6 +257,18 @@ public class ArticleService {
         }
     }
 
+//for forum controller
+    public boolean doesArticleExist(String articleId) throws ExecutionException, InterruptedException {
+        return articleRepository.exists(articleId);
+    }
+    public String getUserIdByArticleId(String articleId) throws ExecutionException, InterruptedException {
+        Article article = articleRepository.getArticleById(articleId);
+        if(article == null) {
+            throw new IllegalArgumentException("Article not found");
+        }
+        return article.getUserId();
+    }
+
 
 //    get article count for teacherId
 //    public List<String> getTeachersWithArticleCountGreaterThan(int count) throws ExecutionException, InterruptedException {

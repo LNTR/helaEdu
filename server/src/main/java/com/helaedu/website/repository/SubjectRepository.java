@@ -4,6 +4,7 @@ import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
+import com.google.cloud.firestore.WriteResult;
 import com.google.firebase.cloud.FirestoreClient;
 import com.helaedu.website.entity.Subject;
 import org.springframework.stereotype.Repository;
@@ -29,6 +30,13 @@ public class SubjectRepository {
             subject = document.toObject(Subject.class);
         }
         return subject;
+    }
+
+    public String updateSubject(String subjectId, Subject subject) throws ExecutionException, InterruptedException {
+        Firestore dbFirestore = FirestoreClient.getFirestore();
+        DocumentReference documentReference = dbFirestore.collection("subjects").document(subjectId);
+        ApiFuture<WriteResult> future = documentReference.set(subject);
+        return future.get().getUpdateTime().toString();
     }
 
     public boolean exists(String subjectId) throws ExecutionException, InterruptedException {

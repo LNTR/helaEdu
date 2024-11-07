@@ -16,4 +16,7 @@ public class ComplaintsDto {
     private String commentId;
     private String userId;
     private Instant publishedTimestamp;
+    private String status;
+    private String reviewedAdminId;
+    private String feedback;
 }

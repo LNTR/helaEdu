@@ -40,7 +40,10 @@ public class ComplaintsService {
                 complaintsDto.getArticleId(),
                 complaintsDto.getCommentId(),
                 complaintsDto.getUserId(),
-                publishedTimestamp
+                publishedTimestamp,
+                complaintsDto.getStatus(),
+                complaintsDto.getReviewedAdminId(),
+                complaintsDto.getFeedback()
         );
 
         return complaintsRepository.addComplaint(complaints);
@@ -54,10 +57,23 @@ public class ComplaintsService {
                                 complaint.getArticleId(),
                                 complaint.getCommentId(),
                                 complaint.getUserId(),
-                                complaint.getPublishedTimestamp()
+                                complaint.getPublishedTimestamp(),
+                                complaint.getStatus(),
+                                complaint.getReviewedAdminId(),
+                                complaint.getFeedback()
                         )
                 )
                 .collect(Collectors.toList());
+    }
+    public String reviewComplaint(String complaintId,String feedback ,String reviewedAdminId) throws ExecutionException, InterruptedException {
+        return complaintsRepository.updateComplaintStatus(complaintId, "REVIEWED",feedback, reviewedAdminId);
+    }
+
+    public String declineComplaint(String complaintId,String feedback ,String reviewedAdminId) throws ExecutionException, InterruptedException {
+        return complaintsRepository.updateComplaintStatus(complaintId, "DECLINED",feedback, reviewedAdminId);
+    }
+    public String deleteComplaint(String complaintId) throws ExecutionException, InterruptedException {
+        return complaintsRepository.deleteComplaint(complaintId);
     }
 
 }

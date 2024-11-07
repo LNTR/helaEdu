@@ -1,9 +1,7 @@
 package com.helaedu.website.controller;
 
-import com.helaedu.website.dto.ArticleDto;
+import com.helaedu.website.dto.*;
 import com.helaedu.website.dto.ComplaintsDto;
-import com.helaedu.website.dto.TeacherDto;
-import com.helaedu.website.dto.ValidationErrorResponse;
 import com.helaedu.website.service.*;
 import com.helaedu.website.util.UserUtil;
 import jakarta.validation.Valid;
@@ -21,11 +19,13 @@ import java.util.concurrent.ExecutionException;
 @CrossOrigin(origins = "*")
 public class ComplaintsController {
     private final TMService tmService;
+    private final StudentService studentService;
     private final ComplaintsService complaintsService;
 
-    public ComplaintsController(ForumService forumService, TMService tmService, ComplaintsService complaintsService, StudentService studentService, ArticleService articleService) {
+    public ComplaintsController(ForumService forumService, TMService tmService, StudentService studentService, StudentService studentService1, ComplaintsService complaintsService) {
 
         this.tmService = tmService;
+        this.studentService = studentService1;
         this.complaintsService = complaintsService;
     }
     @GetMapping
@@ -45,7 +45,15 @@ public class ComplaintsController {
         try {
             String email = UserUtil.getCurrentUserEmail();
             TeacherDto teacherDto = tmService.getTMByEmail(email);
-            complaintsDto.setUserId(teacherDto.getUserId());
+            if (teacherDto == null) {
+                StudentDto studentDto = studentService.getStudentByEmail(email);
+                if (studentDto == null) {
+                    return new ResponseEntity<>("User not found", HttpStatus.UNAUTHORIZED);
+                }
+                complaintsDto.setUserId(studentDto.getUserId());
+            } else {
+                complaintsDto.setUserId(teacherDto.getUserId());
+            }
             String complaintId = complaintsService.addComplaint(complaintsDto);
             return new ResponseEntity<>(complaintId, HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
@@ -54,6 +62,50 @@ public class ComplaintsController {
             return new ResponseEntity<>("Error adding complaint", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @PutMapping("/{complaintId}/review")
+    public ResponseEntity<Object> reviewComplaints(@PathVariable String complaintId, @RequestParam String feedback) throws ExecutionException, InterruptedException {
+        try {
+            String userId = UserUtil.getCurrentUserEmail();
+            String result = complaintsService.reviewComplaint(complaintId,feedback, userId);
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            ValidationErrorResponse errorResponse = new ValidationErrorResponse();
+            errorResponse.addViolation("complaintId", e.getMessage());
+            return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        } catch (ExecutionException | InterruptedException e) {
+            return new ResponseEntity<>("Error reviewing complaints", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @PutMapping("/{complaintId}/decline")
+    public ResponseEntity<Object> declineComplaints(@PathVariable String complaintId, @RequestParam String feedback) throws ExecutionException, InterruptedException {
+        try {
+            String userId = UserUtil.getCurrentUserEmail();
+
+            String result = complaintsService.declineComplaint(complaintId, feedback, userId);
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            ValidationErrorResponse errorResponse = new ValidationErrorResponse();
+            errorResponse.addViolation("complaintId", e.getMessage());
+            return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        } catch (ExecutionException | InterruptedException e) {
+            return new ResponseEntity<>("Error declining complaints", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @DeleteMapping("/{complaintId}")
+    public ResponseEntity<Object> deleteComplaint(@PathVariable String complaintId) throws ExecutionException, InterruptedException {
+        try {
+            String result = complaintsService.deleteComplaint(complaintId);
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            ValidationErrorResponse errorResponse = new ValidationErrorResponse();
+            errorResponse.addViolation("complaintId", e.getMessage());
+            return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        } catch (ExecutionException | InterruptedException e) {
+            return new ResponseEntity<>("Error deleting complaints", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
 
 }

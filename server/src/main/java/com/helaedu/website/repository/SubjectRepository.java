@@ -1,14 +1,13 @@
 package com.helaedu.website.repository;
 
 import com.google.api.core.ApiFuture;
-import com.google.cloud.firestore.DocumentReference;
-import com.google.cloud.firestore.DocumentSnapshot;
-import com.google.cloud.firestore.Firestore;
-import com.google.cloud.firestore.WriteResult;
+import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
 import com.helaedu.website.entity.Subject;
+import com.helaedu.website.entity.SubjectNote;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 @Repository
@@ -42,4 +41,12 @@ public class SubjectRepository {
     public boolean exists(String subjectId) throws ExecutionException, InterruptedException {
         return getSubjectById(subjectId) != null;
     }
+    public List<Subject> getSubjectByGrade(String grade) throws ExecutionException, InterruptedException {
+        Firestore dbFirestore = FirestoreClient.getFirestore();
+        CollectionReference subjectsCollection = dbFirestore.collection("subjects");
+        ApiFuture<QuerySnapshot> future = subjectsCollection.whereEqualTo("grade", grade).get();
+        return future.get().toObjects(Subject.class);
+    }
+
+
 }

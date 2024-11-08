@@ -93,14 +93,20 @@ const Sidebar = () => {
             <FontAwesomeIcon icon={faCog} className="mr-4" />
             Account Settings
           </Link>
+          <Link
+            to="/resourse"
+            className={`text-2xl flex items-center p-4 rounded transition-colors duration-300 ${
+              isActive("/resourse") || isActive("/selectedSub")
+                ? "bg-blue text-white"
+                : "hover:bg-gray-200 text-black"
+            }`}
+          >
+            <FontAwesomeIcon icon={faCog} className="mr-4" />
+            Resourses
+          </Link>
         </div>
       </div>
-      <div>
-        <button className="text-xl flex items-center p-4 rounded transition-colors duration-300 bg-white text-black hover:bg-gray-200 w-full justify-center">
-          <FontAwesomeIcon icon={faSignOutAlt} className="mr-4" />
-          Logout
-        </button>
-      </div>
+      
     </div>
   );
 };

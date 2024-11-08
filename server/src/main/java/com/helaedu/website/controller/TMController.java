@@ -127,7 +127,7 @@ public class TMController {
         Map<String, String> requestBody = RequestUtil.createEmailRequestBody(email);
         return deleteProfilePicture(requestBody);
     }
-    //    for get details of all users
+//    for get details of all users
     @GetMapping("/{userId}/all")
     public ResponseEntity<Object> getAllUsers(@PathVariable String userId) throws ExecutionException, InterruptedException {
         TeacherDto teacherDto = tmService.getTM(userId);

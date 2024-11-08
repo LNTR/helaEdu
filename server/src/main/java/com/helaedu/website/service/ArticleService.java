@@ -257,7 +257,7 @@ public class ArticleService {
         }
     }
 
-    //for forum controller
+//for forum controller
     public boolean doesArticleExist(String articleId) throws ExecutionException, InterruptedException {
         return articleRepository.exists(articleId);
     }

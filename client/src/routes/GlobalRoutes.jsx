@@ -40,6 +40,9 @@ import QuestionsList from "@pages/assignments/QuestionsList";
 import Complaints from "@pages/admin/Complaints";
 import QuizA from "@pages/attemptAssignment/Quiz";
 
+import Resource from "@pages/admin/Resourses";
+import SelectedSub from "@pages/admin/SelectedSub";
+
 function GlobalRoutes() {
   return (
     <Routes>
@@ -70,20 +73,22 @@ function GlobalRoutes() {
       <Route path="/resources" element={<Resources />} />
       <Route path="/modDashboard" element={<ModDashboard />} />
       <Route path="/modNotifications" element={<ModNotifications />} />
-
       <Route path="/notes" element={<AllNotes />} />
       <Route path="/notes/new" element={<NewNote />} />
       <Route path="/land" element={<HeroLanding />} />
       <Route path="/premiumPlan" element={<PremiumPlan />} />
-      <Route path="/reputationPoints" element={<ReputationPoints />} />
-      <Route path="/summary" element={<Summary />} />
-      <Route path="/votes" element={<Votes />} />
-      <Route path="/comments" element={<Comments />} />
-      <Route path="/badges" element={<Badges />} />
-      <Route path="/reviewQuizzes/:assignmentId" element={<ReviewdQuiz />} />
-      <Route path="/questionList" element={<QuestionsList />} />
-      <Route path="/complaints" element={<Complaints />} />
-      <Route path="/quizStart/:assignmentId" element={<QuizA />} />
+      <Route path="/reputationPoints" element={<ReputationPoints/>} />
+      <Route path="/summary" element={<Summary/>} />
+      <Route path="/votes" element={<Votes/>} />
+      <Route path="/comments" element={<Comments/>} />
+      <Route path="/badges" element={<Badges/>} />
+      <Route path="/reviewQuizzes/:assignmentId" element={<ReviewdQuiz/>} />
+      <Route path="/questionList" element={<QuestionsList/>}/>
+      <Route path="/complaints" element={<Complaints/>}/>
+      <Route path="/quizStart/:assignmentId" element={<QuizA/>}/>
+      <Route path="/resourse" element={<Resource/>}/>
+      <Route path="/selectedSub" element={<SelectedSub/>}/>
+
     </Routes>
   );
 }

@@ -42,4 +42,5 @@ public class SubjectRepository {
     public boolean exists(String subjectId) throws ExecutionException, InterruptedException {
         return getSubjectById(subjectId) != null;
     }
+
 }

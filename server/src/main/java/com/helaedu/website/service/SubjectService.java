@@ -2,8 +2,10 @@ package com.helaedu.website.service;
 
 import com.helaedu.website.dto.StudentDto;
 import com.helaedu.website.dto.SubjectDto;
+import com.helaedu.website.dto.SubjectNoteDto;
 import com.helaedu.website.entity.Student;
 import com.helaedu.website.entity.Subject;
+import com.helaedu.website.entity.SubjectNote;
 import com.helaedu.website.repository.SubjectRepository;
 import com.helaedu.website.util.UniqueIdGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 @Service
 public class SubjectService {
@@ -67,5 +71,18 @@ public class SubjectService {
             throw new IllegalArgumentException("Subject not found");
         }
         return pdfRef;
+    }
+    public List<SubjectDto> getSubjectByGrade(String grade) throws ExecutionException, InterruptedException {
+        List<Subject> subject = subjectRepository.getSubjectByGrade(grade);
+        return subject.stream().map(subjects ->
+                new SubjectDto(
+                        subjects.getSubjectId(),
+                        subjects.getSubjectName(),
+                        subjects.getGrade(),
+                        subjects.getLanguage(),
+                        subjects.getPdfRef()
+
+                )
+        ).collect(Collectors.toList());
     }
 }

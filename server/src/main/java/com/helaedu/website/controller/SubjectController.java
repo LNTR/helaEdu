@@ -55,4 +55,5 @@ public class SubjectController {
             throw new RuntimeException(e);
         }
     }
+
 }

@@ -21,10 +21,8 @@ import ModDashboard from "@pages/moderator/ModDashboard";
 
 // import ApproveTeachers from "@pages/admin/ApproveTeachers";
 // import TopTeachers from "@pages/admin/TopTeachers";
-import SubjectCatalog from "@pages/subjects/SubjectCatalog";
 import Test from "@components/test/Test";
 import ViewArticleMyself from "@pages/articles/ViewArticleMyself";
-import Subject from "@pages/subjects/Subject";
 import UserManagement from "@pages/admin/UserManagement";
 import Settings from "@pages/admin/Settings";
 import Reports from "@pages/admin/Reports";
@@ -62,11 +60,9 @@ function GlobalRoutes() {
         path="/viewArticleMyself/:articleId"
         element={<ViewArticleMyself />}
       />
-      <Route path="/subjectCatalog" element={<SubjectCatalog />} />
       <Route path="/userManagement" element={<UserManagement />} />
       <Route path="/Settings" element={<Settings />}></Route>
       <Route path="/Reports" element={<Reports />}></Route>
-      <Route path="/subject/:subject" element={<Subject />} />
 
       <Route path="/reviewQuiz" element={<ReviewQuiz />} />
       <Route path="/reviewQuizList" element={<ReviewQuizList />} />

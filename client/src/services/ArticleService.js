@@ -6,6 +6,8 @@ const PENDING_ARTICLE_URL = `${import.meta.env.VITE_REST_API_BASE_URL}/articles/
 const CREATE_ARTICLE_URL = `${import.meta.env.VITE_REST_API_BASE_URL}/articles/create`;
 const RECCOMEND_ARTICLE_URL = `${import.meta.env.VITE_SERVICE_API}/articles/get-recommendation`;
 const ADD_COMMENTS_ARTICLES_URL=`${import.meta.env.VITE_REST_API_BASE_URL}/forum/create`;
+const GET_COMMENTS_ARTICLES_URL=`${import.meta.env.VITE_REST_API_BASE_URL}/forum`;
+
 
 export const listArticles = () => axios.get(REST_API_BASE_URL);
 export const listArticlesByTeacher = (headers) =>
@@ -48,3 +50,7 @@ export const listCommentsByArticleId = (articleId) =>
 
 export const addComment = (comment, headers) =>
   axios.post(ADD_COMMENTS_ARTICLES_URL, comment, { headers });
+
+
+export const getCommentById = (commentId) =>
+  axios.get(`${GET_COMMENTS_ARTICLES_URL}/${commentId}`);

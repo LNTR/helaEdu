@@ -75,6 +75,12 @@ public class ForumService {
                 )
         ).collect(Collectors.toList());
     }
+    public String deleteComment(String commentId) throws ExecutionException, InterruptedException {
+        return forumRepository.deleteComment(commentId);
+    }
+    public String updateCommentAsDelete(String commentId) throws ExecutionException, InterruptedException {
+        return forumRepository.updateCommentAsDelete(commentId, "THIS MESSAGE WAS DELETED ");
+    }
 
 
 }

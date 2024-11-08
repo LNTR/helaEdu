@@ -1,7 +1,13 @@
 import React, { useState } from 'react';
 import { addComment } from '@services/ArticleService';
+import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 
 function AddReply({ onCancel, commentId, articleId }) {
+
+  const authHeader = useAuthHeader();
+  const headers = {
+    Authorization: authHeader,
+  };
   const [replyText, setReplyText] = useState('');
   const [isPopupOpen, setIsPopupOpen] = useState(true); 
   const [error, setError] = useState('');
@@ -21,10 +27,11 @@ function AddReply({ onCancel, commentId, articleId }) {
     };
 
     try {
-      const response = await addComment(commentData);
+      const response = await addComment(commentData,headers);
       console.log("Create reply response:", response);
       setReplyText('');
-      setIsPopupOpen(false); 
+      setIsPopupOpen(false);
+      window.location.reload(); 
     } catch (error) {
       console.error("Failed to post reply", error);
       setError("Failed to post reply. Please try again.");

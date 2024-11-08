@@ -8,7 +8,9 @@ import com.helaedu.website.entity.Forum;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 @Repository
@@ -51,6 +53,24 @@ public class ForumRepository {
         }
         return forums;
     }
+
+    public String deleteComment(String commentId) throws ExecutionException, InterruptedException {
+        Firestore dbFirestore = FirestoreClient.getFirestore();
+        DocumentReference documentReference = dbFirestore.collection("forum").document(commentId);
+        ApiFuture<WriteResult> future = documentReference.delete();
+        return future.get().getUpdateTime().toString();
+    }
+    public String updateCommentAsDelete(String commentId, String newMsg) throws ExecutionException, InterruptedException {
+        Firestore dbFirestore = FirestoreClient.getFirestore();
+        DocumentReference documentReference = dbFirestore.collection("forum").document(commentId);
+
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("comment", newMsg);
+
+        ApiFuture<WriteResult> future = documentReference.update(updates);
+        return future.get().getUpdateTime().toString();
+    }
+
 
 
 

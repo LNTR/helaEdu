@@ -1,10 +1,9 @@
 package com.helaedu.website.controller;
 
-import com.helaedu.website.dto.ForumDto;
-import com.helaedu.website.dto.TeacherDto;
-import com.helaedu.website.dto.ValidationErrorResponse;
+import com.helaedu.website.dto.*;
 import com.helaedu.website.service.ArticleService;
 import com.helaedu.website.service.ForumService;
+import com.helaedu.website.service.StudentService;
 import com.helaedu.website.service.TMService;
 import com.helaedu.website.util.UserUtil;
 import jakarta.validation.Valid;
@@ -22,10 +21,12 @@ import java.util.concurrent.ExecutionException;
 public class ForumController {
     private final ForumService forumService;
     private final TMService tmService;
+    private final StudentService studentService;
     private final ArticleService articleService;
-    public ForumController(ForumService forumService, TMService tmService, ArticleService articleService) {
+    public ForumController(ForumService forumService, TMService tmService, StudentService studentService, ArticleService articleService) {
         this.forumService = forumService;
         this.tmService = tmService;
+        this.studentService = studentService;
         this.articleService = articleService;
     }
 
@@ -52,12 +53,21 @@ public class ForumController {
         try {
             String email = UserUtil.getCurrentUserEmail();
             TeacherDto teacherDto = tmService.getTMByEmail(email);
-            forumDto.setUserId(teacherDto.getUserId());
 
+            if (teacherDto == null) {
+                StudentDto studentDto = studentService.getStudentByEmail(email);
+                if (studentDto == null) {
+                    return new ResponseEntity<>("User not found", HttpStatus.UNAUTHORIZED);
+                }
+                forumDto.setUserId(studentDto.getUserId());
+            } else {
+                forumDto.setUserId(teacherDto.getUserId());
+            }
             boolean articleExists = articleService.doesArticleExist(forumDto.getArticleId());
             if (!articleExists) {
                 return new ResponseEntity<>("Article does not exist", HttpStatus.BAD_REQUEST);
             }
+            assert teacherDto != null;
             if (teacherDto.getUserId().equals(articleService.getUserIdByArticleId(forumDto.getArticleId()))) {
                 return new ResponseEntity<>("You cannot comment on your own article", HttpStatus.FORBIDDEN);
             }
@@ -71,5 +81,62 @@ public class ForumController {
         }
     }
 
+    @DeleteMapping("/{commentId}")
+    public ResponseEntity<Object> deleteComment(@PathVariable String commentId) throws ExecutionException, InterruptedException {
+        try {
+            String result = forumService.deleteComment(commentId);
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            ValidationErrorResponse errorResponse = new ValidationErrorResponse();
+            errorResponse.addViolation("commentId", e.getMessage());
+            return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        } catch (ExecutionException | InterruptedException e) {
+            return new ResponseEntity<>("Error deleting comment", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
+    @PutMapping("/admin/{commentId}")
+    public ResponseEntity<Object> deleteCommentByAdmin(@PathVariable String commentId) throws ExecutionException, InterruptedException {
+        try {
+            String result = forumService.updateCommentAsDelete(commentId);
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            ValidationErrorResponse errorResponse = new ValidationErrorResponse();
+            errorResponse.addViolation("commentId", e.getMessage());
+            return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        } catch (ExecutionException | InterruptedException e) {
+            return new ResponseEntity<>("Error updating comment", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @PutMapping("/author/{commentId}")
+    public ResponseEntity<Object> deleteCommentByAuthor(@PathVariable String commentId) throws ExecutionException, InterruptedException {
+        try {
+            String email = UserUtil.getCurrentUserEmail();
+            String userId;
+            TeacherDto teacherDto = tmService.getTMByEmail(email);
+            if (teacherDto == null) {
+                StudentDto studentDto = studentService.getStudentByEmail(email);
+                if (studentDto == null) {
+                    return new ResponseEntity<>("User not found", HttpStatus.UNAUTHORIZED);
+                }
+                userId = studentDto.getUserId();
+            } else {
+                userId = teacherDto.getUserId();
+            }
+            ForumDto forumDto = forumService.getComment(commentId);
+            String commentUserId = forumDto.getUserId();
+            if (!userId.equals(commentUserId)) {
+                return new ResponseEntity<>("You cannot delete another user's comment", HttpStatus.FORBIDDEN);
+            }
+            String result = forumService.updateCommentAsDelete(commentId);
+            return new ResponseEntity<>(result, HttpStatus.OK);
+
+        } catch (IllegalArgumentException e) {
+            ValidationErrorResponse errorResponse = new ValidationErrorResponse();
+            errorResponse.addViolation("commentId", e.getMessage());
+            return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        } catch (ExecutionException | InterruptedException e) {
+            return new ResponseEntity<>("Error updating comment", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

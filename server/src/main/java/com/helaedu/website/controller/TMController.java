@@ -1,9 +1,11 @@
 package com.helaedu.website.controller;
 
 import com.helaedu.website.dto.ArticleDto;
+import com.helaedu.website.dto.StudentDto;
 import com.helaedu.website.dto.TeacherDto;
 import com.helaedu.website.dto.ValidationErrorResponse;
 import com.helaedu.website.service.ArticleService;
+import com.helaedu.website.service.StudentService;
 import com.helaedu.website.service.TMService;
 import com.helaedu.website.util.RequestUtil;
 import com.helaedu.website.util.UserUtil;
@@ -23,9 +25,11 @@ import java.util.concurrent.ExecutionException;
 public class TMController {
     private final ArticleService articleService;
     private final TMService tmService;
-    public TMController(ArticleService articleService, TMService tmService) {
+    private final StudentService studentService;
+    public TMController(ArticleService articleService, TMService tmService, StudentService studentService) {
         this.articleService = articleService;
         this.tmService = tmService;
+        this.studentService = studentService;
     }
 
     @PostMapping("/uploadProfilePicture")
@@ -57,6 +61,7 @@ public class TMController {
             return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
         }
     }
+
     @PostMapping("/by-email")
     public ResponseEntity<Object> getTMByEmail(@RequestBody Map<String, String> requestBody) throws ExecutionException, InterruptedException {
         String email = requestBody.get("email");
@@ -122,4 +127,23 @@ public class TMController {
         Map<String, String> requestBody = RequestUtil.createEmailRequestBody(email);
         return deleteProfilePicture(requestBody);
     }
+//    for get details of all users
+    @GetMapping("/{userId}/all")
+    public ResponseEntity<Object> getAllUsers(@PathVariable String userId) throws ExecutionException, InterruptedException {
+        TeacherDto teacherDto = tmService.getTM(userId);
+        if (teacherDto != null) {
+            return ResponseEntity.ok(teacherDto);
+        } else {
+            StudentDto studentDto = studentService.getStudent(userId);
+
+            if (studentDto != null) {
+                return ResponseEntity.ok(studentDto);
+            } else {
+                ValidationErrorResponse errorResponse = new ValidationErrorResponse();
+                errorResponse.addViolation("userId", "User not found (neither teacher nor student)");
+                return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+            }
+        }
+    }
+
 }

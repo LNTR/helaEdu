@@ -20,6 +20,5 @@ public class SubjectDto {
     @NotEmpty(message = "Language is required")
     private String language;
 
-    @NotEmpty(message = "PDF reference is required")
     private String pdfRef;
 }

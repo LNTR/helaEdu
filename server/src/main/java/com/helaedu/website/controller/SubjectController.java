@@ -9,7 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
 @RestController
@@ -39,6 +41,18 @@ public class SubjectController {
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         } catch (ExecutionException | InterruptedException e) {
             return new ResponseEntity<>("Error creating subject", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/uploadPdf")
+    public ResponseEntity<Object> uploadPdf(@RequestParam String subjectId, @RequestParam("pdf") MultipartFile pdf) {
+        try {
+            String pdfRef = subjectService.uploadPdf(subjectId, pdf);
+            return new ResponseEntity<>(pdfRef, HttpStatus.OK);
+        } catch (IOException e) {
+            return new ResponseEntity<>("Error uploading pdf", HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 }

@@ -1,6 +1,13 @@
 import React, { useState } from 'react';
+import { addComplaint } from '@services/ComplaintServce';
+import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 
 function AddReport({ onCancel, commentId, articleId }) {
+
+  const authHeader = useAuthHeader();
+  const headers = {
+    Authorization: authHeader,
+  };
   const [reportText, setReportText] = useState('');
   const [isPopupOpen, setIsPopupOpen] = useState(true); 
   const [error, setError] = useState('');
@@ -12,18 +19,23 @@ function AddReport({ onCancel, commentId, articleId }) {
       setError("Add your complaint");
       return;
     }
-
     const reportData = {
       complaint: reportText,
       articleId: articleId,
       commentId: commentId,
     };
-
     try {
-      const response = await addComment(commentData);
+      const response = await addComplaint(reportData, headers);
       console.log("Create reply response:", response);
-      setReplyText('');
-      setIsPopupOpen(false); 
+
+      if (response.status === 201) {
+       
+        setReportText(''); 
+        setIsPopupOpen(false);
+        window.location.reload(); 
+      } else {
+        setError("Failed to post complaint. Please try again.");
+      }
     } catch (error) {
       console.error("Failed to post reply", error);
       setError("Failed to post reply. Please try again.");
@@ -45,12 +57,11 @@ function AddReport({ onCancel, commentId, articleId }) {
               value={reportText}
               onChange={(e) => {
                 setReportText(e.target.value);
-                setError('');
+                setError(''); 
               }}
-              placeholder="Type your reply..."
+              placeholder="Type your complaint..."
               className="w-full p-2 border border-gray-300 rounded-lg mb-4"
             />
-            {error && <p className="text-red-500 mb-4">{error}</p>}
             <div className="flex justify-end space-x-4">
               <button
                 onClick={handlePost}

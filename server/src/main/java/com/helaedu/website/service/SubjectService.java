@@ -73,16 +73,15 @@ public class SubjectService {
         return pdfRef;
     }
     public List<SubjectDto> getSubjectByGrade(String grade) throws ExecutionException, InterruptedException {
-        List<Subject> subject = subjectRepository.getSubjectByGrade(grade);
-        return subject.stream().map(subjects ->
-                new SubjectDto(
-                        subjects.getSubjectId(),
-                        subjects.getSubjectName(),
-                        subjects.getGrade(),
-                        subjects.getLanguage(),
-                        subjects.getPdfRef()
-
-                )
-        ).collect(Collectors.toList());
+        List<Subject> subjects = subjectRepository.getSubjectByGrade(grade);
+        return subjects.stream()
+                .map(subject -> new SubjectDto(
+                        subject.getSubjectId(),
+                        subject.getSubjectName(),
+                        subject.getGrade(),
+                        subject.getLanguage(),
+                        subject.getPdfRef()))
+                .collect(Collectors.toList());
     }
+
 }

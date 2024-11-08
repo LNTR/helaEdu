@@ -1,5 +1,7 @@
 package com.helaedu.website.controller;
 
+import com.helaedu.website.dto.NoteDto;
+import com.helaedu.website.dto.StudentDto;
 import com.helaedu.website.dto.SubjectDto;
 import com.helaedu.website.dto.ValidationErrorResponse;
 import com.helaedu.website.service.SubjectService;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 @RestController
@@ -55,5 +58,18 @@ public class SubjectController {
             throw new RuntimeException(e);
         }
     }
+    @GetMapping("/byGrade/{grade}")
+    public ResponseEntity<List<SubjectDto>> getSubjectsByGrade(@PathVariable String grade) {
+        try {
+            List<SubjectDto> subjects = subjectService.getSubjectByGrade(grade);
+            return new ResponseEntity<>(subjects, HttpStatus.OK);
+        } catch (ExecutionException | InterruptedException e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+
+
 
 }

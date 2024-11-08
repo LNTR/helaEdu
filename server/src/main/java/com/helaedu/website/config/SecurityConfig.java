@@ -81,6 +81,10 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.PUT, "/complaints/**").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/complaints/**").permitAll()
                                 .requestMatchers(HttpMethod.DELETE, "/complaints/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/subjects/**").permitAll()
+                                .requestMatchers(HttpMethod.PUT, "/subjects/**").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/subjects/**").permitAll()
+                                .requestMatchers(HttpMethod.DELETE, "/subjects/**").permitAll()
 
                         .anyRequest().permitAll()
                 )

@@ -2,10 +2,8 @@ package com.helaedu.website.controller;
 
 import com.google.firebase.auth.FirebaseAuthException;
 import com.helaedu.website.dto.*;
-import com.helaedu.website.service.NoteService;
-import com.helaedu.website.service.StudentService;
-import com.helaedu.website.service.SubjectService;
-import com.helaedu.website.service.SubscriptionService;
+import com.helaedu.website.entity.SubjectNote;
+import com.helaedu.website.service.*;
 import com.helaedu.website.util.UserUtil;
 import com.helaedu.website.util.RequestUtil;
 import jakarta.validation.Valid;
@@ -33,11 +31,15 @@ public class StudentController {
 
     private final SubjectService subjectService;
 
-    public StudentController(StudentService studentService, NoteService noteService, SubscriptionService subscriptionService, SubjectService subjectService) {
+    private final SubjectNoteService subjectNoteService;
+
+    public StudentController(StudentService studentService, NoteService noteService, SubscriptionService subscriptionService,
+                             SubjectService subjectService, SubjectNoteService subjectNoteService) {
         this.studentService = studentService;
         this.noteService = noteService;
         this.subscriptionService = subscriptionService;
         this.subjectService = subjectService;
+        this.subjectNoteService = subjectNoteService;
     }
 
     @PostMapping("/create")
@@ -334,9 +336,12 @@ public class StudentController {
 
         try {
             studentService.enrollSubject(studentDto.getUserId(), subjectDto);
+            subjectNoteService.createSubjectNote(new SubjectNoteDto(subjectId, email));
             return new ResponseEntity<>("Enrolled successfully", HttpStatus.OK);
         } catch (ExecutionException | InterruptedException e) {
             return new ResponseEntity<>("Error enrolling student", HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (FirebaseAuthException e) {
+            throw new RuntimeException(e);
         }
     }
 

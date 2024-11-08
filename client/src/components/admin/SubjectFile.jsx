@@ -2,11 +2,11 @@ import React, {useState} from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFile,faTrash,faEye,faEdit } from '@fortawesome/free-solid-svg-icons';
 
-export default function SubjectFile({subjects}) {
+export default function SubjectFile({subject}) {
 
   const [isOpenDeletePopup,setDeletePopup] = useState(false);
   const [isOpenEditPopup,setEditPopup] = useState(false);
-
+console.log(subject);
   const openDeletePopup=()=>{
     setDeletePopup(true);
   }
@@ -20,7 +20,7 @@ export default function SubjectFile({subjects}) {
     setEditPopup(false);
   }
   const openPdf = () => {
-    window.open(subjects.pdf, '_blank');
+    window.open(subject.pdfRef, '_blank');
    
   };
   return (
@@ -28,7 +28,7 @@ export default function SubjectFile({subjects}) {
       <div className='rounded-xl shadow-xl w-56 h-80 py-20 hover:scale-95 transition-transform '>
        
         <div className='flex justify-center mb-5 text-black cursor-pointer' onClick={openPdf} ><FontAwesomeIcon icon={faFile} size="3x"/></div>
-        <p className='text-3xl text-black text-center h-12'>{subjects.subject}</p>
+        <p className='text-3xl text-black text-center h-12'>{subject.subjectName}</p>
         
         <div className='flex justify-center text-center mt-10'>  
             <div className='bg-blue p-2 rounded-lg hover:translate-x-1 mx-3'>

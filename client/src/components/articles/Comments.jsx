@@ -1,19 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import AddReply from './AddReply'; 
-import AddReport from "@components/articles/AddReport"
-import { faThumbsUp as faThumbsUpRegular } from '@fortawesome/free-regular-svg-icons';
-import { faThumbsUp as faThumbsUpSolid } from '@fortawesome/free-solid-svg-icons';
-import { faThumbsDown as faThumbsDownRegular } from '@fortawesome/free-regular-svg-icons';
-import { faThumbsDown as faThumbsDownSolid } from '@fortawesome/free-solid-svg-icons';
+import AddReport from "@components/articles/AddReport";
+import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
+import { getAllDetailsForCurrentUser } from '@services/AuthService';
+import DeleteComment from '@components/articles/DeleteComment'; 
 
 function Comment({ comment }) {
+
+  const authHeader = useAuthHeader();
+  const headers = {
+    Authorization: authHeader,
+  };
+
   const [showReplies, setShowReplies] = useState(false);
   const [showAddReply, setShowAddReply] = useState(false);
   const [showAddReport, setShowAddReport] = useState(false);
+  const [showAddDelete, setShowAddDelete] = useState(false);
+  const [currentUserId, setCurrentUserId] = useState(null);
 
- 
+  useEffect(() => {
+    async function fetchCurrentUser() {
+      try {
+        const userDetails = await getAllDetailsForCurrentUser(headers);
+        setCurrentUserId(userDetails.data.userId);
+        console.log(userDetails.data);
+        
+      } catch (error) {
+        console.error("Error fetching current user details:", error);
+      }
+    }
+    fetchCurrentUser();
+  }, []);
+
   return (
     <div>
       <div className="flex mt-6">
@@ -38,15 +58,17 @@ function Comment({ comment }) {
               <FontAwesomeIcon icon={faChevronDown} className="mr-1" />
               {comment.replies.length}
             </span>
-            <p><FontAwesomeIcon icon={faThumbsUpRegular} /></p>
-            <p><FontAwesomeIcon icon={faThumbsDownRegular} /></p>
             <span className="cursor-pointer" onClick={() => setShowAddReply(true)}>Reply</span>
-            <span className="cursor-pointer"onClick={() => setShowAddReport(true)}>Report</span>
+            <span className="cursor-pointer" onClick={() => setShowAddReport(true)}>Report</span>
+
+            {currentUserId === comment.userId && (
+              <span className="cursor-pointer" onClick={() => setShowAddDelete(true)}>Delete</span>
+            )}
           </div>
           {showReplies && comment.replies.length > 0 && (
             <div className="ml-10 mt-4">
               {comment.replies.map((reply, index) => (
-                <Comment key={index} comment={reply}  />
+                <Comment key={index} comment={reply} />
               ))}
             </div>
           )}
@@ -64,6 +86,12 @@ function Comment({ comment }) {
           onCancel={() => setShowAddReport(false)} 
           commentId={comment.commentId} 
           articleId={comment.articleId} 
+        />
+      )}
+      {showAddDelete && (
+        <DeleteComment 
+          onCancel={() => setShowAddDelete(false)} 
+          commentId={comment.commentId} 
         />
       )}
     </div>

@@ -1,9 +1,7 @@
 package com.helaedu.website.controller;
 
-import com.helaedu.website.dto.ArticleDto;
-import com.helaedu.website.dto.StudentDto;
-import com.helaedu.website.dto.TeacherDto;
-import com.helaedu.website.dto.ValidationErrorResponse;
+import com.helaedu.website.dto.*;
+import com.helaedu.website.service.AdminService;
 import com.helaedu.website.service.ArticleService;
 import com.helaedu.website.service.StudentService;
 import com.helaedu.website.service.TMService;
@@ -25,10 +23,12 @@ import java.util.concurrent.ExecutionException;
 public class TMController {
     private final ArticleService articleService;
     private final TMService tmService;
+    private final AdminService adminService;
     private final StudentService studentService;
-    public TMController(ArticleService articleService, TMService tmService, StudentService studentService) {
+    public TMController(ArticleService articleService, TMService tmService, AdminService adminService, StudentService studentService) {
         this.articleService = articleService;
         this.tmService = tmService;
+        this.adminService = adminService;
         this.studentService = studentService;
     }
 
@@ -145,5 +145,24 @@ public class TMController {
             }
         }
     }
+    @GetMapping("/me/all")
+    public ResponseEntity<Object> getCurrentUserDetails() throws ExecutionException, InterruptedException {
+        String email = UserUtil.getCurrentUserEmail();
+        AdminDto admin = adminService.getAdminByEmail(email);
+        if (admin != null) {
+            return new ResponseEntity<>(admin, HttpStatus.OK);
+        }
+        TeacherDto teacherDto = tmService.getTMByEmail(email);
+        if (teacherDto != null) {
+            return new ResponseEntity<>(teacherDto, HttpStatus.OK);
+        }
+        StudentDto studentDto = studentService.getStudentByEmail(email);
+        if (studentDto != null) {
+            return new ResponseEntity<>(studentDto, HttpStatus.OK);
+        }
+        return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+    }
+
+
 
 }

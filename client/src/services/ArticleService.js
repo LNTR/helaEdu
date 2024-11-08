@@ -54,3 +54,9 @@ export const addComment = (comment, headers) =>
 
 export const getCommentById = (commentId) =>
   axios.get(`${GET_COMMENTS_ARTICLES_URL}/${commentId}`);
+
+export const deleteCommentByAuthor = (commentId,headers) =>
+  axios.put(`${GET_COMMENTS_ARTICLES_URL}/author/${commentId}`,{headers});
+
+export const deleteCommentByAdmin = (commentId) =>
+  axios.put(`${GET_COMMENTS_ARTICLES_URL}/admin/${commentId}`);

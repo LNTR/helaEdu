@@ -12,4 +12,9 @@ public class SubjectNoteDto {
     private String subjectId;
     private String email;
     private String content;
+
+    public SubjectNoteDto(String subjectId, String email) {
+        this.subjectId = subjectId;
+        this.email = email;
+    }
 }

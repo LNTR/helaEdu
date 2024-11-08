@@ -5,11 +5,13 @@ import com.helaedu.website.dto.SubjectNoteDto;
 import com.helaedu.website.entity.SubjectNote;
 import com.helaedu.website.repository.SubjectNoteRepository;
 import com.helaedu.website.util.UniqueIdGenerator;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
+@Service
 public class SubjectNoteService {
 
     private final SubjectNoteRepository subjectNoteRepository;

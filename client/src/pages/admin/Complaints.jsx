@@ -46,9 +46,6 @@ const Complaints = () => {
   
     fetchData();
   }, []);
-  
-  
-
   const totalPages = Math.ceil(complaints.length / rowsPerPage);
   const currentRows = complaints
     .slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)
@@ -63,6 +60,7 @@ const Complaints = () => {
         date={complaint.publishedTimestamp}
         status={complaint.status || "Pending"}
         articleId={complaint.articleId}
+        commentId={complaint.commentId}
       />
     ));
 

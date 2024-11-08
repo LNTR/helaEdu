@@ -7,6 +7,8 @@ import pdfICT from '@assets/temp/pdfICT.pdf';
 import pdfMaths from '@assets/temp/pdfMaths.pdf';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
+import { uploadPdf } from '@services/SubjectService';
+import { createSubject } from '@services/SubjectService';
 
 export default function SelectedSub() {
   const location = useLocation();
@@ -72,6 +74,8 @@ export default function SelectedSub() {
                 <h3 className="text-4xl mb-4  flex justify-center ">Add Your TextBook</h3>
                 <form>
                   <label className='text-3xl my-3'>Subject</label><br></br>
+                  <input type="text" className="border border-blue rounded-md px-5 py-3"/><br></br><br></br>
+                  <label className='text-3xl my-3'>Language</label><br></br>
                   <input type="text" className="border border-blue rounded-md px-5 py-3"/>
                   <input type="file" placeholder='Subject' className="my-6 w-full"/>
                   <br></br>

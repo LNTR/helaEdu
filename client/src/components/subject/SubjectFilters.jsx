@@ -14,7 +14,7 @@ function SubjectFilters() {
     "Grade 13",
   ];
   let [enrollFilter, setEnrollFilter] = useState("all");
-  let [gradeFilter, setGradeFilter] = useState("all");
+  let [selectedGrade, setSelectedGrade] = useState(grades[0] || "Select Grade");
   useEffect(() => {
     switch (enrollFilter) {
       case "all":
@@ -27,7 +27,7 @@ function SubjectFilters() {
   }, [enrollFilter]);
 
   useEffect(() => {
-    switch (gradeFilter) {
+    switch (selectedGrade) {
       case "all":
         //all course detail logic
         break;
@@ -35,7 +35,7 @@ function SubjectFilters() {
         //enroll course details logic
         break;
     }
-  }, [gradeFilter]);
+  }, [selectedGrade]);
 
   return (
     <div className="mx-44 ">
@@ -65,9 +65,9 @@ function SubjectFilters() {
             <div className="dropdown dropdown-end">
               <button
                 tabIndex={0}
-                className="text-xl px-10 py-3 rounded-sm border border-gray1 text-gray1 hover:bg-blue hover:text-white transition-colors flex items-center"
+                className="text-xl px-10 py-3 rounded-sm border border-gray1 text-gray1 transition-colors flex items-center"
               >
-                Grade{" "}
+                {selectedGrade}
                 <FontAwesomeIcon
                   icon={faChevronDown}
                   className="text-gray1 text-sm ml-2"
@@ -80,13 +80,21 @@ function SubjectFilters() {
               >
                 {grades.map((grade, index) => (
                   <li key={index} className="z-10">
-                    <button className="text-xl w-full text-left px-4 py-2 hover:bg-gray-100 z-10 bg-white">
+                    <button
+                      onClick={() => setSelectedGrade(grade)}
+                      className={`text-xl w-full text-left px-4 py-2 z-10 ${
+                        selectedGrade == grade ? "bg-blue text-white" : ""
+                      }`}
+                    >
                       {grade}
                     </button>
                   </li>
                 ))}
               </ul>
             </div>
+            <button className="text-xl bg-black px-10 py-3 rounded-sm border border-gray1 text-white hover:bg-blue hover:text-white transition-colors">
+              Save Filters
+            </button>
             <button className="text-xl bg-black px-10 py-3 rounded-sm border border-gray1 text-white hover:bg-blue hover:text-white transition-colors">
               Reset
             </button>

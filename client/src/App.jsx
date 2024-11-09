@@ -4,6 +4,7 @@ import {
   GlobalRoutes,
   QuizRoutes,
   AssignmentRoutes,
+  SubjectRoutes,
 } from "@routes";
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
         <Route path="/articles/*" element={<ArticleRoutes />} />
         <Route path="/quiz/*" element={<QuizRoutes />} />
         <Route path="/assignments/*" element={<AssignmentRoutes />} />
+        <Route path="/subjects/*" element={<SubjectRoutes />} />
         <Route path="/*" element={<GlobalRoutes />} />
       </Routes>
     </div>

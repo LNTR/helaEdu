@@ -45,8 +45,8 @@ export default function ReadArticle() {
 
   useEffect(() => {
     const fetchReccomendations = async () => {
-      const clusterId = article?.cluster;
-      let articleList = (await reccomendArticles(clusterId)).data;
+      const articleId = article?.articleId;
+      let articleList = (await reccomendArticles(articleId)).data;
       setReccomendedArticles(articleList);
     };
     if (article) {
@@ -112,7 +112,7 @@ export default function ReadArticle() {
         </div>
       </div>
       <div className="mx-24">
-        <CommentList  articleId={article.articleId}/>
+        <CommentList articleId={article.articleId} />
       </div>
       <Footer />
     </div>

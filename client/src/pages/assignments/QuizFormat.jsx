@@ -57,7 +57,7 @@ export default function QuizFormat() {
         const response = await addQuizzes(questions, assignmentId);
         if (response.status === 200) {
           console.log(response);
-          navigate("/assignment/assignmentList");
+          navigate("/assignments/assignmentList");
         }
       } else {
         console.error("Assignment ID is not defined.");

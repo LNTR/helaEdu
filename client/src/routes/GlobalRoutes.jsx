@@ -33,7 +33,6 @@ import Summary from "@pages/reputation/Summary";
 import Votes from "@pages/reputation/Votes";
 import Comments from "@pages/reputation/Comments";
 import Badges from "@pages/reputation/Badges";
-import ReviewdQuiz from "@pages/assignments/ReviewdQuiz";
 import QuestionsList from "@pages/assignments/QuestionsList";
 import Complaints from "@pages/admin/Complaints";
 import QuizA from "@pages/attemptAssignment/Quiz";
@@ -78,7 +77,6 @@ function GlobalRoutes() {
       <Route path="/votes" element={<Votes />} />
       <Route path="/comments" element={<Comments />} />
       <Route path="/badges" element={<Badges />} />
-      <Route path="/reviewQuizzes/:assignmentId" element={<ReviewdQuiz />} />
       <Route path="/questionList" element={<QuestionsList />} />
       <Route path="/complaints" element={<Complaints />} />
       <Route path="/quizStart/:assignmentId" element={<QuizA />} />

@@ -8,7 +8,7 @@ import { userRoles } from "@utils/userRoles";
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 
 
-export default function ArticleHead() {
+export default function ArticleHead({onStatusChange}) {
   const currentUserRole = useAuthUser()?.role;
   const grades = ["Grade 1", "Grade 2", "Grade 3", "Grade 4", "Grade 5"];
 
@@ -31,7 +31,7 @@ export default function ArticleHead() {
         </div>
       </div>
       <div className="flex justify-center items-center mt-12">
-        <Sort />
+        <Sort onStatusChange={onStatusChange} />
       </div>
     </div>
   );

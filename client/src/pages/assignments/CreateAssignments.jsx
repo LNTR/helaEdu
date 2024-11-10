@@ -49,7 +49,7 @@ export default function CreateAssignments() {
       // const response = await createAssignment(assignment);
       console.log("Create Assignment Response:", response);
       const assignmentId = response.data;
-      navigate(`/quizFormat/${assignmentId}`);
+      navigate(`assignments/quizFormat/${assignmentId}`);
 
     } catch (error) {
       console.error("Failed to create assignment", error);

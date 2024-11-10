@@ -168,7 +168,7 @@ export default function AddArticlesForm() {
               />
             </div>
           </div>
-          <div className="my-7">
+          <div className="my-7 ">
             <span className="text-3xl">Content</span>
             <TextEditor content={content} setContent={setContent} required />
           </div>

@@ -12,7 +12,7 @@ function AssignmentRoutes() {
     <Routes>
       <Route path="/assignmentList" element={<AssignmentList />} />
       <Route path="/createAssignments" element={<CreateAssignments />} />
-      <Route path="/quizFormat" element={<QuizFormat />} />
+      <Route path="/quizFormat/:assignmentId" element={<QuizFormat />} />
     </Routes>
   );
 }

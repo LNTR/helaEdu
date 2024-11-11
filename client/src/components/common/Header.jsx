@@ -160,10 +160,31 @@ function Header() {
                         </Link>
                       ) : null}
                     </li>
-                    <li>
+                    {/* <li>
                       <h4>Grades</h4>
+                    </li> */}
+                    <li>
+                      {currentUserRole == userRoles.Teacher ? (
+                        <Link to="/articles/addArticles">
+                          <h4> My Articles</h4>
+                        </Link>
+                      ) : currentUserRole == userRoles.Moderator ? (
+                        <Link to="/articles/addArticles">
+                          <h4> My Articles</h4>
+                        </Link>
+                      ) : null}
                     </li>
-
+                    <li>
+                      {currentUserRole == userRoles.Teacher ? (
+                        <Link to="/assignments/assignmentList">
+                          <h4>Assignments</h4>
+                        </Link>
+                      ) : currentUserRole == userRoles.Moderator ? (
+                        <Link to="/assignments/assignmentList">
+                          <h4>Assignments</h4>
+                        </Link>
+                      ) : null}
+                    </li>
                     <li>
                       <Link to="/notes">
                         <h4>Stickies</h4>

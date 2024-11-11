@@ -14,6 +14,7 @@ function AssignmentRoutes() {
       <Route path="/assignmentList" element={<AssignmentList />} />
       <Route path="/createAssignments" element={<CreateAssignments />} />
       <Route path="/quizFormat/:assignmentId" element={<QuizFormat />} />
+
       <Route path="/reviewQuizzes/:assignmentId" element={<ReviewdQuiz />} />
     </Routes>
   );

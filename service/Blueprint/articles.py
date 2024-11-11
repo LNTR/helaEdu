@@ -28,8 +28,8 @@ def recreate_model():
     return jsonify({"message": "Model recreated"})
 
 
-@articles.route("<article_id>/get-recommendation", methods=["GET"])
-@articles.route("<article_id>/get-recommendation/", methods=["GET"])
+@articles.route("/get-recommendation/<article_id>", methods=["GET"])
+@articles.route("/get-recommendation/<article_id>/", methods=["GET"])
 def get_reccomendation(article_id):
     articles = _get_related_articles(article_id)
     return jsonify(articles)

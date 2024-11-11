@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 // import { useAuthorizer } from "@hooks";
+import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 
 import useWebSocket from "react-use-websocket";
 
@@ -23,26 +24,30 @@ import useWebSocket from "react-use-websocket";
 //   );
 // }
 
+// function Test() {
+//   const [socketUrl, setSocketUrl] = useState(
+//     `${import.meta.env.VITE_WEBSOCK_API}/ws-assignment`
+//   );
+//   const { sendMessage, lastMessage, readyState } = useWebSocket(socketUrl, {
+//     onOpen: () => console.log("Connected"),
+//     shouldReconnect: (closeEvent) => true,
+//   });
+//   useEffect(() => {
+//     sendMessage(
+//       "SUBSCRIBE\nid:sub-0\ndestination:/topic/assignment-time/as6242d556-c648-43e5-9ea2-f17bcc62a6e0\n\n\0"
+//     );
+//   }, []);
+
+//   useEffect(() => {
+//     if (lastMessage !== null) {
+//       console.log(lastMessage);
+//     }
+//   }, [lastMessage]);
+//   return <></>;
+// }
 function Test() {
-  const [socketUrl, setSocketUrl] = useState(
-    `${import.meta.env.VITE_WEBSOCK_API}/ws-assignment`
-  );
-  const { sendMessage, lastMessage, readyState } = useWebSocket(socketUrl, {
-    onOpen: () => console.log("Connected"),
-    shouldReconnect: (closeEvent) => true,
-  });
-  useEffect(() => {
-    sendMessage(
-      "SUBSCRIBE\nid:sub-0\ndestination:/topic/assignment-time/as6242d556-c648-43e5-9ea2-f17bcc62a6e0\n\n\0"
-    );
-  }, []);
-
-  useEffect(() => {
-    if (lastMessage !== null) {
-      console.log(lastMessage);
-    }
-  }, [lastMessage]);
-  return <></>;
+  const headers = useAuthHeader();
+  console.log(headers);
+  return <>Test here</>;
 }
-
 export default Test;

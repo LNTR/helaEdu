@@ -32,7 +32,7 @@ function Header() {
                 <h4>Home</h4>
               </div>
             </Link>
-            <Link to="/SubjectCatalog">
+            <Link to="/subjects/SubjectCatalog">
               <div className="nav-text flex-c m-4 cursor-pointer">
                 <h4>Subject</h4>
               </div>

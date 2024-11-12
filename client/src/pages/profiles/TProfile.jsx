@@ -110,7 +110,7 @@ const TProfile = () => {
           </div>
         </div>
         <div className="w-1/2 grid grid-cols-2 gap-8 mt-12">
-          <Link to="/assignment/assignmentList">
+          <Link to="/assignments/assignmentList">
             <div className="shadow-xl rounded-lg w-full h-56 flex flex-col items-center justify-center text-xl font-semibold">
               <img src={Assignment} className="w-20 h-20" alt="Assignments" />
               <p className="text-2xl">My Assignments</p>

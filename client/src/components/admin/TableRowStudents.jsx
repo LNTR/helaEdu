@@ -23,7 +23,7 @@ export default function TableRowStudents({ userId, firstName,lastName, email ,pr
   return (
 
     <div className='flex justify-center   my-4'>
-      <div className=' border border-blue rounded-3xl w-9/12 h-16 px-7 py-4 flex justify-between items-center'>
+      <div className=' border border-blue rounded-3xl w-10/12 h-16 px-7 py-4 flex justify-between items-center'>
           {profileRef ?(
               <img src={profileRef} className='w-12 h-12 rounded-full'/>
           ):(

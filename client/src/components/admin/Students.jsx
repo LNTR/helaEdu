@@ -2,7 +2,7 @@ import TableRawStudents from '@components/admin/TableRowStudents';
 import React ,{useState , useEffect} from 'react';
 import Pagination from '@components/admin/Pagination';
 import { listStudentDetails } from '@services/StudentService';
-
+import TableHeaderForUsers from "@components/admin/TableHeaderForUsers";
 export default function Students() {
   const [currentPage, setCurrentPage] = useState(1);
   const [students, setStudents] = useState([]);
@@ -35,8 +35,9 @@ export default function Students() {
 
   return (
     <div>
-      <div className=' my-28 z-50'>
+      <div className=' my-10 z-50'>
         <div className="min-h-72">
+          <TableHeaderForUsers/>
             {currentRows}
         </div>
         <div>

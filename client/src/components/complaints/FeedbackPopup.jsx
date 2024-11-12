@@ -4,18 +4,18 @@ function FeedbackPopup({ onCancel, onSubmitFeedback }) {
   const [feedback, setFeedback] = useState('');
 
   const handleAccept = () => {
-    onSubmitFeedback(feedback, 'accept'); // Pass "accept" as the action type
+    onSubmitFeedback(feedback, 'accept'); 
   };
 
   const handleDecline = () => {
-    onSubmitFeedback(feedback, 'decline'); // Pass "decline" as the action type
+    onSubmitFeedback(feedback, 'decline'); 
   };
 
   return (
     <div className="popup-overlay fixed inset-0 flex items-center justify-center bg-gray-700 bg-opacity-50">
       <div className="popup-content bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
         <h3 className="text-2xl font-semibold mb-4">Review Complaint</h3>
-        <p className="mb-4">Do you want to accept or decline this complaint?</p>
+        <p className="mb-4">Do you want to resolve  or decline this complaint?</p>
         
         <textarea
           value={feedback}
@@ -29,7 +29,7 @@ function FeedbackPopup({ onCancel, onSubmitFeedback }) {
             onClick={handleAccept} 
             className="bg-green-500 text-white px-4 py-2 rounded-md text-2xl"
           >
-            Accept
+            Resolve
           </button>
           <button 
             onClick={handleDecline} 

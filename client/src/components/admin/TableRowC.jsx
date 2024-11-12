@@ -38,7 +38,7 @@ export default function TableRowC({ complaintId, comment, complaint, commentedBy
     try {
       if (actionType === 'accept') {
         await reviewComplaint(complaintId, feedback);
-        alert('Complaint accepted with feedback');
+        alert('Complaint resolved with feedback');
         window.location.reload();
       } else if (actionType === 'decline') {
         await declineComplaint(complaintId, feedback);

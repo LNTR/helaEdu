@@ -47,6 +47,7 @@ const UserManagement = () => {
             <Sidebar />
           </div>
           <div className="content-wrapper ">
+          
             <div className="tabs text-sm flex justify-center mb-4">
               <button
                 onClick={() => handleTabClick("PendingRequests")}
@@ -78,6 +79,9 @@ const UserManagement = () => {
               >
                 Top Teachers
               </button>
+            </div>
+            <div className="flex justify-end mr-40 mt-4">
+              <input type="text" className="border border-blue px-10 py-2 rounded-2xl h-16 w-60" placeholder="Search..."/>
             </div>
             <div className="">
               <TableRows 

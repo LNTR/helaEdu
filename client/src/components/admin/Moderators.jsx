@@ -3,7 +3,7 @@ import { Header, Footer } from '@components/common';
 import React ,{useState , useEffect} from 'react';
 import Pagination from '@components/admin/Pagination';
 import { listModeratorDetails } from '@services/TeacherService';
-
+import TableHeaderForUsers from "@components/admin/TableHeaderForUsers";
 export default function Moderators() {
   const [currentPage, setCurrentPage] = useState(1);
   const [moderators, setModerators] = useState([]);
@@ -36,9 +36,10 @@ export default function Moderators() {
   return (
     <div>
      
-      <div className=' my-28 z-50'>
+      <div className='my-8 z-50'>
        
         <div>
+          <TableHeaderForUsers/>
             {currentRows}
         </div>
         <div>

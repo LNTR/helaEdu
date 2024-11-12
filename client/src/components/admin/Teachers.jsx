@@ -2,7 +2,7 @@ import TableRawTeachers from '@components/admin/TableRowTeachers';
 import React ,{useState, useEffect} from 'react';
 import Pagination from '@components/admin/Pagination';
 import { listAllTeachersDetails } from '@services/TeacherService';
-  
+import TableHeaderForUsers from "@components/admin/TableHeaderForUsers";
 export default function Teachers() {
 
     const [currentPage, setCurrentPage] = useState(1);
@@ -38,9 +38,10 @@ export default function Teachers() {
   return (
     <div>
      
-      <div className=' my-28 z-50'>
+      <div className=' my-10 z-50'>
        
         <div className="min-h-72">
+          <TableHeaderForUsers/>
             {currentRows}
         </div>
         <div>

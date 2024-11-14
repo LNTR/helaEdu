@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -28,6 +30,8 @@ public class StudentDto {
     private String regTimestamp;
     private String noteId;
     private String subscriptionId;
+    private ArrayList<String> enrolledSubjects;
+
     private String role;
     private boolean emailVerified;
     private String profilePictureUrl;

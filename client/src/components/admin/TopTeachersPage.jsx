@@ -2,6 +2,8 @@ import TableRawTopTeachers from '@components/admin/TableRowTopTeachers';
 import { Header, Footer } from '@components/common';
 import React ,{useState} from 'react';
 import Pagination from '@components/articles/Pagination';
+import TableHeaderForUsers from "@components/admin/TableHeaderForUsers";
+
 const teacher = [
     {
       teacherId: 1,
@@ -62,9 +64,10 @@ export default function TopTeachersPage() {
   return (
     <div>
      
-      <div className=' my-28 z-50'>
+      <div className='my-10 z-50'>
        
         <div>
+        <TableHeaderForUsers/>
             {currentRows}
         </div>
         <div>

@@ -1,27 +1,83 @@
 import React, { useState } from 'react';
+import { addComment } from '@services/ArticleService';
+import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 
-export default function AddReply({ onCancel, onPostReply }) {
-  const [replyText, setReplyText] = useState('');
+function AddReply({ onCancel, commentId, articleId }) {
 
-  const handlePostReply = () => {
-    onPostReply(replyText);
-    setReplyText('');
+  const authHeader = useAuthHeader();
+  const headers = {
+    Authorization: authHeader,
   };
-  return (
-   
-      <div className='m-12'>
-        <div className='flex justify-start'>
-            <div><h1>Reply to M.Perera</h1></div>
-            <div> <button onClick={onCancel}  className='bg-yellow text-white rounded-xl p-4 text-3xl'>Cancel Reply</button></div>
+  const [replyText, setReplyText] = useState('');
+  const [isPopupOpen, setIsPopupOpen] = useState(true); 
+  const [error, setError] = useState('');
 
+  const handlePost = async (e) => {
+    e.preventDefault();
+
+    if (!replyText.trim()) {
+      setError("Reply cannot be empty.");
+      return;
+    }
+
+    const commentData = {
+      comment: replyText,
+      articleId: articleId,
+      parentId: commentId,
+    };
+
+    try {
+      const response = await addComment(commentData,headers);
+      console.log("Create reply response:", response);
+      setReplyText('');
+      setIsPopupOpen(false);
+      window.location.reload(); 
+    } catch (error) {
+      console.error("Failed to post reply", error);
+      setError("Failed to post reply. Please try again.");
+    }
+  };
+
+  const handleCancelReply = () => {
+    setIsPopupOpen(false);
+    onCancel();
+  };
+
+  return (
+    <>
+      {isPopupOpen && (
+        <div className="popup-overlay fixed inset-0 flex items-center justify-center bg-gray-700 bg-opacity-50">
+          <div className="popup-content bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+            <h3 className="text-2xl font-semibold mb-4">Add Your Reply</h3>
+            <textarea 
+              value={replyText}
+              onChange={(e) => {
+                setReplyText(e.target.value);
+                setError('');
+              }}
+              placeholder="Type your reply..."
+              className="w-full p-2 border border-gray-300 rounded-lg mb-4"
+            />
+            {error && <p className="text-red-500 mb-4">{error}</p>}
+            <div className="flex justify-end space-x-4">
+              <button
+                onClick={handlePost}
+                className="bg-blue text-2xl text-white px-4 py-2 rounded-md"
+              >
+                Post Reply
+              </button>
+              <button
+                onClick={handleCancelReply}
+                className="bg-red-600 text-2xl text-white px-4 py-2 rounded-md"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
         </div>
-        <br></br>
-        <input className='border border-blue w-11/12 h-80 rounded-xl mt-7 mb-7' value={replyText}
-        onChange={(e) => setReplyText(e.target.value)}></input>
-        <div className='flex justify-start'>
-            <button className='bg-yellow text-white rounded-xl p-4 text-3xl' onClick={handlePostReply}> Post Reply</button>
-        </div>
-        </div>
-   
-  )
+      )}
+    </>
+  );
 }
+
+export default AddReply;

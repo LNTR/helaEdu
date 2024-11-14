@@ -1,6 +1,6 @@
 import TableRaw from "@components/assignments/TableRaw";
 import { Header, Footer } from "@components/common";
-import React, { useState , useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Pagination from "@components/articles/Pagination";
 import { Link } from "react-router-dom";
 import { listAssignment } from "@services/AssignmentService";
@@ -10,10 +10,9 @@ import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import DetailesView from "@components/assignments/DetailesView";
 
 export default function AssignmentList() {
-
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isViewPopup, setIsViewPopupOpen] = useState(false);
-  const [assignment, setAssignment] = useState([]); 
+  const [assignment, setAssignment] = useState([]);
   const authHeader = useAuthHeader();
   const headers = {
     Authorization: authHeader,
@@ -37,7 +36,7 @@ export default function AssignmentList() {
   useEffect(() => {
     const fetchAssignments = async () => {
       try {
-        const teacherDetails =await listTeacherDetails(headers);
+        const teacherDetails = await listTeacherDetails(headers);
         const teacherResponse = teacherDetails.data.userId;
         console.log(teacherResponse);
         const assignmentDetails = await listAssignment(teacherResponse);
@@ -53,8 +52,6 @@ export default function AssignmentList() {
     fetchAssignments();
   }, []);
 
-
-  
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 7;
   const totalPages = Math.ceil(assignment.length / rowsPerPage);
@@ -68,11 +65,10 @@ export default function AssignmentList() {
     const formattedSeconds = seconds < 10 ? `0${seconds}` : seconds;
     return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
   };
-  
+
   const currentRows = assignment
     .slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)
-    .map((data, index) => ( 
-      
+    .map((data, index) => (
       <TableRaw
         key={data.assignmentId}
         assignmentId={data.assignmentId}
@@ -94,7 +90,7 @@ export default function AssignmentList() {
       <Header />
       <div className="min-h-screen">
         <div className="flex justify-between mx-48 my-12">
-        {isPopupOpen && (
+          {isPopupOpen && (
             <dialog open className="modal">
               <div className="modal-box max-w-3xl p-10">
                 <p className="py-4 text-3xl">
@@ -107,10 +103,7 @@ export default function AssignmentList() {
                   >
                     Cancel
                   </button>
-                  <button
-                    className="btn bg-blue text-white text-2xl"
-                    
-                  >
+                  <button className="btn bg-blue text-white text-2xl">
                     Delete
                   </button>
                 </div>
@@ -120,7 +113,7 @@ export default function AssignmentList() {
           {isViewPopup && (
             <dialog open className="modal">
               <div className="modal-box max-w-3xl p-10">
-                <DetailesView/>
+                <DetailesView />
               </div>
             </dialog>
           )}
@@ -129,14 +122,15 @@ export default function AssignmentList() {
             <hr className="border-yellow border-t-4 w-full hover:border-white transition duration-300 ease-in-out"></hr>
           </div>
           <div>
-            <Link to="/createAssignments">
+
+            <Link to="/assignments/createAssignments">
               <button className="bg-yellow text-white rounded-xl p-4 text-3xl">
                 Create Assignment
               </button>
             </Link>
           </div>
         </div>
-        <TableRowHeader/>
+        <TableRowHeader />
         <div>{currentRows}</div>
         <div>
           <Pagination
@@ -146,7 +140,7 @@ export default function AssignmentList() {
           />
         </div>
       </div>
-     
+
       <Footer />
     </div>
   );

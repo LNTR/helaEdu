@@ -9,6 +9,11 @@
   --color-accent: #B5D2FC;
   --color-dark-gray: #6C6C6C;
   --color-light-gray: #BBBBBB;
+  --color-main-gray:#9b9b9b;
+  --color-hover-gray:#9b9b9b;
+  --color-gray-background: #bbbbbb3e;
+  --color-danger-color:#eb756e;
+  --color-success-color: #50a250;
 }
 
 .dark {

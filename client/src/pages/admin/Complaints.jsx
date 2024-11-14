@@ -1,69 +1,84 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Header } from "@/components/common";
 import Sidebar from "@/components/admin/Sidebar";
 import TableRowHeaderC from "@components/admin/TableRowHeaderC";
 import TableRowC from "@components/admin/TableRowC";
 import Pagination from "@components/articles/Pagination";
+import { getCommentById } from "@services/ArticleService";
+import { getUserDetails } from "@services/TeacherService";
+import { listComplaints } from "@services/AdminService";
+import Sort from "@components/complaints/Sort";
 
 const Complaints = () => {
-  const commentsData = [
-    {
-      commentId: 1,
-      comment: "Great job on the project!",
-      commentedBy: "John Doe",
-      reportedBy: "Alice Smith",
-      date: "2024-08-30",
-      status: "Approved",
-    },
-    {
-      commentId: 2,
-      comment: "Please revise the design.",
-      commentedBy: "Jane Smith",
-      reportedBy: "Bob Johnson",
-      date: "2024-08-28",
-      status: "Pending",
-    },
-    {
-      commentId: 3,
-      comment: "Content needs updating.",
-      commentedBy: "Michael Brown",
-      reportedBy: "Charlie Lee",
-      date: "2024-08-27",
-      status: "Rejected",
-    },
-    {
-      commentId: 4,
-      comment: "This is ready to go live.",
-      commentedBy: "Emily Davis",
-      reportedBy: "David Wilson",
-      date: "2024-08-26",
-      status: "Approved",
-    },
-    {
-      commentId: 5,
-      comment: "Fix the typos in the document.",
-      commentedBy: "Daniel Miller",
-      reportedBy: "Eve Thompson",
-      date: "2024-08-25",
-      status: "Pending",
-    },
-  ];
-
+  const [complaints, setComplaints] = useState([]);
+  const [filteredComplaints, setFilteredComplaints] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedStatus, setSelectedStatus] = useState("All");
+  const rowsPerPage = 7;
 
-  const rowsPerPage = 7; 
-  const totalPages = Math.ceil(commentsData.length / rowsPerPage);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const complaintsList = await listComplaints();
+        const complaintsArray = complaintsList.data;
 
-  const currentRows = commentsData
+        const complaintsWithDetails = await Promise.all(
+          complaintsArray.map(async (complaint) => {
+            const reporterDetails = await getUserDetails(complaint.userId);
+            const commentDetails = await getCommentById(complaint.commentId);
+            const commentAuthorDetails = await getUserDetails(commentDetails.data.userId);
+            return {
+              ...complaint,
+              reportedBy: reporterDetails.data.firstName + ' ' + reporterDetails.data.lastName,
+              comment: commentDetails.data.comment,
+              commentedBy: commentAuthorDetails.data.firstName + ' ' + commentAuthorDetails.data.lastName,
+            };
+          })
+        );
+        setComplaints(complaintsWithDetails);
+        setFilteredComplaints(complaintsWithDetails); // Initialize filtered complaints
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    let filtered = [...complaints];
+
+    // Filter by status
+    if (selectedStatus !== "All") {
+      filtered = filtered.filter((complaint) => complaint.status === selectedStatus);
+    }
+
+    // Sort by date
+    if (selectedDate) {
+      filtered = filtered.filter((complaint) =>
+        new Date(complaint.publishedTimestamp).toDateString() === selectedDate.toDateString()
+      );
+    }
+
+    setFilteredComplaints(filtered);
+  }, [selectedStatus, selectedDate, complaints]);
+
+  const totalPages = Math.ceil(filteredComplaints.length / rowsPerPage);
+  const currentRows = filteredComplaints
     .slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)
-    .map((comment) => (
+    .map((complaint) => (
       <TableRowC
-        key={comment.commentId}
-        comment={comment.comment}
-        commentedBy={comment.commentedBy}
-        reportedBy={comment.reportedBy}
-        date={comment.date}
-        status={comment.status}
+        key={complaint.complaintId}
+        complaintId={complaint.complaintId}
+        comment={complaint.comment}
+        complaint={complaint.complaint}
+        commentedBy={complaint.commentedBy}
+        reportedBy={complaint.reportedBy}
+        date={complaint.publishedTimestamp}
+        status={complaint.status || "Pending"}
+        articleId={complaint.articleId}
+        commentId={complaint.commentId}
       />
     ));
 
@@ -81,6 +96,7 @@ const Complaints = () => {
           </div>
           <div className="content-wrapper">
             <h1 className="mx-32 my-14">Complaints</h1>
+            <Sort onDateChange={setSelectedDate} onStatusChange={setSelectedStatus} />
             <TableRowHeaderC />
             <div>{currentRows}</div>
             <Pagination

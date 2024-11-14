@@ -11,7 +11,6 @@ import DarkModeToggle from "@components/common/DarkModeToggle";
 import { userRoles } from "@utils/userRoles";
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 
-
 function Header() {
   const isAuthenticated = useIsAuthenticated();
   const signOut = useSignOut();
@@ -33,19 +32,19 @@ function Header() {
                 <h4>Home</h4>
               </div>
             </Link>
-            <Link to="/SubjectCatalog">
+            <Link to="/subjects/SubjectCatalog">
               <div className="nav-text flex-c m-4 cursor-pointer">
                 <h4>Subject</h4>
               </div>
             </Link>
             {currentUserRole == userRoles.Teacher ? (
-              <Link to="/assignmentList">
+              <Link to="/assignments/assignmentList">
                 <div className="nav-text flex-c m-4 cursor-pointer">
                   <h4>Assignments</h4>
                 </div>
               </Link>
             ) : currentUserRole == userRoles.Moderator ? (
-              <Link to="/assignmentList">
+              <Link to="/assignments/assignmentList">
                 <div className="nav-text flex-c m-4 cursor-pointer">
                   <h4>Assignments</h4>
                 </div>
@@ -56,7 +55,7 @@ function Header() {
                   <h4>Quiz</h4>
                 </div>
               </Link>
-            ):(null)}
+            ) : null}
 
             <Link to="/articles">
               <div className="nav-text flex-c m-4 cursor-pointer">
@@ -64,7 +63,7 @@ function Header() {
               </div>
             </Link>
             {currentUserRole == userRoles.Student ? (
-              <Link to="/leaderboard/1">
+              <Link to="/quiz/leaderboard/1">
                 <a className="nav-text flex-c m-4 cursor-pointer">
                   <h4>Leaderboard</h4>
                 </a>
@@ -161,15 +160,35 @@ function Header() {
                         </Link>
                       ) : null}
                     </li>
-                    <li>
+                    {/* <li>
                       <h4>Grades</h4>
-                    </li>
-
+                    </li> */}
                     <li>
-                      <Link to ="/notes">
+                      {currentUserRole == userRoles.Teacher ? (
+                        <Link to="/articles/addArticles">
+                          <h4> My Articles</h4>
+                        </Link>
+                      ) : currentUserRole == userRoles.Moderator ? (
+                        <Link to="/articles/addArticles">
+                          <h4> My Articles</h4>
+                        </Link>
+                      ) : null}
+                    </li>
+                    <li>
+                      {currentUserRole == userRoles.Teacher ? (
+                        <Link to="/assignments/assignmentList">
+                          <h4>Assignments</h4>
+                        </Link>
+                      ) : currentUserRole == userRoles.Moderator ? (
+                        <Link to="/assignments/assignmentList">
+                          <h4>Assignments</h4>
+                        </Link>
+                      ) : null}
+                    </li>
+                    <li>
+                      <Link to="/notes">
                         <h4>Stickies</h4>
                       </Link>
-                      
                     </li>
                     <li>
                       <h4

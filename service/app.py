@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, jsonify, redirect
 
 # from Blueprint.chat import chat
 from Blueprint.status_codes import status_codes
@@ -16,8 +16,7 @@ def create_app():
 
     # app.register_blueprint(chat, url_prefix="/chat")
     app.register_blueprint(articles, url_prefix="/articles")
-
-    app.register_blueprint(status_codes, url_prefix="/status_code")
+    app.register_blueprint(status_codes, url_prefix="")
 
     return app
 

@@ -6,6 +6,8 @@ import { faPencil } from '@fortawesome/free-solid-svg-icons';
 import ProfileImagePopup from '@components/admin/ProfileImagePopup';
 import EditPasswordPopup from '@components/admin/EditPasswordPopup';
 import EditProfilePopup from '@components/admin/EditProfilePopup';
+import ProfileImg from "@assets/img/articles/profile.jpg";
+
 
 const AdminDetails = () => {
   const authHeader = useAuthHeader();
@@ -125,8 +127,11 @@ const AdminDetails = () => {
         <div className="flex justify-start">
           <div className="pl-28 w-1/3 flex  flex-col justify-center relative">
             <div className="relative z-10">
+              {
+                
+              }
               <img
-                src={formData.profilePictureUrl}
+                src={formData.profilePictureUrl ? formData.profilePictureUrl : ProfileImg}
                 alt="Profile Photo"
                 className=" w-72 h-72 rounded-full object-cover shadow-xl"
               />

@@ -263,6 +263,9 @@ public class AssignmentService {
     public void submitAnswer(String assignmentId, String quizId, String userId, String providedAnswer) throws Exception {
         Assignment assignment = assignmentRepository.getAssignmentById(assignmentId);
         AssignmentQuestion question = getQuestionById(assignment, quizId);
+        if (question.getGivenAnswers() == null) {
+            question.setGivenAnswers(new HashMap<>());
+        }
         question.getGivenAnswers().put(userId, providedAnswer);
         assignmentRepository.updateAssignment(assignmentId, assignment);
     }

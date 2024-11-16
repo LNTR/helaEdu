@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -145,7 +146,7 @@ public class AssignmentService {
     public String createAssignment(String userId, AssignmentDto assignmentDto) throws ExecutionException, InterruptedException {
 
         String assignmentId = UniqueIdGenerator.generateUniqueId("as", assignmentRepository::exists);
-
+//        Instant publishedTimestamp = assignmentDto.getPublishedTimestamp() != null ? assignmentDto.getPublishedTimestamp() : Instant.now();
         Assignment assignment = new Assignment(
                 assignmentId,
                 assignmentDto.getTitle(),

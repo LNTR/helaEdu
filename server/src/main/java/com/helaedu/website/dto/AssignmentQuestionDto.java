@@ -12,15 +12,15 @@ import java.util.Map;
 @Setter
 @AllArgsConstructor
 public class AssignmentQuestionDto {
-    private String quizId;
+    private String questionId;
 
     @NotEmpty(message = "Question is required")
     private String question;
 
     private List<String> options;
 
-    @NotEmpty(message = "Correct answer is required")
-    private String correctAnswer;
+    @NotEmpty(message = "Correct answers are required")
+    private List<String> correctAnswers;
 
     //userId, provided answer
     private Map<String, String> givenAnswers;

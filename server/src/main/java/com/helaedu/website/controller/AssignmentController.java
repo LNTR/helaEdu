@@ -113,7 +113,7 @@ public class AssignmentController {
     }
 
 //    @PreAuthorize("hasRole('STUDENT')")
-    @PostMapping("/{assignmentId}/question/{quizId}/answer")
+    @PostMapping("/{assignmentId}/{quizId}/answer")
     public ResponseEntity<String> submitAnswer(@PathVariable String assignmentId, @PathVariable String quizId,
                                                @RequestParam String providedAnswer) {
         try {

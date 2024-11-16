@@ -4,6 +4,7 @@ import com.helaedu.website.dto.AssignmentDto;
 import com.helaedu.website.dto.AssignmentQuestionDto;
 import com.helaedu.website.entity.Assignment;
 import com.helaedu.website.entity.AssignmentQuestion;
+import com.helaedu.website.repository.AssignmentQuestionRepository;
 import com.helaedu.website.repository.AssignmentRepository;
 import com.helaedu.website.util.UniqueIdGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,12 +26,16 @@ public class AssignmentService {
     private final AssignmentRepository assignmentRepository;
 
     @Autowired
+    private final AssignmentQuestionRepository assignmentQuestionRepository;
+
+    @Autowired
     private WebSocketService webSocketService;
 
     private Map<String, Map<String, Long>> assignmentStudentRemainingTimeMap = new HashMap<>();
 
-    public AssignmentService(AssignmentRepository assignmentRepository) {
+    public AssignmentService(AssignmentRepository assignmentRepository, AssignmentQuestionRepository assignmentQuestionRepository) {
         this.assignmentRepository = assignmentRepository;
+        this.assignmentQuestionRepository = assignmentQuestionRepository;
     }
 
     public void startAssignment(String assignmentId) throws ExecutionException, InterruptedException {
@@ -155,7 +160,7 @@ public class AssignmentService {
                 false,
                 new HashMap<>(),
                 new HashMap<>(),
-                assignmentDto.getPublishedTimestamp(),
+                System.currentTimeMillis(),
                 assignmentDto.getEndedTimestamp(),
                 userId,
                 new ArrayList<>()
@@ -230,15 +235,23 @@ public class AssignmentService {
         Assignment assignment = assignmentRepository.getAssignmentById(assignmentId);
         if (assignment != null) {
             List<AssignmentQuestion> quizEntities = quizzes.stream()
-                    .map(quizDto -> new AssignmentQuestion(
-                            quizDto.getQuizId(),
-                            quizDto.getQuestion(),
-                            quizDto.getOptions(),
-                            quizDto.getCorrectAnswer(),
-                            quizDto.getGivenAnswers(),
-                            quizDto.getAssignmentId(),
-                            quizDto.getMarks()
-                    ))
+                    .map(quizDto -> {
+                        try {
+                            return new AssignmentQuestion(
+                                    UniqueIdGenerator.generateUniqueId("que", assignmentQuestionRepository::exists),
+                                    quizDto.getQuestion(),
+                                    quizDto.getOptions(),
+                                    quizDto.getCorrectAnswers(),
+                                    quizDto.getGivenAnswers(),
+                                    assignmentId,
+                                    quizDto.getMarks()
+                            );
+                        } catch (ExecutionException e) {
+                            throw new RuntimeException(e);
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+                    })
                     .toList();
 
             assignment.getQuizzes().addAll(quizEntities);
@@ -257,7 +270,7 @@ public class AssignmentService {
 
     public AssignmentQuestion getQuestionById(Assignment assignment, String quizId) throws Exception {
         return assignment.getQuizzes().stream()
-                .filter(q -> q.getQuizId().equals(quizId))
+                .filter(q -> q.getQuestionId().equals(quizId))
                 .findFirst()
                 .orElseThrow(() -> new Exception("Question not found with quizId: " + quizId));
     }

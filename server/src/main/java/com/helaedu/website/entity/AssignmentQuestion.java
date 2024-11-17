@@ -20,4 +20,7 @@ public class AssignmentQuestion {
     private Map<String, String> givenAnswers;
     private String assignmentId;
     private int marks;
+    public void setGivenAnswers(Map<String, String> givenAnswers) {
+        this.givenAnswers = givenAnswers;
+    }
 }

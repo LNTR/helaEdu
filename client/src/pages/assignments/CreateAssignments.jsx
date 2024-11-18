@@ -65,7 +65,7 @@ export default function CreateAssignments() {
         <form onSubmit={saveAssignment}>
           <div className=" mb-6">
             <div className=" ">
-              <label className="text-3xl block mb-2 ">Title</label>
+              <label className="text-3xl block mb-2 ">Title<span className="text-red-600">*</span></label>
               <input
                 placeholder="Enter title"
                 className="border border-blue h-16 rounded-lg w-full px-4 text-xl"
@@ -78,7 +78,7 @@ export default function CreateAssignments() {
           </div>
           <div className="mb-6">
             <label className="text-3xl block mb-2 ">
-              Instructions for student
+              Instructions for student<span className="text-red-600">*</span>
             </label>
             <textarea
               placeholder="Enter instructions"
@@ -91,21 +91,28 @@ export default function CreateAssignments() {
           </div>
           <div className="flex justify-between mb-6">
             <div className="w-4/5">
-              <label className="text-3xl block mb-2 ">Total Time</label>
+              <label className="text-3xl block mb-2 ">Total Time<span className="text-red-600">*</span></label>
               <div className=" flex justify-start">
-                <input
-                  type="number"
-                  min="0"
-                  step="1"
-                  id="hoursInput"
-                  placeholder="hours"
-                  className="border border-blue h-16 rounded-lg w-40 px-4 text-xl"
-                  value={hours}
-                  onChange={handleHours}
-                  required
-                />
+                <div className="">
+                  <label className="text-lg">Hours</label>
+                  <input
+                    type="number"
+                    min="0"
+                    max="4"
+                    step="1"
+                    id="hoursInput"
+                    placeholder="hours"
+                    className="border border-blue h-16 rounded-lg w-40 px-4 text-xl"
+                    value={hours}
+                    onChange={handleHours}
+                    required
+                  />
+                </div>
+               
                 <p className="text-3xl mx-6 py-4">:</p>
-                <input
+                <div>
+                  <label className="text-lg">Minutes</label>
+                  <input
                   type="number"
                   min="0"
                   step="1"
@@ -117,6 +124,7 @@ export default function CreateAssignments() {
                   onChange={handleMinutes}
                   required
                 />
+                </div>
               </div>
             </div>
             <div className="flex items-end">

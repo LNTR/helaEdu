@@ -65,22 +65,28 @@ export default function AssignmentList() {
     const formattedSeconds = seconds < 10 ? `0${seconds}` : seconds;
     return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
   };
+  const convertMillisToISO = (millis) => {
+    const date = new Date(millis);
+    return date.toISOString();
+  };
 
   const currentRows = assignment
-    .slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)
-    .map((data, index) => (
-      <TableRaw
-        key={data.assignmentId}
-        assignmentId={data.assignmentId}
-        title={data.title}
-        instruction={data.instructions}
-        publishedDate={data.publishedTimestamp}
-        totalTime={formatTime(data.totalTime * 1000)}
-        onClose={openDeleteModal}
-        onView={openViewModal}
-        started={data.started}
-      />
-    ));
+  .sort((a, b) => b.publishedTimestamp - a.publishedTimestamp) 
+  .slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)
+  .map((data, index) => (
+    <TableRaw
+      key={data.assignmentId}
+      assignmentId={data.assignmentId}
+      title={data.title}
+      instruction={data.instructions}
+      publishedDate={convertMillisToISO(data.publishedTimestamp)}
+      totalTime={formatTime(data.totalTime * 1000)}
+      onClose={openDeleteModal}
+      onView={openViewModal}
+      started={data.started}
+    />
+  ));
+
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };

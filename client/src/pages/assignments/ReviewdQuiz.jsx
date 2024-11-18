@@ -8,7 +8,9 @@ import { faClock } from '@fortawesome/free-solid-svg-icons';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { useParams } from 'react-router-dom';
 import { getAssignment } from '@services/AssignmentService';
+
 export default function ReviewdQuiz() {
+
     const averageScore=65;
     const data=useParams();
     const assignmentId=data.assignmentId;
@@ -19,7 +21,7 @@ export default function ReviewdQuiz() {
       if (assignmentId) {
           getAssignment(assignmentId).then(data => {
               setAssignmentData(data.data);
-              console.log(assignmentData);
+              console.log("jn",assignmentData);
           }).catch(error => {
               console.error("Failed to fetch assignment data:", error);
           });
@@ -36,6 +38,7 @@ export default function ReviewdQuiz() {
         <div className='mx-64 my-14'>
           <div className=" flex justify-start space-x-6 ">
             <div className="">
+              <p className='text-black text-4xl'>{assignmentData.quizzes.questionId}</p>
               <h1 className='text-blue'>{assignmentData.title}</h1>
               <div className='flex justify-start mt-3'>
                 <p className='text-black mr-10 '><FontAwesomeIcon icon={faCalendar}  className='mx-5'/> {assignmentData.

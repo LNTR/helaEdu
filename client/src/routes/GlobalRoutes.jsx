@@ -77,7 +77,7 @@ function GlobalRoutes() {
       <Route path="/votes" element={<Votes />} />
       <Route path="/comments" element={<Comments />} />
       <Route path="/badges" element={<Badges />} />
-      <Route path="/questionList" element={<QuestionsList />} />
+      <Route path="/questionList/:assignmentId/:userId" element={<QuestionsList />} />
       <Route path="/complaints" element={<Complaints />} />
       <Route path="/quizStart/:assignmentId" element={<QuizA />} />
       <Route path="/resourse" element={<Resource />} />

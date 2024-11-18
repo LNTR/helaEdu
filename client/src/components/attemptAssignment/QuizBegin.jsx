@@ -59,7 +59,7 @@ const QuizBegin = ({ assignmentId }) => {
           question: quiz.question,
           options: quiz.options,
           answer: quiz.correctAnswer,
-          id: quiz.quizId,
+          id: quiz.questionId,
         }));
 
         setAssignment(assignmentData);
@@ -163,6 +163,7 @@ const QuizBegin = ({ assignmentId }) => {
                   initialTimer={globalTimer}
                   isLastQuestion={isLastQuestion}
                   timet={timet}
+                  assignmentId={assignmentId}
                 />
               ) : (
                 <Score

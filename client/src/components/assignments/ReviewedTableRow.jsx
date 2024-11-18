@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faSearch } from '@fortawesome/free-solid-svg-icons';
 import Profile from '@assets/img/articles/profile.jpg';
 import { Link } from 'react-router-dom';
-export default function ReviewedTableRow({ name,email,score }) {
+export default function ReviewedTableRow({ assignmentId,userId,name,email,score }) {
   return (
     <div>
       <div>
@@ -23,12 +23,11 @@ export default function ReviewedTableRow({ name,email,score }) {
          </div>
         
          <div className=' w-1/4 flex justify-center'>
-        
             <button className='bg-blue text-white text-xl rounded-xl px-4 py-1 mr-7'>Reviewed</button>
-       
-          <Link to="/questionList" className='bg-blue text-white text-xl rounded-xl px-4 py-1' >
-             view
-          </Link>
+
+            <Link to={`/questionList/${assignmentId}/${userId}`} className="bg-blue text-white text-xl rounded-xl px-4 py-1">
+              View
+            </Link>
          
           
          </div>

@@ -1,47 +1,74 @@
+
 import React, { useState, useEffect } from "react";
-import Question from "@components/attemptAssignment/Question";
 import Answer from "@components/attemptAssignment/Answer";
+import Question from "@components/attemptAssignment/Question";
+
+import {submitAnswer} from "@services/AssignmentService";
+import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
 
 const Questions = ({
   questions,
   handleNextQuestion,
   currentQuestion,
   handleAnswerClick,
-  initialTimer, 
-  isLastQuestion,timet
+  initialTimer,
+  isLastQuestion,
+  timet,
+  assignmentId,  
+  
 }) => {
   const optionIds = ["A", "B", "C", "D"];
-  const [selectedOption, setSelectedOption] = useState(null);
-  // const [timer, setTimer] = useState(initialTimer); // Global quiz timer
+  const [selectedOptions, setSelectedOptions] = useState([]);
 
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     setTimer((prevTimer) => {
-  //       if (prevTimer <= 0) {
-  //         clearInterval(interval);
-  //         return 0;
-  //       }
-  //       return prevTimer - 1000; // Decrement every second
-  //     });
-  //   }, 1000);
-  //   return () => clearInterval(interval);
-  // }, []);
-
+  const authHeader = useAuthHeader();
+  const headers = {
+    Authorization: authHeader,
+  };
   const handleOptionClick = (option) => {
-    setSelectedOption(option);
-    handleAnswerClick(option);
+    setSelectedOptions((prevSelected) => {
+      if (prevSelected.includes(option)) {
+        return prevSelected.filter((item) => item !== option); 
+      } else {
+        return [...prevSelected, option]; 
+      }
+    });
   };
 
+  const handleNextButtonClick = () => {
+    const currentQuiz = questions[currentQuestion];
+    const providedAnswers = selectedOptions; 
+    console.log("Submitting answer for quiz ID:", currentQuiz.id);
+    console.log("Provided answers:", providedAnswers);
+    if (providedAnswers.length === 0) {
+      console.error("No answers selected for question:", currentQuiz.id);
+      return;
+    }
+    submitAnswer(assignmentId, currentQuiz.id, providedAnswers, headers) 
+      .then((response) => {
+        console.log("Answer submitted successfully", response);
+      })
+      .catch((error) => {
+        console.error("Error submitting answer", error);
+      });
+  
+    setSelectedOptions([]);
+    handleNextQuestion(timet);
+  };
+  
   return (
     <div>
-      <Question
-        question_no={currentQuestion + 1}
-        question={questions[currentQuestion].question}
-        // timer={timer}
-        totalQuizTime={initialTimer}
-        questionLength={questions.length}
-        timet={timet}
-      />
+      <div>
+        <Question
+          question_no={currentQuestion + 1}
+          question={questions[currentQuestion].question}
+          totalQuizTime={initialTimer}
+          questionLength={questions.length}
+          timet={timet}
+        />
+
+        {/* <h2>Question {currentQuestion + 1}</h2>
+        <p>{questions[currentQuestion].question}</p> */}
+      </div>
       <div className="w-full grid grid-flow-row grid-cols-2 mx-32">
         {questions[currentQuestion].options.map((option, index) => (
           <Answer
@@ -49,15 +76,12 @@ const Questions = ({
             option={option}
             id={optionIds[index]}
             onclick={() => handleOptionClick(option)}
-            selectedOption={selectedOption}
+            isSelected={selectedOptions.includes(option)} 
           />
         ))}
       </div>
       <div className="flex justify-end mx-32 mt-32">
-        <button
-          className="gold-button w-64"
-          onClick={() => handleNextQuestion(timet)}
-        >
+        <button className="gold-button w-64" onClick={handleNextButtonClick}>
           <h4>{isLastQuestion ? "Submit" : "Next"}</h4>
         </button>
       </div>

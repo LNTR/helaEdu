@@ -17,5 +17,6 @@ export const createStudent = (userData) =>
   axios.post(`${CREATE_STUDENT}`, userData);
 
 export const deleteStudents =(studentId) =>axios.delete( `${GET_STUDENT_BASIC_URL}/${studentId}`);
-export const currentStudent=(headers)=>axios.get(GET_CURRENT_STUDENT_BASIC_URL,{headers})
+export const currentStudent=(headers)=>axios.get(GET_CURRENT_STUDENT_BASIC_URL,{headers});
+export const getStudentById=(userId)=>axios.get(`${GET_STUDENT_BASIC_URL}/${userId}`);
 

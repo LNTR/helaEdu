@@ -11,7 +11,7 @@ export default function Sort({onStatusChange}) {
   const toCamelCase = (str) => str.toLowerCase().replace(/ (\w)/g, (_, letter) => letter.toUpperCase());
 
   return (
-    <div className='flex justify-center items-center mb-10'>
+    <div className='flex justify-center items-center mb-10 z-100'>
       <div className='flex space-x-4 text-sm'>
         <button className='text-xl px-10 py-3 rounded-sm border border-gray1 text-gray1 hover:bg-blue hover:text-white transition-colors'>
           All
@@ -34,7 +34,7 @@ export default function Sort({onStatusChange}) {
           >
             Grade <FontAwesomeIcon icon={faChevronDown} className="text-gray1 text-sm ml-2" />
           </button>
-          <ul tabIndex={0} className='dropdown-content menu p-1 shadow rounded-box w-52 text-sm'>
+          <ul tabIndex={0} className='dropdown-content menu p-1 shadow rounded-box w-52 text-sm z-100'>
             {grades.map((grade, index) => (
               <li key={index} className='z-10'>
                 <button className='text-xl w-full text-left px-4 py-2 hover:bg-gray-100 z-10'>{grade}</button>
@@ -66,7 +66,7 @@ export default function Sort({onStatusChange}) {
           >
             Status <FontAwesomeIcon icon={faChevronDown} className="text-gray1 text-sm ml-2 z-50" />
           </button>
-          <ul tabIndex={0} className='dropdown-content menu p-1 shadow rounded-box w-52 text-sm  z-50'>
+          <ul tabIndex={0} className='dropdown-content menu p-1 shadow rounded-box w-52 text-sm  z-50 bg-white'>
             {statuses.map((status) => (
               <li key={status}>
                 <button
@@ -79,10 +79,10 @@ export default function Sort({onStatusChange}) {
             ))}
           </ul>
         </div>
-        <div className='dropdown dropdown-end'>
+        <div className='dropdown dropdown-end bg-white'>
           <button
             tabIndex={0}
-            className='text-xl px-10 py-3 rounded-sm border border-gray1 text-gray1 hover:bg-blue hover:text-white transition-colors flex items-center'
+            className='text-xl px-10 py-3 rounded-sm border border-gray1 text-gray1 hover:bg-blue  bg-white hover:text-white transition-colors flex items-center'
           >
             Tags <FontAwesomeIcon icon={faChevronDown} className="text-gray1 text-sm ml-2" />
           </button>

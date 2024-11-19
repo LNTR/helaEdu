@@ -80,8 +80,14 @@ const QuestionsList = () => {
   
       totalMarks += questionMarks;  
     });
-  
     const scorePercentage = (totalScore / totalMarks) * 100;
+    const scoreData = {
+      studentId: userId,
+      assignmentId,
+      score: parseFloat(scorePercentage),
+    };
+  
+    localStorage.setItem(`score_${userId}_${assignmentId}`, JSON.stringify(scoreData));
     return scorePercentage.toFixed(2);
   };
   

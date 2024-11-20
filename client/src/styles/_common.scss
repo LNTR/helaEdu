@@ -1,3 +1,16 @@
+
+:root {
+    --color-bg: #ffffff;
+    --color-text: #343232;
+    --color-primary: #0A6CF5; 
+    --color-secondary: #F5A711; 
+    --color-accent: #B5D2FC; 
+    --color-dark-gray: #6C6C6C;
+    --color-light-gray: #BBBBBB;
+    
+  }
+
+  
 .flex-c {
     display: flex;
     align-items: center;
@@ -93,9 +106,23 @@
     z-index: 90;
 
 }
-.icon-circle:hover{
+.icon-circle:hover, .small-yellow-icon-circle:hover{
     cursor: pointer;
 }
+
+.small-yellow-icon-circle {
+    height: 25px;
+    width: 25px;
+    border-radius: 100%;
+    box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 5px 5px 5px 5px;
+    z-index: 90;
+
+}
+
 
 
 .no-display {

@@ -20,7 +20,7 @@ export default function ModDashboard() {
         <Sidebar value={sidebar} setValue={setSidebar} />
         <div className="content-wrapper mx-auto mt-28" >
           <div className='flex justify-center p-2 w-auto'>
-            <div className="card bg-base-100 w-128 shadow-xl m-6">
+            <div className="card border-blue border-2 bg-base-100 w-128 shadow-xl m-6">
               <div className="card-body">
                 <h2 className="card-title text-header1">Articles</h2>
                 <p className='text-1 text-gray1 pt-4'>Review and approve articles written by the teachers</p>
@@ -29,7 +29,7 @@ export default function ModDashboard() {
                 </div>
               </div>
             </div>
-            <div className="card bg-base-100 w-128 shadow-xl m-6">
+            <div className="card border-blue border-2 bg-base-100 w-128 shadow-xl m-6">
               <div className="card-body">
                 <h2 className="card-title text-header1">Weekly Quizzes</h2>
                 <p className='text-1 text-gray1 pt-4'>Generate and review weekly quizzes for this weeek</p>
@@ -40,7 +40,7 @@ export default function ModDashboard() {
             </div>
             </div>
             <div className='flex justify-center p-2 w-auto'>
-            <div className="card bg-base-100 w-128 shadow-xl m-6">
+            <div className="card border-blue border-2 bg-base-100 w-128 shadow-xl m-6">
               <div className="card-body">
                 <h2 className="card-title text-header1">Resources</h2>
                 <p className='text-1 text-gray1 pt-4'>Upload updated or newly published textbooks and teachers' resources</p>
@@ -49,7 +49,7 @@ export default function ModDashboard() {
                 </div>
               </div>
             </div>
-            <div className="card bg-base-100 w-128 shadow-xl m-6">
+            <div className="card border-blue border-2 bg-base-100 w-128 shadow-xl m-6">
               <div className="card-body">
                 <h2 className="card-title text-header1">Profile</h2>
                 <p className='text-1 text-gray1 pt-4'>View and edit your profile</p>

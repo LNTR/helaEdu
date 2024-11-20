@@ -10,7 +10,6 @@ import com.helaedu.website.util.UserUtil;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -125,6 +124,20 @@ public class AssignmentController {
             return ResponseEntity.ok("Answer submitted and moved to the next question");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/{assignmentId}")
+    public ResponseEntity<Object> deleteAssignment(@PathVariable String assignmentId) throws ExecutionException, InterruptedException {
+        try {
+            String result = assignmentService.deleteAssignment(assignmentId);
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            ValidationErrorResponse errorResponse = new ValidationErrorResponse();
+            errorResponse.addViolation("assignmentId", e.getMessage());
+            return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        } catch (ExecutionException | InterruptedException e) {
+            return new ResponseEntity<>("Error deleting assignment", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

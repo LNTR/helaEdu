@@ -66,11 +66,11 @@ public class AssignmentRepository {
         return assignments;
     }
 
-    public void deleteAssignment(String assignmentId) throws ExecutionException, InterruptedException {
+    public String deleteAssignment(String assignmentId) throws ExecutionException, InterruptedException {
         Firestore dbFirestore = FirestoreClient.getFirestore();
         DocumentReference documentReference = dbFirestore.collection("assignments").document(assignmentId);
         ApiFuture<WriteResult> future = documentReference.delete();
-        future.get(); // Optional: You can handle the result if needed
+        return future.get().getUpdateTime().toString();
     }
 
     public boolean exists(String assignmentId) throws ExecutionException, InterruptedException {

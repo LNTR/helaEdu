@@ -277,5 +277,7 @@ public class AssignmentService {
                 .orElseThrow(() -> new Exception("Question not found with quizId: " + quizId));
     }
 
-
+    public String deleteAssignment(String assignmentId) throws ExecutionException, InterruptedException {
+        return assignmentRepository.deleteAssignment(assignmentId);
+    }
 }

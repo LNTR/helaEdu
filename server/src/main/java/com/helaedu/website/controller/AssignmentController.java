@@ -140,4 +140,18 @@ public class AssignmentController {
             return new ResponseEntity<>("Error deleting assignment", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @PostMapping("/{assignmentId}/marks")
+    public ResponseEntity<Object> submitStudentMarks(@PathVariable String assignmentId, @RequestParam Double studentMarks) {
+        try {
+            String email = UserUtil.getCurrentUserEmail();
+            StudentDto student = studentService.getStudentByEmail(email);
+
+            assignmentService.submitStudentMarks(assignmentId, student.getUserId(), studentMarks);
+
+            return ResponseEntity.ok("Marks submitted");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }

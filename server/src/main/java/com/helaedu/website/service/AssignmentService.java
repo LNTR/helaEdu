@@ -280,4 +280,13 @@ public class AssignmentService {
     public String deleteAssignment(String assignmentId) throws ExecutionException, InterruptedException {
         return assignmentRepository.deleteAssignment(assignmentId);
     }
+
+    public void submitStudentMarks(String assignmentId, String userId, Double studentMarks) throws Exception {
+        Assignment assignment = assignmentRepository.getAssignmentById(assignmentId);
+        if(assignment.getStudentMarks() == null) {
+            assignment.setStudentMarks(new HashMap<>());
+        }
+        assignment.getStudentMarks().put(userId, studentMarks);
+        assignmentRepository.updateAssignment(assignmentId, assignment);
+    }
 }

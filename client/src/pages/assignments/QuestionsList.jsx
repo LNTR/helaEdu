@@ -6,11 +6,11 @@ import { getStudentById } from '@services/StudentService';
 
 const QuestionsList = () => {
   const { assignmentId, userId } = useParams();
-  console.log(userId);
   const [openIndex, setOpenIndex] = useState(null);
   const [assignment, setAssignment] = useState(null);
   const [student, setStudent] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [studentScore, setStudentScore] = useState(0);
 
   const handleToggle = (index) => {
     setOpenIndex(openIndex === index ? null : index);
@@ -22,6 +22,9 @@ const QuestionsList = () => {
       try {
         const assignmentDetails = await getAssignment(assignmentId);
         setAssignment(assignmentDetails.data);
+
+        const studentMarks = assignmentDetails.data.studentMarks || {};
+        setStudentScore(studentMarks[userId] || 0); 
       } catch (error) {
         console.error('Error fetching assignment:', error);
       } finally {
@@ -30,7 +33,7 @@ const QuestionsList = () => {
     };
 
     fetchAssignment();
-  }, [assignmentId]);
+  }, [assignmentId, userId]);
 
   useEffect(() => {
     const fetchStudent = async () => {
@@ -39,58 +42,23 @@ const QuestionsList = () => {
         const studentDetails = await getStudentById(userId);
         setStudent(studentDetails.data);
       } catch (error) {
-        console.error('Error fetching student Details:', error);
+        console.error('Error fetching student details:', error);
       } finally {
         setLoading(false);
       }
     };
+
     fetchStudent();
   }, [userId]);
 
-  const checkAnswer = (question, userId) => {
+  const checkAnswer = (question) => {
     const userAnswers = question.givenAnswers && question.givenAnswers[userId];
     const correctAnswers = question.correctAnswers || [];
     if (!userAnswers) {
-      return false; // No answer given, consider it incorrect
+      return false;
     }
-    const isCorrect = userAnswers.every((answer) => correctAnswers.includes(answer));
-    return isCorrect;
+    return userAnswers.every((answer) => correctAnswers.includes(answer));
   };
-
-  const calculateScore = () => {
-    let totalScore = 0;
-    let totalMarks = 0;  
-  
-    assignment.quizzes.forEach((q) => {
-      const userAnswers = q.givenAnswers && q.givenAnswers[userId];
-      const correctAnswers = q.correctAnswers || [];
-      const questionMarks = q.marks;  
-      if (!userAnswers) {
-        return;
-      }
-  
-      if (userAnswers.length === correctAnswers.length && userAnswers.every((answer) => correctAnswers.includes(answer))) {
-        totalScore += questionMarks;
-      } else if (userAnswers.some((answer) => correctAnswers.includes(answer))) {
-      
-        const correctCount = userAnswers.filter((answer) => correctAnswers.includes(answer)).length;
-        const percentage = (correctCount / correctAnswers.length);
-        totalScore += questionMarks * percentage;  
-      }
-  
-      totalMarks += questionMarks;  
-    });
-    const scorePercentage = (totalScore / totalMarks) * 100;
-    const scoreData = {
-      studentId: userId,
-      assignmentId,
-      score: parseFloat(scorePercentage),
-    };
-  
-    localStorage.setItem(`score_${userId}_${assignmentId}`, JSON.stringify(scoreData));
-    return scorePercentage.toFixed(2);
-  };
-  
 
   if (loading) {
     return <div>Loading...</div>;
@@ -106,14 +74,14 @@ const QuestionsList = () => {
       <div className="min-h-screen mx-32">
         <div className="mt-14">
           <p>Student Name: {student?.firstName || 'N/A'}</p>
-          <p>Total Score: {calculateScore()}%</p>
+          <p>Total Score: {studentScore}%</p>
           <br />
           <p>
-            No of Correct Answers: {assignment.quizzes.filter((q) => checkAnswer(q, userId)).length}
+            No of Correct Answers: {assignment.quizzes.filter((q) => checkAnswer(q)).length}
           </p>
           <p>
             No of Incorrect Answers:{' '}
-            {assignment.quizzes.filter((q) => !checkAnswer(q, userId)).length}
+            {assignment.quizzes.filter((q) => !checkAnswer(q)).length}
           </p>
         </div>
 
@@ -157,9 +125,7 @@ const QuestionsList = () => {
 
                   <div className="mt-4">
                     <h4 className="text-xl">Correct Answer(s):</h4>
-                    <p className="text-green-800">
-                      {q.correctAnswers.join(', ')}
-                    </p>
+                    <p className="text-green-800">{q.correctAnswers.join(', ')}</p>
                   </div>
 
                   <div className="mt-4">

@@ -19,6 +19,7 @@ export default function Participants({ assignmentId }) {
         const assignmentDetails = await getAssignment(assignmentId);
         console.log('Fetched assignment details:', assignmentDetails.data);
         const quizzes = assignmentDetails.data?.quizzes ?? [];
+        const studentMarks = assignmentDetails.data?.studentMarks ?? {};
         const attemptedUserIds = [];
 
         quizzes.forEach((quiz) => {
@@ -49,6 +50,7 @@ export default function Participants({ assignmentId }) {
           userId:user?.userId,
           name: user?.firstName + user?.lastName|| 'Unknown',
           email: user?.email || 'No email',
+          score: studentMarks[user?.userId] || 0,
         }));
 
         setParticipants(participantData);
@@ -72,7 +74,7 @@ export default function Participants({ assignmentId }) {
         userId={participant.userId}
         name={participant.name}
         email={participant.email}
-        score={10} 
+        score={participant.score} 
       />
     ));
 

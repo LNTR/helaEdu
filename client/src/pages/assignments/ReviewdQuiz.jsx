@@ -26,25 +26,44 @@ export default function ReviewdQuiz() {
     }
   }, [assignmentId]);
 
+  // useEffect(() => {
+  //   const scores = [];
+  //   for (let i = 0; i < localStorage.length; i++) {
+  //     const key = localStorage.key(i);
+  //     if (key.startsWith('score_') && key.includes(assignmentId)) {
+  //       const scoreData = JSON.parse(localStorage.getItem(key));
+  //       if (scoreData.assignmentId === assignmentId) {
+  //         scores.push(scoreData);
+  //       }
+  //     }
+  //   }
+  //   scores.sort((a, b) => b.score - a.score); 
+  //   setTopScores(scores.slice(0, 3)); 
+
+  //   if (scores.length > 0) {
+  //     const total = scores.reduce((acc, curr) => acc + curr.score, 0);
+  //     setAverageScoreCalc((total / scores.length).toFixed(2));
+  //   }
+  // }, [assignmentId]);
   useEffect(() => {
-    const scores = [];
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      if (key.startsWith('score_') && key.includes(assignmentId)) {
-        const scoreData = JSON.parse(localStorage.getItem(key));
-        if (scoreData.assignmentId === assignmentId) {
-          scores.push(scoreData);
-        }
+    if (assignmentData) {
+      const scores = [];
+      const studentMarks = assignmentData.studentMarks || {};
+      Object.keys(studentMarks).forEach((studentId) => {
+        scores.push({
+          studentId,
+          score: studentMarks[studentId],
+        });
+      });
+
+      scores.sort((a, b) => b.score - a.score);
+      setTopScores(scores.slice(0, 3)); 
+      if (scores.length > 0) {
+        const totalScore = scores.reduce((acc, curr) => acc + curr.score, 0);
+        setAverageScoreCalc((totalScore / scores.length).toFixed(2)); 
       }
     }
-    scores.sort((a, b) => b.score - a.score); 
-    setTopScores(scores.slice(0, 3)); 
-
-    if (scores.length > 0) {
-      const total = scores.reduce((acc, curr) => acc + curr.score, 0);
-      setAverageScoreCalc((total / scores.length).toFixed(2));
-    }
-  }, [assignmentId]);
+  }, [assignmentData, assignmentId]);
 
   if (!assignmentData) {
     return <div>Loading...</div>;

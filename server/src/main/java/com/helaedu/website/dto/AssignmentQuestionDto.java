@@ -22,8 +22,8 @@ public class AssignmentQuestionDto {
     @NotEmpty(message = "Correct answers are required")
     private List<String> correctAnswers;
 
-    //userId, provided answer
-    private Map<String, String> givenAnswers;
+    //userId, provided answers
+    private Map<String, List<String>> givenAnswers;
 
     private String assignmentId;
 

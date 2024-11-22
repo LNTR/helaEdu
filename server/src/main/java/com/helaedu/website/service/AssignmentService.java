@@ -261,15 +261,16 @@ public class AssignmentService {
         return "Assignment not found";
     }
 
-    public void submitAnswer(String assignmentId, String quizId, String userId, String providedAnswer) throws Exception {
+    public void submitAnswer(String assignmentId, String quizId, String userId, List<String> providedAnswers) throws Exception {
         Assignment assignment = assignmentRepository.getAssignmentById(assignmentId);
         AssignmentQuestion question = getQuestionById(assignment, quizId);
         if (question.getGivenAnswers() == null) {
             question.setGivenAnswers(new HashMap<>());
         }
-        question.getGivenAnswers().put(userId, providedAnswer);
+        question.getGivenAnswers().put(userId, providedAnswers);
         assignmentRepository.updateAssignment(assignmentId, assignment);
     }
+
 
     public AssignmentQuestion getQuestionById(Assignment assignment, String quizId) throws Exception {
         return assignment.getQuizzes().stream()

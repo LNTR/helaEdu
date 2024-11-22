@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -150,7 +151,7 @@ public class AssignmentService {
     public String createAssignment(String userId, AssignmentDto assignmentDto) throws ExecutionException, InterruptedException {
 
         String assignmentId = UniqueIdGenerator.generateUniqueId("as", assignmentRepository::exists);
-
+//        Instant publishedTimestamp = assignmentDto.getPublishedTimestamp() != null ? assignmentDto.getPublishedTimestamp() : Instant.now();
         Assignment assignment = new Assignment(
                 assignmentId,
                 assignmentDto.getTitle(),
@@ -260,15 +261,16 @@ public class AssignmentService {
         return "Assignment not found";
     }
 
-    public void submitAnswer(String assignmentId, String quizId, String userId, String providedAnswer) throws Exception {
+    public void submitAnswer(String assignmentId, String quizId, String userId, List<String> providedAnswers) throws Exception {
         Assignment assignment = assignmentRepository.getAssignmentById(assignmentId);
         AssignmentQuestion question = getQuestionById(assignment, quizId);
         if (question.getGivenAnswers() == null) {
             question.setGivenAnswers(new HashMap<>());
         }
-        question.getGivenAnswers().put(userId, providedAnswer);
+        question.getGivenAnswers().put(userId, providedAnswers);
         assignmentRepository.updateAssignment(assignmentId, assignment);
     }
+
 
     public AssignmentQuestion getQuestionById(Assignment assignment, String quizId) throws Exception {
         return assignment.getQuizzes().stream()

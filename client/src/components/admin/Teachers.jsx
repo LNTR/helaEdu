@@ -3,11 +3,11 @@ import React ,{useState, useEffect} from 'react';
 import Pagination from '@components/admin/Pagination';
 import { listAllTeachersDetails } from '@services/TeacherService';
 import TableHeaderForUsers from "@components/admin/TableHeaderForUsers";
-export default function Teachers() {
+export default function Teachers({searchQuery}) {
 
     const [currentPage, setCurrentPage] = useState(1);
     const [teachers, setTeachers] = useState([]);
-    const totalPages =2;
+    const rowsPerPage = 7;
 
     useEffect(() => {
       const fetchTeachers = async () => {
@@ -16,9 +16,18 @@ export default function Teachers() {
           console.log(response.data);
       };
       fetchTeachers();
-    }, [currentPage]);
-    
-    const currentRows = teachers
+    }, []);
+
+    const filteredTeachers = teachers.filter((teacher) => 
+      teacher.firstName.toLowerCase().includes(searchQuery.toLowerCase()) || 
+      teacher.lastName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      teacher.email.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  
+    const totalPages = Math.ceil(filteredTeachers.length / rowsPerPage);
+  
+    const currentRows = filteredTeachers
+      .slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)
     .map((teacher) => (
         <TableRawTeachers
         key={teacher.userId}
@@ -27,8 +36,6 @@ export default function Teachers() {
         firstName={teacher.firstName}
         lastName={teacher.lastName}
         email={teacher.email}
-        
-       
         />
     ));
     const handlePageChange = (pageNumber) => {
@@ -48,9 +55,9 @@ export default function Teachers() {
             <Pagination
             totalPages={totalPages}
             currentPage={currentPage}
-            onPageChange={setCurrentPage}
+            onPageChange={handlePageChange}
             />
-      </div>
+        </div>
       </div>
 
     </div>

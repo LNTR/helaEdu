@@ -36,14 +36,19 @@ const teacher = [
     
   ];
   
-export default function TopTeachersPage() {
+export default function TopTeachersPage({searchQuery}) {
 
     const [currentPage, setCurrentPage] = useState(1);
     
     const rowsPerPage = 7;
-    const totalPages = Math.ceil(teacher.length / rowsPerPage);
+    const filteredTeachers = teacher.filter((teacher) => 
+      teacher.firstName.toLowerCase().includes(searchQuery.toLowerCase()) || 
+      teacher.email.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  
+    const totalPages = Math.ceil(filteredTeachers.length / rowsPerPage);
 
-    const currentRows = teacher.slice(
+    const currentRows = filteredTeachers.slice(
         (currentPage - 1) * rowsPerPage,
         currentPage * rowsPerPage
     ).map((teacher, index) => (

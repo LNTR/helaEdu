@@ -1,5 +1,3 @@
-import React from "react";
-
 const Question = ({
   questionData,
   qIndex,
@@ -27,7 +25,7 @@ const Question = ({
         <br />
         <br />
         <input
-          className="border border-blue rounded-lg h-32 w-full  px-4 "
+          className="border border-blue rounded-lg h-32 w-full px-4"
           value={questionData.question}
           onChange={(e) => handleQuestionChange(qIndex, e.target.value)}
         />
@@ -36,7 +34,9 @@ const Question = ({
         <label className="text-3xl">
           Enter your options
           <br />
-          <span className="text-xl">Check mark the right answer for your question</span>
+          <span className="text-xl">
+            Check all the correct answers for your question
+          </span>
         </label>
         <br />
         <br />
@@ -47,11 +47,11 @@ const Question = ({
               className="flex items-center space-x-4 w-1/2 mb-4"
             >
               <input
-                type="radio"
-                name={`correctAnswer-${qIndex}`}
-                checked={questionData.correctAnswer === option}
+                type="checkbox"
+                name={`correctAnswers-${qIndex}`}
+                checked={questionData.correctAnswers.includes(option)}
                 onChange={() => handleCorrectAnswerChange(qIndex, option)}
-                className="radio border-blue h-10 w-10"
+                className="checkbox border-blue h-10 w-10"
               />
               <input
                 placeholder={`Option ${oIndex + 1}`}
@@ -60,18 +60,21 @@ const Question = ({
                 onChange={(e) =>
                   handleOptionChange(qIndex, oIndex, e.target.value)
                 }
+                required
               />
             </div>
           ))}
         </div>
         <div className="my-10">
-          <label className="text-3xl">Total Score</label>
+          <label className="text-3xl">Score</label>
           <br />
           <input
             type="number"
+            min="0"
             className="border border-blue rounded-lg h-16 text-xl px-4"
             value={questionData.marks || ""}
             onChange={(e) => handleMarksChange(qIndex, e.target.value)}
+            required
           />
         </div>
       </div>

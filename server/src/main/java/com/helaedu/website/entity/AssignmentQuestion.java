@@ -17,10 +17,11 @@ public class AssignmentQuestion {
     private String question;
     private List<String> options;
     private List<String> correctAnswers;
-    private Map<String, String> givenAnswers;
+    private Map<String, List<String>> givenAnswers;
     private String assignmentId;
     private int marks;
-    public void setGivenAnswers(Map<String, String> givenAnswers) {
+    public void setGivenAnswers(Map<String, List<String>> givenAnswers) {
         this.givenAnswers = givenAnswers;
     }
+
 }

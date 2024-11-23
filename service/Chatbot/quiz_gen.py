@@ -69,6 +69,4 @@ def get_quiz(number, grade, chain=quiz_chain_ret):
     response = chain.invoke({"number": number, "grade": grade})
 
     return response
-
-if __name__ == "__main__":
-    output = get_quiz(10, 10, quiz_chain_ret)
+ 

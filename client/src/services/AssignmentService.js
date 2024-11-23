@@ -12,4 +12,10 @@ export const startAssignment=(assignmentId)=>axios.post(`${REST_API_BASE_URL}/${
 export const endAssignment=(assignmentId)=>axios.post(`${REST_API_BASE_URL}/${assignmentId}/end`);
 export const startAssignmentByStudent = (assignmentId, headers) =>
     axios.post(`${REST_API_BASE_URL}/${assignmentId}/student/start`, null, { headers });
-  
+
+export const submitAnswer = (assignmentId, quizId, providedAnswers, headers) => axios.post(`${REST_API_BASE_URL}/${assignmentId}/${quizId}/answer`, providedAnswers,{ headers });
+
+export const submitStudentMark = (assignmentId, marks, headers) => axios.post(`${REST_API_BASE_URL}/${assignmentId}/marks?studentMarks=${marks}`, null,{ headers });
+
+export const deleteAssignment=(assignmentId)=>axios.delete(`${REST_API_BASE_URL}/${assignmentId}`);
+

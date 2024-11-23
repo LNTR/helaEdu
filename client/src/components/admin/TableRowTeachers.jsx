@@ -20,7 +20,7 @@ export default function TableRowTeachers({userId, firstName,lastName, email }) {
     }
   };
   return (
-    <div className='flex justify-center '>
+    <div className='flex justify-center my-4'>
       <div className='border border-blue rounded-3xl w-10/12 h-16 px-7 py-4 flex justify-between items-center'>
         {/* <div className='text-left'><p className='text-xl text-left'>{teacherId}</p></div> */}
         <div className="bg-yellow rounded-full w-10 h-10 flex items-center justify-center mr-4">

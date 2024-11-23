@@ -1,10 +1,11 @@
 package com.helaedu.website.controller;
 
 import com.helaedu.website.dto.ArticleDto;
+import com.helaedu.website.dto.ForumDto;
 import com.helaedu.website.dto.TeacherDto;
 import com.helaedu.website.dto.ValidationErrorResponse;
-import com.helaedu.website.entity.Teacher;
 import com.helaedu.website.service.ArticleService;
+import com.helaedu.website.service.ForumService;
 import com.helaedu.website.service.TMService;
 import com.helaedu.website.util.UserUtil;
 import jakarta.validation.Valid;
@@ -28,9 +29,12 @@ public class ArticleController{
     private final ArticleService articleService;
     private final TMService tmService;
 
-    public ArticleController(ArticleService articleService, TMService tmService){
+    private final ForumService forumService;
+
+    public ArticleController(ArticleService articleService, TMService tmService, ForumService forumService){
         this.articleService = articleService;
         this.tmService = tmService;
+        this.forumService = forumService;
     }
 
     @PostMapping("/create")
@@ -193,5 +197,11 @@ public class ArticleController{
         } catch (ExecutionException | InterruptedException e) {
             return new ResponseEntity<>("Error upvoting article", HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @GetMapping("/{articleId}/comments")
+    public ResponseEntity<List<ForumDto>> getAllCommentsByArticleId(@PathVariable String articleId) throws ExecutionException, InterruptedException {
+        List<ForumDto> forum = forumService.getCommentsByArticleId(articleId);
+        return ResponseEntity.ok(forum);
     }
 }

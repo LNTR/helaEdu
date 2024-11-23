@@ -7,11 +7,12 @@ import RegenarateButton from "@/components/Quiz/RegenarateButton";
 const Quiz = () => {
   return (
     <>
-      <Header />
+      {/* <Header />
       <Question />
       <Answers />
       <RegenarateButton />
-      <Footer />
+      <Footer /> */}
+      
     </>
   );
 };

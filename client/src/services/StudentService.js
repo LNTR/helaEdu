@@ -9,6 +9,7 @@ const CREATE_STUDENT = `${
 const GET_STUDENT_BASIC_URL = `${
   import.meta.env.VITE_REST_API_BASE_URL
 }/students`;
+const GET_CURRENT_STUDENT_BASIC_URL = `${import.meta.env.VITE_REST_API_BASE_URL}/students/me`;
 export const listStudentDetails = (pageNo) =>
   axios.get(`${GET_STUDENT_DETAILS_URL}/${pageNo}`);
 
@@ -16,4 +17,6 @@ export const createStudent = (userData) =>
   axios.post(`${CREATE_STUDENT}`, userData);
 
 export const deleteStudents =(studentId) =>axios.delete( `${GET_STUDENT_BASIC_URL}/${studentId}`);
+export const currentStudent=(headers)=>axios.get(GET_CURRENT_STUDENT_BASIC_URL,{headers});
+export const getStudentById=(userId)=>axios.get(`${GET_STUDENT_BASIC_URL}/${userId}`);
 

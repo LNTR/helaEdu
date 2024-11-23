@@ -12,7 +12,6 @@ import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import { useDropzone } from "react-dropzone";
 
 export default function AddArticlesForm() {
-  
   const coverImageInputRef = useRef(null);
   const additionalFilesInputRef = useRef(null);
   const handleUploadClick = (ref) => {
@@ -37,9 +36,9 @@ export default function AddArticlesForm() {
   const [additionalFiles, setAdditionalFiles] = useState([]);
   const [error, setError] = useState("");
   const navigate = useNavigate();
-  const authHeader = useAuthHeader;
+  const authHeader = useAuthHeader();
   const headers = {
-    Authorization: authHeader(),
+    Authorization: authHeader,
   };
 
   const validateFileTypes = (files, validTypes) => {
@@ -53,7 +52,13 @@ export default function AddArticlesForm() {
   };
 
   const onDropAdditionalFiles = useCallback((acceptedFiles) => {
-    const validTypes = ["pdf", "msword", "vnd.openxmlformats-officedocument.wordprocessingml.document", "jpeg", "png"];
+    const validTypes = [
+      "pdf",
+      "msword",
+      "vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "jpeg",
+      "png",
+    ];
     if (!validateFileTypes(acceptedFiles, validTypes)) {
       setError("Additional files must be pdf, word, jpg, jpeg, or png.");
       return;
@@ -168,7 +173,7 @@ export default function AddArticlesForm() {
               />
             </div>
           </div>
-          <div className="my-7">
+          <div className="my-7 ">
             <span className="text-3xl">Content</span>
             <TextEditor content={content} setContent={setContent} required />
           </div>

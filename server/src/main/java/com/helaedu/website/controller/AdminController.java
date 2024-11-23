@@ -115,7 +115,6 @@ public class AdminController {
             return new ResponseEntity<>("Error updating admin", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
     @DeleteMapping("/{userId}")
     public ResponseEntity<Object> deleteAdmin(@PathVariable String userId) throws ExecutionException, InterruptedException {
         try {
@@ -148,16 +147,17 @@ public class AdminController {
         Map<String, String> requestBody = RequestUtil.createEmailRequestBody(email);
         return getAdminByEmail(requestBody);
     }
-
     @PutMapping("/me")
     public ResponseEntity<Object> updateCurrentAdmin(@Valid @RequestBody AdminDto adminDto, BindingResult bindingResult) throws ExecutionException, InterruptedException {
-        String userId = UserUtil.getCurrentUserEmail();
-        return updateAdmin(userId, adminDto, bindingResult);
+        String email= UserUtil.getCurrentUserEmail();
+        AdminDto admin=adminService.getAdminByEmail(email);
+        System.out.println(admin.getUserId());
+        return updateAdmin(admin.getUserId(), adminDto, bindingResult);
     }
-
     @DeleteMapping("/me")
     public ResponseEntity<Object> deleteCurrentAdmin() throws ExecutionException, InterruptedException {
-        String userId = UserUtil.getCurrentUserEmail();
-        return deleteAdmin(userId);
+        String email= UserUtil.getCurrentUserEmail();
+        AdminDto admin=adminService.getAdminByEmail(email);
+        return deleteAdmin(admin.getUserId());
     }
 }

@@ -29,4 +29,5 @@ public class Article {
     private String rejectedReason;
     private String userId;
     private ArrayList<String> upvote;
+    private String cluster;
 }

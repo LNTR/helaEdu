@@ -14,7 +14,7 @@ function Card({ subject }) {
     <div
       className="subject-card shadow-xl card"
       onClick={() => {
-        navigate(`/subject/${subject}`);
+        navigate(`/subjects/subject/${subject}`);
       }}
     >
       <div className="card-icon">

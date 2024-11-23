@@ -6,17 +6,18 @@ import Question from "@components/assignments/Question";
 
 export default function QuizFormat() {
   const [questions, setQuestions] = useState([
-    { question: "", options: ["", "", "", ""], correctAnswer: "", marks: 0 },
+    { question: "", options: ["", "", "", ""], correctAnswers: [], marks: 0 },
   ]);
 
   const navigate = useNavigate();
   const params = useParams();
-  const assignmentId = params.assginmentId; 
+  const assignmentId = params.assignmentId;
 
-  console.log("Assignment ID:", assignmentId); 
-  
   const addQuestion = () => {
-    setQuestions([...questions, { question: "", options: ["", "", "", ""], correctAnswer: "", marks: 0 }]);
+    setQuestions([
+      ...questions,
+      { question: "", options: ["", "", "", ""], correctAnswers: [], marks: 0 },
+    ]);
   };
 
   const removeQuestion = (index) => {
@@ -33,28 +34,43 @@ export default function QuizFormat() {
   const handleOptionChange = (qIndex, oIndex, value) => {
     const newQuestions = [...questions];
     newQuestions[qIndex].options[oIndex] = value;
+    const correctAnswers = newQuestions[qIndex].correctAnswers.filter(
+      (answer) => answer !== questions[qIndex].options[oIndex]
+    );
+    newQuestions[qIndex].correctAnswers = correctAnswers;
+
     setQuestions(newQuestions);
   };
 
-  const handleCorrectAnswerChange = (qIndex, value) => {
+  const handleCorrectAnswerChange = (qIndex, option) => {
     const newQuestions = [...questions];
-    newQuestions[qIndex].correctAnswer = value;
+    const correctAnswers = newQuestions[qIndex].correctAnswers || [];
+
+    if (correctAnswers.includes(option)) {
+      newQuestions[qIndex].correctAnswers = correctAnswers.filter(
+        (answer) => answer !== option
+      );
+    } else {
+      newQuestions[qIndex].correctAnswers = [...correctAnswers, option];
+    }
+
     setQuestions(newQuestions);
   };
 
   const handleMarksChange = (qIndex, value) => {
     const newQuestions = [...questions];
-    newQuestions[qIndex].marks = value;
+    newQuestions[qIndex].marks = parseInt(value, 10);
     setQuestions(newQuestions);
   };
 
   const addQuizzesToBackend = async () => {
     try {
       if (assignmentId) {
+        console.log("Payload being sent:", questions);
         const response = await addQuizzes(questions, assignmentId);
         if (response.status === 200) {
           console.log(response);
-          navigate("/assignmentList");
+          navigate("/assignments/assignmentList");
         }
       } else {
         console.error("Assignment ID is not defined.");
@@ -67,7 +83,7 @@ export default function QuizFormat() {
   return (
     <div>
       <Header />
-      <div className=" shadow-xl rounded-xl mx-96 my-20 p-10">
+      <div className="shadow-xl rounded-xl mx-96 my-20 p-10">
         {questions.map((q, qIndex) => (
           <Question
             key={qIndex}

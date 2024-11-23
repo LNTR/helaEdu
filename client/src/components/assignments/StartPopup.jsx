@@ -1,9 +1,9 @@
-// SharePopup.js
-import React from 'react';
-import QR from "@assets/img/assignments/QR.png"
 
+import React , {useState} from 'react';
+import { QRCodeCanvas } from "qrcode.react";
+import { startAssignment } from '@services/AssignmentService';
 
-function StartPopup({ closePopup }) {
+function StartPopup({ closePopup ,assignmentId }) {
     const teachers = [
         { email: 'userd@gmail.com'},
         { email: 'kasun3435@gmail.com'},
@@ -11,6 +11,30 @@ function StartPopup({ closePopup }) {
         { email: 'helor56@gmail.com'},
         
       ];
+      const [copied, setCopied] = useState(false);
+      
+      const baseURL = `${import.meta.env.VITE_FRONTEND_API_BASE_URL}/quizStart/`;
+      const assignmentURL = `${baseURL}${assignmentId}`;
+      const copyToClipboard = () => {
+        navigator.clipboard.writeText(assignmentURL);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      };
+
+      // start assignment
+      const [isStarted,setIsStarted] =useState(null);
+      const handleStartAssignment = async () => {
+        try {
+          const response = await startAssignment(assignmentId);
+          console.log('Assignment started:', response.data);
+          alert("Assignment is started");
+          setIsStarted(true);
+
+        } catch (error) {
+          console.error('Error starting the assignment:', error);
+          alert("error starting assignment");
+        }
+      };
   return (
     <div className='fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 p-10'>
       <div className='bg-white rounded-lg p-6 '>
@@ -18,7 +42,7 @@ function StartPopup({ closePopup }) {
           <div className='w-1/2 pr-4'>
             <h2 className='text-3xl my-6'>Do you want to start your assignment ? </h2>
 
-            <button className='text-white bg-blue  text-xl px-6 py-3 rounded-lg flex-c flex-col m-2 '>Start Assignemnt</button>
+            <button className='text-white bg-blue  text-xl px-6 py-3 rounded-lg flex-c flex-col m-2 ' onClick={handleStartAssignment} disabled={isStarted} >{isStarted ?"Already Started" : "Start Assignment"}</button>
 
             <div className=' p-2  mb-4'>
                 <span className='text-xl '>Assignment Link</span>
@@ -26,19 +50,20 @@ function StartPopup({ closePopup }) {
                     <div className='w-10/12 mx-3' >
                         <input
                             type='text'
-                            value='sales.untitledui.com'
+                            value={assignmentURL}
                             readOnly
                             className='w-full border border-blue p-3 rounded-lg '
                         />
                     </div>
-                    <div className='w-2/12'><button className='text-white bg-blue  text-xl px-6 py-3 rounded-lg '>Copy</button></div>
+                    <div className='w-2/12'><button onClick={copyToClipboard} className='text-white bg-blue  text-xl px-6 py-3 rounded-lg '>{copied ? "Copied" : "Copy"}</button></div>
                 </div>
               
               
             </div>
             <p className='mb-4'>Scan to open in Assignment</p>
             <div className=' flex justify-center' >
-                <img src={QR} alt='QR Code' className='w-96' />
+              
+                <QRCodeCanvas value={assignmentURL} className='w-128' />
             </div>
             
           </div>
@@ -69,7 +94,7 @@ function StartPopup({ closePopup }) {
                                     </div>
 
                                 </div>
-                                <div className='flex-1 mx-4 bg-gray-400 p-2 rounded-lg flex-1'>
+                                <div className='flex-1 mx-4 bg-gray-400 p-2 rounded-lg '>
                                     <p className='text-sm'>Invite Sent</p>
                                 </div>
 

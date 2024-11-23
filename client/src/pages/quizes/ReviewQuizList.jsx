@@ -1,25 +1,31 @@
 import React from "react";
 import { Header, Footer } from "@/components/common";
-import Banner from "../../components/Quiz/Banner";
-import QuizCard from "@components/Quiz/QuizCard";
-import { Link } from "react-router-dom";
-//import CardCarousel from "@/components/articles/CardCarousel";
-import QuizHead from "@/components/Quiz/QuizHead";
+import ModeratorSidebar from "@components/teacher_com/ModeratorSidebar";
+import QuizCard from "@components/Quiz/QuizCard"
 const Articles = () => {
   return (
     <>
-      <Header />
+      {/* <Header />
       <Banner />
       <QuizHead />
       <QuizCard />
 
-      {/* <Link to="/addArticleForm">
-       <AddArticleBtn buttonText="Add your Article" />
-      </Link> */}
-
+     
       <br></br>
       <iframe></iframe>
-      <Footer />
+      <Footer /> */}
+       <Header />
+          <div className="dashboard">
+            <div className="dashboard-wrapper mb-9">
+              <div className="sidebar-wrapper">
+                <ModeratorSidebar />
+              </div>
+              <div className="content-wrapper mx-32">
+                <h1 className="mx-10 my-14">Review Quizzes List</h1>
+                <QuizCard />
+              </div>
+            </div>
+          </div>
     </>
   );
 };

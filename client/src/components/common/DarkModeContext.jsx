@@ -11,9 +11,9 @@ const DarkModeProvider = ({ children }) => {
 
   useEffect(() => {
     if (darkMode) {
-      document.documentElement.classList.add("dark");
+      document.documentElement.querySelector("body").classList.add("dark");
     } else {
-      document.documentElement.classList.remove("dark");
+      document.documentElement.querySelector("body").classList.remove("dark");
     }
     localStorage.setItem("darkMode", JSON.stringify(darkMode));
   }, [darkMode]);

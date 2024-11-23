@@ -29,16 +29,13 @@
 *.Dockerfile
 docker-compose.yml
 compose.yml
-*/__pycache__
-*/__pycache__/*
 
-**/resources
 
 
 
 */.env
 
-/textbooks
+/resources
 __pycache__/
 .DS_Store
 
@@ -47,7 +44,9 @@ __pycache__/
 *.pyc 
 __pycache__/
 */*/__pycache__/*
+**/__pycache__/*
 **/firebase-service-account.json
 
 **/credentials.json
 /resources
+**/credentials.json

@@ -10,7 +10,6 @@ import com.helaedu.website.util.UserUtil;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -35,7 +34,7 @@ public class AssignmentController {
         this.studentService = studentService;
     }
 
-    @PreAuthorize("hasRole('TEACHER') or hasRole('MODERATOR')")
+//    @PreAuthorize("hasRole('TEACHER') or hasRole('MODERATOR')")
     @PostMapping("/create")
     public ResponseEntity<Object> createAssignment(@Valid @RequestBody AssignmentDto assignmentDto, BindingResult bindingResult) throws ExecutionException, InterruptedException {
         if (bindingResult.hasErrors()) {
@@ -55,14 +54,14 @@ public class AssignmentController {
         }
     }
 
-    @PreAuthorize("hasRole('TEACHER') or hasRole('MODERATOR')")
+//    @PreAuthorize("hasRole('TEACHER') or hasRole('MODERATOR')")
     @PostMapping("/{assignmentId}/start")
     public ResponseEntity<String> startAssignment(@PathVariable String assignmentId) throws ExecutionException, InterruptedException {
         assignmentService.startAssignment(assignmentId);
         return ResponseEntity.ok("Assignment started");
     }
 
-    @PreAuthorize("hasRole('TEACHER') or hasRole('MODERATOR')")
+//    @PreAuthorize("hasRole('TEACHER') or hasRole('MODERATOR')")
     @PostMapping("/{assignmentId}/end")
     public ResponseEntity<String> endAssignment(@PathVariable String assignmentId) throws ExecutionException, InterruptedException {
         assignmentService.endAssignment(assignmentId);
@@ -93,13 +92,13 @@ public class AssignmentController {
         return ResponseEntity.ok(assignments);
     }
 
-    @PreAuthorize("hasRole('TEACHER') or hasRole('MODERATOR')")
+//    @PreAuthorize("hasRole('TEACHER') or hasRole('MODERATOR')")
     @PostMapping("/{assignmentId}/quizzes")
     public String addQuizzesToAssignment(@PathVariable String assignmentId, @RequestBody List<AssignmentQuestionDto> quizzes) throws ExecutionException, InterruptedException {
         return assignmentService.addQuizzesToAssignment(assignmentId, quizzes);
     }
 
-    @PreAuthorize("hasRole('STUDENT')")
+//    @PreAuthorize("hasRole('STUDENT')")
     @PostMapping("/{assignmentId}/student/start")
     public ResponseEntity<String> studentStartAssignment(@PathVariable String assignmentId) {
         try {
@@ -107,6 +106,50 @@ public class AssignmentController {
             StudentDto student = studentService.getStudentByEmail(email);
             assignmentService.studentStartAssignment(assignmentId, student.getUserId());
             return ResponseEntity.ok("Assignment started for student");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+//    @PreAuthorize("hasRole('STUDENT')")
+    @PostMapping("/{assignmentId}/{quizId}/answer")
+    public ResponseEntity<String> submitAnswer(@PathVariable String assignmentId, @PathVariable String quizId,
+                                               @RequestBody List<String> providedAnswers) {
+        try {
+            String email = UserUtil.getCurrentUserEmail();
+            StudentDto student = studentService.getStudentByEmail(email);
+
+            assignmentService.submitAnswer(assignmentId, quizId, student.getUserId(), providedAnswers);
+
+            return ResponseEntity.ok("Answer submitted and moved to the next question");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/{assignmentId}")
+    public ResponseEntity<Object> deleteAssignment(@PathVariable String assignmentId) throws ExecutionException, InterruptedException {
+        try {
+            String result = assignmentService.deleteAssignment(assignmentId);
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            ValidationErrorResponse errorResponse = new ValidationErrorResponse();
+            errorResponse.addViolation("assignmentId", e.getMessage());
+            return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        } catch (ExecutionException | InterruptedException e) {
+            return new ResponseEntity<>("Error deleting assignment", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/{assignmentId}/marks")
+    public ResponseEntity<Object> submitStudentMarks(@PathVariable String assignmentId, @RequestParam Double studentMarks) {
+        try {
+            String email = UserUtil.getCurrentUserEmail();
+            StudentDto student = studentService.getStudentByEmail(email);
+
+            assignmentService.submitStudentMarks(assignmentId, student.getUserId(), studentMarks);
+
+            return ResponseEntity.ok("Marks submitted");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

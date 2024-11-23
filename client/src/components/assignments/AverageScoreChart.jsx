@@ -7,7 +7,7 @@ const AverageScoreChart = ({ averageScore }) => {
     <div className='w-64'>
       <CircularProgressbar
         value={averageScore}
-        text={` ${averageScore.toFixed(2)}%`}
+        text={` ${averageScore}%`}
         styles={buildStyles({
           pathColor: `rgba(62, 152, 199, ${averageScore / 100})`,
           textColor: '#3e98c7',

@@ -22,7 +22,7 @@ import json
 
 project_id = "helaedu-website"
 
-source = open("./config/credentials.json")
+source = open("./config/firebase-service-account.json")
 info = json.load(source)
 source.close()
 db_credentials = service_account.Credentials.from_service_account_info(info)

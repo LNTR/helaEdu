@@ -28,7 +28,7 @@ const SProfile = () => {
       />
       <div className='flex'>
         <div className='w-1/2'>
-          {/* <Badges /> */}
+          <Badges />
         </div>
         <div className='w-1/2 border bg-slate-200 p-0'>
         </div>

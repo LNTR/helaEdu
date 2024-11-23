@@ -13,7 +13,7 @@ os.environ["OPENAI_API_KEY"] = (
 )
 
 openai_api_key = os.getenv("OPENAI_API_KEY")
-llm = ChatOpenAI(model="gpt-4o", temperature=0)
+llm = ChatOpenAI(model="orca-mini", temperature=0)
 
 class MCQ(BaseModel):
     id: int = Field(description="The question number")
@@ -35,8 +35,8 @@ parser = JsonOutputParser(pydantic_object=Quiz)
 # llm = Ollama(model="llama3.1:8b", temperature=0)
 
 vectorstore = load_vectorstore(embedding_model="all-MiniLM-L6-v2")
-retriever = vectorstore.as_retriever()
-# retriever = vectorstore.as_retriever(search_kwargs={"k": 1, "filter": {"source": "/Users/helaEdu/textbooks/10/Science_I.pdf"}})
+# retriever = vectorstore.as_retriever()
+retriever = vectorstore.as_retriever(search_kwargs={"k": 1, "filter": {"source": "/Users/helaEdu/textbooks/10/Science_I.pdf"}})
 
 template = """You are an expert multiple choice question maker. Given the {context}, it is your job to\
 create a quiz of {number} multiple choice questions for students from the given {context}.
@@ -67,6 +67,4 @@ def get_quiz(number, grade, chain=quiz_chain_ret):
     response = chain.invoke({"number": number, "grade": grade})
 
     return response
-
-if __name__ == "__main__":
-    output = get_quiz(10, 10, quiz_chain_ret)
+ 

@@ -1,4 +1,7 @@
 import { Header } from '@components/common';
+import ScoreTable from '@components/leaderboard/ScoreTable';
+import Score from '@components/Quiz/Score';
+import Badges from '@components/student/Badges';
 import StudentHero from '@components/student/StudentHero'
 import React from 'react'
 
@@ -23,7 +26,13 @@ const SProfile = () => {
         coverImg={student.coverPictureUrl}
         quote={student.quote}
       />
-      
+      <div className='flex'>
+        <div className='w-1/2'>
+          {/* <Badges /> */}
+        </div>
+        <div className='w-1/2 border bg-slate-200 p-0'>
+        </div>
+      </div>
     </div>
   )
 }

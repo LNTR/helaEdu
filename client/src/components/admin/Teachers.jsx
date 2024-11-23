@@ -2,12 +2,12 @@ import TableRawTeachers from '@components/admin/TableRowTeachers';
 import React ,{useState, useEffect} from 'react';
 import Pagination from '@components/admin/Pagination';
 import { listAllTeachersDetails } from '@services/TeacherService';
-  
-export default function Teachers() {
+import TableHeaderForUsers from "@components/admin/TableHeaderForUsers";
+export default function Teachers({searchQuery}) {
 
     const [currentPage, setCurrentPage] = useState(1);
     const [teachers, setTeachers] = useState([]);
-    const totalPages =2;
+    const rowsPerPage = 7;
 
     useEffect(() => {
       const fetchTeachers = async () => {
@@ -16,9 +16,18 @@ export default function Teachers() {
           console.log(response.data);
       };
       fetchTeachers();
-    }, [currentPage]);
-    
-    const currentRows = teachers
+    }, []);
+
+    const filteredTeachers = teachers.filter((teacher) => 
+      teacher.firstName.toLowerCase().includes(searchQuery.toLowerCase()) || 
+      teacher.lastName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      teacher.email.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  
+    const totalPages = Math.ceil(filteredTeachers.length / rowsPerPage);
+  
+    const currentRows = filteredTeachers
+      .slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)
     .map((teacher) => (
         <TableRawTeachers
         key={teacher.userId}
@@ -27,8 +36,6 @@ export default function Teachers() {
         firstName={teacher.firstName}
         lastName={teacher.lastName}
         email={teacher.email}
-        
-       
         />
     ));
     const handlePageChange = (pageNumber) => {
@@ -38,18 +45,19 @@ export default function Teachers() {
   return (
     <div>
      
-      <div className=' my-28 z-50'>
+      <div className=' my-10 z-50'>
        
         <div className="min-h-72">
+          <TableHeaderForUsers/>
             {currentRows}
         </div>
         <div>
             <Pagination
             totalPages={totalPages}
             currentPage={currentPage}
-            onPageChange={setCurrentPage}
+            onPageChange={handlePageChange}
             />
-      </div>
+        </div>
       </div>
 
     </div>

@@ -20,7 +20,7 @@ const Settings = () => {
           <div className="mx-32 mt-10">
             <h1>Account Settings</h1>
             <Profile/>
-            <ProfileDeletion/>
+            {/* <ProfileDeletion/> */}
           </div>
         </div>
       </div>

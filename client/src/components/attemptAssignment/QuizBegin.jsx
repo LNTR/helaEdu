@@ -2,12 +2,13 @@ import React, { useEffect, useState } from "react";
 import background from "@assets/img/quiz-bg.svg";
 import Guidlines from "@components/attemptAssignment/Guidlines";
 import Questions from "@components/attemptAssignment/Questions";
-import Score from "@components/Quiz/Score";
+import Score from '@components/attemptAssignment/Score';
 import StartPopup from "@components/Quiz/StartPopup";
 import { Header, Footer } from "@components/common";
 import { getAssignment, startAssignmentByStudent } from "@services/AssignmentService";
 import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
 import { currentStudent } from "@services/StudentService";
+import { submitStudentMark } from "@services/AssignmentService";
 
 const QuizBegin = ({ assignmentId }) => {
 
@@ -26,12 +27,15 @@ const QuizBegin = ({ assignmentId }) => {
   const [showPopup, setShowPopup] = useState(false);
   const [totalTime, setTotalTime] = useState(0);
   const [studentId, setStudentId] = useState(null);
+  const [studentName, setStudentName] = useState("");
+  const [givenAnswers, setGivenAnswers] = useState({});
 
   useEffect(() => {
     const fetchStudent = async () => {
       try {
         const response = await currentStudent(headers);
         setStudentId(response.data.userId); 
+        setStudentName(`${response.data.firstName} ${response.data.lastName}`);
         console.log("studentId", response.data.userId);
       } catch (error) {
         console.error("Failed to fetch student information", error);
@@ -59,9 +63,16 @@ const QuizBegin = ({ assignmentId }) => {
           question: quiz.question,
           options: quiz.options,
           answer: quiz.correctAnswer,
-          id: quiz.quizId,
+          id: quiz.questionId,
         }));
+        const answers = {};
+        assignmentData.quizzes.forEach((quiz) => {
+          if (quiz.givenAnswers && quiz.givenAnswers[studentId]) {
+            answers[quiz.questionId] = quiz.givenAnswers[studentId];
+          }
+        });
 
+        setGivenAnswers(answers);
         setAssignment(assignmentData);
         setQuestions(fetchedQuestions);
 
@@ -137,6 +148,43 @@ const QuizBegin = ({ assignmentId }) => {
     }
   };
 
+  const calculateScore = () => {
+    if (!assignment) return 0;
+    let totalScore = 0;
+    let totalMarks = 0;
+
+    assignment.quizzes.forEach((q) => {
+        const userAnswers = q.givenAnswers && q.givenAnswers[studentId];
+        const correctAnswers = q.correctAnswers || [];
+        const questionMarks = q.marks;
+
+        if (!userAnswers) return;
+
+        if (userAnswers.length === correctAnswers.length && userAnswers.every((answer) => correctAnswers.includes(answer))) {
+            totalScore += questionMarks;
+        } else if (userAnswers.some((answer) => correctAnswers.includes(answer))) {
+            const correctCount = userAnswers.filter((answer) => correctAnswers.includes(answer)).length;
+            const percentage = correctCount / correctAnswers.length;
+            totalScore += questionMarks * percentage;
+        }
+        totalMarks += questionMarks;
+    });
+    const scorePercentage = (totalScore / totalMarks) * 100;
+    const roundedScore = parseFloat(scorePercentage.toFixed(2));
+
+    submitStudentMark(assignmentId, roundedScore, headers)
+        .then(response => {
+            console.log('Score submitted successfully:', response);
+        })
+        .catch(error => {
+            alert(error);
+            console.error('Error submitting score:', error);
+        });
+
+    return roundedScore;
+};
+
+
   if (!assignment) {
     return <div>Loading...</div>;
   }
@@ -157,19 +205,19 @@ const QuizBegin = ({ assignmentId }) => {
               currentQuestion < questions.length ? (
                 <Questions
                   questions={questions}
+                  givenAnswers={givenAnswers}
                   handleNextQuestion={handleNextQuestion}
                   currentQuestion={currentQuestion}
                   handleAnswerClick={handleAnswerClick}
                   initialTimer={globalTimer}
                   isLastQuestion={isLastQuestion}
                   timet={timet}
+                  assignmentId={assignmentId}
                 />
               ) : (
                 <Score
-                  score={score}
-                  setScore={setScore}
-                  setCurrentQuestion={setCurrentQuestion}
-                  setQuizStarted={setQuizStarted}
+                  score={calculateScore()}
+                  name={studentName}
                 />
               )
             ) : (
@@ -192,6 +240,7 @@ const QuizBegin = ({ assignmentId }) => {
             ) : quizStarted && currentQuestion < questions.length ? (
               <Questions
                 questions={questions}
+                givenAnswers={givenAnswers}
                 handleNextQuestion={handleNextQuestion}
                 currentQuestion={currentQuestion}
                 handleAnswerClick={handleAnswerClick}
@@ -200,10 +249,8 @@ const QuizBegin = ({ assignmentId }) => {
               />
             ) : (
               <Score
-                score={score}
-                setScore={setScore}
-                setCurrentQuestion={setCurrentQuestion}
-                setQuizStarted={setQuizStarted}
+                score={calculateScore()}
+                name={studentName}
               />
             )
           )

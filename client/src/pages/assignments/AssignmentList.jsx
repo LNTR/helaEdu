@@ -8,22 +8,27 @@ import TableRowHeader from "@components/assignments/TableRowHeader";
 import { listTeacherDetails } from "@services/TeacherService";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import DetailesView from "@components/assignments/DetailesView";
+import { deleteAssignment } from "@services/AssignmentService";
 
 export default function AssignmentList() {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isViewPopup, setIsViewPopupOpen] = useState(false);
   const [assignment, setAssignment] = useState([]);
+  const [selectedAssignmentId, setSelectedAssignmentId] = useState(null);
+
   const authHeader = useAuthHeader();
   const headers = {
     Authorization: authHeader,
   };
 
-  const openDeleteModal = () => {
+  const openDeleteModal = (assignmentId) => {
+    setSelectedAssignmentId(assignmentId);
     setIsPopupOpen(true);
   };
 
   const closeDeleteModal = () => {
     setIsPopupOpen(false);
+    setSelectedAssignmentId(null);
   };
   const openViewModal = () => {
     setIsViewPopupOpen(true);
@@ -31,6 +36,18 @@ export default function AssignmentList() {
 
   const closeViewModal = () => {
     setIsViewPopupOpen(false);
+  };
+
+  const handleDelete = async () => {
+    try {
+      await deleteAssignment(selectedAssignmentId);
+      setAssignment((prev) => prev.filter((a) => a.assignmentId !== selectedAssignmentId));
+      closeDeleteModal();
+      alert("Assignment deleted successfully.");
+    } catch (error) {
+      console.error("Failed to delete assignment:", error);
+      alert("Failed to delete the assignment.");
+    }
   };
 
   useEffect(() => {
@@ -65,22 +82,28 @@ export default function AssignmentList() {
     const formattedSeconds = seconds < 10 ? `0${seconds}` : seconds;
     return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
   };
+  const convertMillisToISO = (millis) => {
+    const date = new Date(millis);
+    return date.toISOString();
+  };
 
   const currentRows = assignment
-    .slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)
-    .map((data, index) => (
-      <TableRaw
-        key={data.assignmentId}
-        assignmentId={data.assignmentId}
-        title={data.title}
-        instruction={data.instructions}
-        publishedDate={data.publishedTimestamp}
-        totalTime={formatTime(data.totalTime * 1000)}
-        onClose={openDeleteModal}
-        onView={openViewModal}
-        started={data.started}
-      />
-    ));
+  .sort((a, b) => b.publishedTimestamp - a.publishedTimestamp) 
+  .slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)
+  .map((data, index) => (
+    <TableRaw
+      key={data.assignmentId}
+      assignmentId={data.assignmentId}
+      title={data.title}
+      instruction={data.instructions}
+      publishedDate={convertMillisToISO(data.publishedTimestamp)}
+      totalTime={formatTime(data.totalTime * 1000)}
+      onClose={() => openDeleteModal(data.assignmentId)}
+      onView={openViewModal}
+      started={data.started}
+    />
+  ));
+
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
@@ -103,7 +126,7 @@ export default function AssignmentList() {
                   >
                     Cancel
                   </button>
-                  <button className="btn bg-blue text-white text-2xl">
+                  <button className="btn bg-blue text-white text-2xl" onClick={handleDelete}>
                     Delete
                   </button>
                 </div>
@@ -122,6 +145,7 @@ export default function AssignmentList() {
             <hr className="border-yellow border-t-4 w-full hover:border-white transition duration-300 ease-in-out"></hr>
           </div>
           <div>
+
             <Link to="/assignments/createAssignments">
               <button className="bg-yellow text-white rounded-xl p-4 text-3xl">
                 Create Assignment

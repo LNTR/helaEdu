@@ -9,6 +9,7 @@ const UserManagement = () => {
   const [isTeachers, setIsTeachers] = useState(false);
   const [isModerators, setIsModerators] = useState(false);
   const [isTopTeachers, setIsTopTeachers] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const handleTabClick = (tab) => {
     setIsPending(false);
@@ -37,6 +38,9 @@ const UserManagement = () => {
         break;
     }
   };
+  const resetSearch = () => {
+    setSearchQuery("");
+  };
 
   return (
     <>
@@ -47,6 +51,7 @@ const UserManagement = () => {
             <Sidebar />
           </div>
           <div className="content-wrapper ">
+          
             <div className="tabs text-sm flex justify-center mb-4">
               <button
                 onClick={() => handleTabClick("PendingRequests")}
@@ -79,13 +84,29 @@ const UserManagement = () => {
                 Top Teachers
               </button>
             </div>
+            <div className="flex justify-end mr-40 mt-4">
+              <input 
+                type="text" 
+                className="border border-blue px-10 py-2 rounded-2xl h-16 w-60" 
+                placeholder="Search..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)} 
+              />
+              <button 
+                onClick={resetSearch} 
+                className="ml-2 px-6 py-2 bg-blue text-white text-xl rounded-2xl h-16"
+              >
+                Reset
+              </button>
+            </div>
             <div className="">
               <TableRows 
                 isPending={isPending} 
                 isStudents={isStudents} 
                 isTeachers={isTeachers} 
-                // isModerators={isModerators} 
+                isModerators={isModerators} 
                 isTopTeachers={isTopTeachers} 
+                searchQuery={searchQuery}
               />
             </div>
           </div>

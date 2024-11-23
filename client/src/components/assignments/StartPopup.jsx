@@ -42,7 +42,7 @@ function StartPopup({ closePopup ,assignmentId }) {
           <div className='w-1/2 pr-4'>
             <h2 className='text-3xl my-6'>Do you want to start your assignment ? </h2>
 
-            <button className='text-white bg-blue  text-xl px-6 py-3 rounded-lg flex-c flex-col m-2 ' onClick={handleStartAssignment} disabled={isStarted} >{isStarted ?"Already Started" : "Start Assignemnt"}</button>
+            <button className='text-white bg-blue  text-xl px-6 py-3 rounded-lg flex-c flex-col m-2 ' onClick={handleStartAssignment} disabled={isStarted} >{isStarted ?"Already Started" : "Start Assignment"}</button>
 
             <div className=' p-2  mb-4'>
                 <span className='text-xl '>Assignment Link</span>

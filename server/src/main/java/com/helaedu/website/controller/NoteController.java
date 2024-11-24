@@ -49,6 +49,40 @@ public class NoteController {
             return new ResponseEntity<>("Error creating note", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    @DeleteMapping("/{noteId}")
+    public ResponseEntity<Object> deleteNote(@PathVariable String noteId) throws ExecutionException, InterruptedException {
+        try {
+            String result = noteService.deleteNote(noteId);
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            ValidationErrorResponse errorResponse = new ValidationErrorResponse();
+            errorResponse.addViolation("noteId", e.getMessage());
+            return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        } catch (ExecutionException | InterruptedException e) {
+            return new ResponseEntity<>("Error deleting note", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @PutMapping("/update/{noteId}")
+    public ResponseEntity<Object> updateNote(@PathVariable String noteId, @RequestBody NoteDto noteDto, BindingResult bindingResult) throws ExecutionException, InterruptedException {
+        if(bindingResult.hasErrors()) {
+            ValidationErrorResponse errorResponse = new ValidationErrorResponse();
+            for (FieldError fieldError : bindingResult.getFieldErrors()) {
+                errorResponse.addViolation(fieldError.getField(), fieldError.getDefaultMessage());
+            }
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
+        try {
+            String result = noteService.updateNote(noteId, noteDto);
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            ValidationErrorResponse errorResponse = new ValidationErrorResponse();
+            errorResponse.addViolation("noteId", e.getMessage());
+            return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        } catch (ExecutionException | InterruptedException e) {
+            return new ResponseEntity<>("Error updating note", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
 
 
 

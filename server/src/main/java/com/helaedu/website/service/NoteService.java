@@ -1,13 +1,7 @@
 package com.helaedu.website.service;
 
 import com.helaedu.website.dto.NoteDto;
-import com.helaedu.website.dto.NoteDto;
-import com.helaedu.website.dto.NoteDto;
-import com.helaedu.website.dto.StudentDto;
 import com.helaedu.website.entity.Note;
-import com.helaedu.website.entity.Note;
-import com.helaedu.website.entity.Note;
-import com.helaedu.website.entity.Student;
 import com.helaedu.website.repository.NoteRepository;
 import com.helaedu.website.util.UniqueIdGenerator;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -93,5 +87,8 @@ public class NoteService {
                 noteDto.getUserId()
         );
         return noteRepository.updateNote(noteId, note);
+    }
+    public String deleteNote(String noteId) throws ExecutionException, InterruptedException {
+        return noteRepository.deleteNote(noteId);
     }
 }

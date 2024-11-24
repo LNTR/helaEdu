@@ -1,7 +1,5 @@
 package com.helaedu.website.controller;
 
-import com.helaedu.website.dto.NoteDto;
-import com.helaedu.website.dto.StudentDto;
 import com.helaedu.website.dto.SubjectDto;
 import com.helaedu.website.dto.ValidationErrorResponse;
 import com.helaedu.website.service.SubjectService;

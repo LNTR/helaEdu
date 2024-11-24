@@ -4,7 +4,6 @@ import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
 import com.helaedu.website.entity.Note;
-import com.helaedu.website.entity.Note;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -55,4 +54,12 @@ public class NoteRepository {
         }
         return notes;
     }
+    public String deleteNote(String noteId) throws ExecutionException, InterruptedException {
+        Firestore dbFirestore = FirestoreClient.getFirestore();
+        DocumentReference documentReference = dbFirestore.collection("tNotes").document(noteId);
+        ApiFuture<WriteResult> future = documentReference.delete();
+        return future.get().getUpdateTime().toString();
+    }
+
+
 }

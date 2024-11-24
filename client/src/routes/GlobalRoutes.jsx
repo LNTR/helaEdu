@@ -6,8 +6,8 @@ import Auth from "@pages/auth/Auth";
 import TProfile from "@pages/profiles/TProfile";
 import SProfile from "@pages/profiles/SProfile";
 
-import AllNotes from "@pages/personalNotes/AllNotes";
-import NewNote from "@pages/personalNotes/NewNote";
+import AllNotes from "@pages/personalNotesTM/AllNotes";
+import NewNote from "@pages/personalNotesTM/NewNote";
 import Dashboard from "@pages/admin/Dashboard";
 import ModeratorDetails from "@pages/admin/ModeratorDetails";
 // import ModeratorManagement from "@pages/admin/ModeratorManagement";
@@ -39,6 +39,7 @@ import QuizA from "@pages/attemptAssignment/Quiz";
 
 import Resource from "@pages/admin/Resourses";
 import SelectedSub from "@pages/admin/SelectedSub";
+import AssignmentView from "@pages/assignments/AssignmentView";
 
 function GlobalRoutes() {
   return (
@@ -82,6 +83,7 @@ function GlobalRoutes() {
       <Route path="/quizStart/:assignmentId" element={<QuizA />} />
       <Route path="/resourse" element={<Resource />} />
       <Route path="/selectedSub" element={<SelectedSub />} />
+      <Route path="/assignmentView" element={<AssignmentView/>} />
     </Routes>
   );
 }

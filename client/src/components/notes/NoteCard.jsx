@@ -1,5 +1,6 @@
 import React from 'react'
 import NoteView from './NoteView'
+import HTMLReactParser from 'html-react-parser';
 
 const NoteCard = ({ topic, subject, date, content }) => {
   const closeModal = () => {
@@ -13,7 +14,7 @@ const NoteCard = ({ topic, subject, date, content }) => {
           <h3 className='special-text text-blue'>{topic}</h3>
         </div>
         <div className='note-card-right'>
-          <p className='s-text'>{content}</p>
+          <p className='s-text'>{HTMLReactParser(content)}</p>
         </div>
       </div>
       <div className='absolute bottom-0 left-1/2 transform -translate-x-1/2 bg-white shadow-xl border text-black text-center w-52 rounded-md'>

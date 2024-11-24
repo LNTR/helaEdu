@@ -1,7 +1,7 @@
 import React from 'react'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil } from "@fortawesome/free-solid-svg-icons";
-
+import HTMLReactParser from 'html-react-parser';
 const NoteView = ({ topic, subject, date, content }) => {
     return (
         <div className='p-5'>
@@ -19,7 +19,7 @@ const NoteView = ({ topic, subject, date, content }) => {
                
             </div>
             <div>
-                <p className='n-text p-10'>{content}</p>
+                <p className='n-text p-10'>{HTMLReactParser(content)}</p>
             </div>
 
         </div>

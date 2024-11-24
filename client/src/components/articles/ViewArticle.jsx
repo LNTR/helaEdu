@@ -29,22 +29,21 @@ export default function ViewArticle({
     const formattedDate = new Date(date).toLocaleDateString();
     const [isLiked, setIsLiked] = useState(false);
     const [isMarked, setIsMarked] = useState(false);
-    const [loggedInUserId, setLoggedInUserId] = useState(null); // To store logged-in user ID
-    const [upvoteCount, setUpvoteCount] = useState(upvote.length); // Track upvote count
+    const [loggedInUserId, setLoggedInUserId] = useState(null); 
+    const [upvoteCount, setUpvoteCount] = useState(upvote.length); 
     const authHeader = useAuthHeader();
     const headers = {
         Authorization: authHeader,
     };
     console.log(upvote);
 
-    // Fetch logged-in user's details
     useEffect(() => {
         const fetchUserData = async () => {
             try {
                 const response = await listTeacherDetails(headers);
                 const userId = response.data.userId;
                 setLoggedInUserId(userId);
-                // Check if logged-in user has already upvoted
+               
                 const isUserLiked = upvote.includes(userId);
                 setIsLiked(isUserLiked);
             } catch (error) {
@@ -54,9 +53,9 @@ export default function ViewArticle({
 
         fetchUserData();
     }, [upvote]);
-    // Handle upvote toggle
+   
     const toggleLike = async () => {
-        // Prevent the article's author from upvoting their own article
+      
         if (loggedInUserId === articleAuthorId) {
             console.log("You cannot upvote your own article.");
             return;

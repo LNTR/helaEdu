@@ -41,17 +41,9 @@ const QuizBegin = ({ assignmentId }) => {
         console.error("Failed to fetch student information", error);
       }
     };
-
     fetchStudent();
   }, [headers]);
 
-  const formatTime = (milliseconds) => {
-    const totalMinutes = Math.floor(milliseconds / 60000);
-    const hours = Math.floor(totalMinutes / 60);
-    const minutes = totalMinutes % 60;
-
-    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
-  };
 
   useEffect(() => {
     const fetchAssignment = async () => {
@@ -85,7 +77,7 @@ const QuizBegin = ({ assignmentId }) => {
     };
 
     fetchAssignment();
-  }, [assignmentId, headers]);
+  }, [assignmentId,headers]);
 
   useEffect(() => {
     if (quizStarted && globalTimer > 0) {

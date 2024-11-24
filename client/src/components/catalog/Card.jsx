@@ -1,9 +1,9 @@
 import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBook } from "@fortawesome/free-solid-svg-icons";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import { faBook } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 
-function Card({ subject }) {
+function Card({ subject, icon, grade }) {
   const navigate = useNavigate();
 
   const formatSubjectName = (subject) => {
@@ -14,11 +14,13 @@ function Card({ subject }) {
     <div
       className="subject-card shadow-xl card"
       onClick={() => {
-        navigate(`/subjects/subject/${subject}`);
+        navigate(`/subjects/subject/${grade}/${subject}`);
       }}
     >
       <div className="card-icon">
-        <FontAwesomeIcon icon={faBook} size="5x" />{" "}
+        {/* <FontAwesomeIcon icon={faBook} size="5x" />{" "}
+         */}
+        <img src={`/src/assets/img/subjects/${icon}.png`} alt="" srcset="" />
       </div>
       <div className="card-text">
         <h3>{formatSubjectName(subject)}</h3>

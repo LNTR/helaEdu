@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
-function SubjectFilters() {
+function SubjectFilters({ selectedGrade, setSelectedGrade }) {
   const grades = [
     "Grade 6",
     "Grade 7",
@@ -14,7 +14,9 @@ function SubjectFilters() {
     "Grade 13",
   ];
   let [enrollFilter, setEnrollFilter] = useState("all");
-  let [selectedGrade, setSelectedGrade] = useState(grades[0] || "Select Grade");
+  useEffect(() => {
+    setSelectedGrade(grades[0] || "Select Grade");
+  }, []);
   useEffect(() => {
     switch (enrollFilter) {
       case "all":
@@ -27,14 +29,7 @@ function SubjectFilters() {
   }, [enrollFilter]);
 
   useEffect(() => {
-    switch (selectedGrade) {
-      case "all":
-        //all course detail logic
-        break;
-      case "enroll":
-        //enroll course details logic
-        break;
-    }
+    //grade selection logic
   }, [selectedGrade]);
 
   return (

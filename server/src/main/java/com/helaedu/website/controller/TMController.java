@@ -1,10 +1,7 @@
 package com.helaedu.website.controller;
 
 import com.helaedu.website.dto.*;
-import com.helaedu.website.service.AdminService;
-import com.helaedu.website.service.ArticleService;
-import com.helaedu.website.service.StudentService;
-import com.helaedu.website.service.TMService;
+import com.helaedu.website.service.*;
 import com.helaedu.website.util.RequestUtil;
 import com.helaedu.website.util.UserUtil;
 import org.springframework.http.HttpStatus;
@@ -25,11 +22,14 @@ public class TMController {
     private final TMService tmService;
     private final AdminService adminService;
     private final StudentService studentService;
-    public TMController(ArticleService articleService, TMService tmService, AdminService adminService, StudentService studentService) {
+    private final NoteService noteService;
+
+    public TMController(ArticleService articleService, TMService tmService, AdminService adminService, StudentService studentService, NoteService noteService) {
         this.articleService = articleService;
         this.tmService = tmService;
         this.adminService = adminService;
         this.studentService = studentService;
+        this.noteService = noteService;
     }
 
     @PostMapping("/uploadProfilePicture")
@@ -80,6 +80,19 @@ public class TMController {
         TeacherDto teacherDto = tmService.getTMByEmail(email);
         List<ArticleDto> articles = articleService.getArticlesByUser(teacherDto.getUserId());
         return ResponseEntity.ok(articles);
+    }
+    @GetMapping("/me/notes")
+    public ResponseEntity<List<NoteDto>> getCurrentTMNotes() throws ExecutionException, InterruptedException {
+        String email = UserUtil.getCurrentUserEmail();
+        Map<String, String> requestBody = RequestUtil.createEmailRequestBody(email);
+        return getAllNotesByTM(requestBody);
+    }
+    @GetMapping("/notes")
+    public ResponseEntity<List<NoteDto>> getAllNotesByTM(@RequestBody Map<String, String> requestBody) throws ExecutionException, InterruptedException {
+        String email = requestBody.get("email");
+        TeacherDto teacherDto = tmService.getTMByEmail(email);
+        List<NoteDto> notes = noteService.getNotesByUser(teacherDto.getUserId());
+        return ResponseEntity.ok(notes);
     }
 
     @PostMapping("/deleteProfilePicture")

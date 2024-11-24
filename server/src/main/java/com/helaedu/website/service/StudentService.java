@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 public class StudentService {
 
     private final StudentRepository studentRepository;
-    private final NoteRepository noteRepository;
+//    private final NoteRepository noteRepository;
     private final SubscriptionRepository subscriptionRepository;
 
     @Autowired
@@ -43,7 +43,7 @@ public class StudentService {
 
     public StudentService(StudentRepository studentRepository, NoteRepository noteRepository, SubscriptionRepository subscriptionRepository) {
         this.studentRepository = studentRepository;
-        this.noteRepository = noteRepository;
+//        this.noteRepository = noteRepository;
         this.subscriptionRepository = subscriptionRepository;
     }
 
@@ -55,10 +55,10 @@ public class StudentService {
 
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         String userId = UniqueIdGenerator.generateUniqueId("st", studentRepository::exists);
-        String noteId = UniqueIdGenerator.generateUniqueId("sn", noteRepository::exists);
+//        String noteId = UniqueIdGenerator.generateUniqueId("sn", noteRepository::exists);
 
-        Note note = new Note(noteId, "");
-        noteRepository.createNote(note);
+//        Note note = new Note(noteId, "");
+//        noteRepository.createNote(note);
 
         Student student = new Student(
                 userId,
@@ -67,14 +67,14 @@ public class StudentService {
                 studentDto.getEmail(),
                 encoder.encode(studentDto.getPassword()),
                 Instant.now().toString(),
-                noteId,
+//                noteId,
                 studentDto.getSubscriptionId(),
                 new ArrayList<>(),
                 "ROLE_STUDENT",
                 null
         );
         studentDto.setUserId(student.getUserId());
-        studentDto.setNoteId(noteId);
+//        studentDto.setNoteId(noteId);
 
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         UserRecord.CreateRequest request = new UserRecord.CreateRequest()
@@ -143,7 +143,6 @@ public class StudentService {
                                 student.getEmail(),
                                 student.getPassword(),
                                 student.getRegTimestamp(),
-                                student.getNoteId(),
                                 student.getSubscriptionId(),
                                 student.getEnrolledSubjects(),
                                 student.getRole(),
@@ -164,7 +163,7 @@ public class StudentService {
                         student.getEmail(),
                         student.getPassword(),
                         student.getRegTimestamp(),
-                        student.getNoteId(),
+//                        student.getNoteId(),
                         student.getSubscriptionId(),
                         student.getEnrolledSubjects(),
                         student.getRole(),
@@ -184,7 +183,7 @@ public class StudentService {
                     student.getEmail(),
                     student.getPassword(),
                     student.getRegTimestamp(),
-                    student.getNoteId(),
+//                    student.getNoteId(),
                     student.getSubscriptionId(),
                     student.getEnrolledSubjects(),
                     student.getRole(),
@@ -205,7 +204,7 @@ public class StudentService {
                     student.getEmail(),
                     student.getPassword(),
                     student.getRegTimestamp(),
-                    student.getNoteId(),
+//                    student.getNoteId(),
                     student.getSubscriptionId(),
                     student.getEnrolledSubjects(),
                     student.getRole(),
@@ -239,9 +238,9 @@ public class StudentService {
         if(studentDto.getRegTimestamp() != null) {
             existingStudent.setRegTimestamp(studentDto.getRegTimestamp());
         }
-        if(studentDto.getNoteId() != null) {
-            existingStudent.setNoteId(studentDto.getNoteId());
-        }
+//        if(studentDto.getNoteId() != null) {
+//            existingStudent.setNoteId(studentDto.getNoteId());
+//        }
         if(studentDto.getSubscriptionId() != null) {
             existingStudent.setSubscriptionId(studentDto.getSubscriptionId());
         }
@@ -355,7 +354,7 @@ public class StudentService {
                         student.getEmail(),
                         student.getPassword(),
                         student.getRegTimestamp(),
-                        student.getNoteId(),
+//                        student.getNoteId(),
                         student.getSubscriptionId(),
                         student.getEnrolledSubjects(),
                         student.getRole(),

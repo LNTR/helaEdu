@@ -1,48 +1,44 @@
 import React, { useState } from "react";
-import { useStripe, useElements, CardElement } from "@stripe/react-stripe-js";
+import {
+  useStripe,
+  useElements,
+  PaymentElement,
+} from "@stripe/react-stripe-js";
+import {
+  subscribeToMonthlyPlan,
+  subscribeToYearlyPlan,
+} from "@services/PaymentService";
 
-const CheckoutForm = () => {
+const CheckoutForm = ({ setIsModalOpen, planType = "Monthly" }) => {
   const stripe = useStripe();
   const elements = useElements();
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handlePayment = async () => {
+  const handlePayment = async (e) => {
+    e.preventDefault();
     if (!stripe || !elements) return;
 
     setIsLoading(true);
     setError(null);
 
     try {
-      // Request the backend to create a PaymentIntent
-      const res = await fetch(
-        "http://localhost:8081/payment/create-payment-intent",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ amount: 5000 }), // Amount in cents
-        }
-      );
-
-      const { clientSecret } = await res.json();
-
-      // Confirm card payment
-      const { error, paymentIntent } = await stripe.confirmCardPayment(
-        clientSecret,
-        {
-          payment_method: {
-            card: elements.getElement(CardElement),
-          },
-        }
-      );
+      const { error } = await stripe.confirmPayment({
+        elements,
+        confirmParams: {
+          return_url: "http://localhost:8081/payment/success",
+        },
+      });
 
       if (error) {
         setError(error.message);
-      } else if (paymentIntent.status === "succeeded") {
+      } else {
         setSuccess(true);
+        setIsModalOpen(false); // Close the modal on success
       }
     } catch (err) {
+      console.error(err);
       setError("An unexpected error occurred. Please try again.");
     }
 
@@ -54,31 +50,26 @@ const CheckoutForm = () => {
       <h2 className="text-2xl font-bold mb-4 text-center">
         Complete Your Payment
       </h2>
-      <CardElement
-        className="p-3 border rounded-md mb-4"
-        options={{
-          style: {
-            base: {
-              fontSize: "16px",
-              color: "#32325d",
-              "::placeholder": { color: "#aab7c4" },
-            },
-            invalid: { color: "#fa755a" },
-          },
-        }}
-      />
-      {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
-      {success && (
-        <p className="text-green-500 text-sm mb-4">Payment successful!</p>
-      )}
+      <form onSubmit={handlePayment}>
+        <PaymentElement
+          className="mb-4"
+          options={{
+            layout: "tabs", // Layout options: 'tabs' or 'accordion'
+          }}
+        />
+        {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
+        {success && (
+          <p className="text-green-500 text-sm mb-4">Payment successful!</p>
+        )}
 
-      <button
-        className={`btn btn-primary w-full ${isLoading ? "loading" : ""}`}
-        onClick={handlePayment}
-        disabled={!stripe || isLoading}
-      >
-        {isLoading ? "Processing..." : "Pay $50"}
-      </button>
+        <button
+          type="submit"
+          className={`btn btn-primary w-full ${isLoading ? "loading" : ""}`}
+          disabled={!stripe || isLoading}
+        >
+          {isLoading ? "Processing..." : "Pay Now"}
+        </button>
+      </form>
     </div>
   );
 };

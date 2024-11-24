@@ -46,6 +46,7 @@ const QuizBegin = ({ assignmentId }) => {
   }, []);
   useEffect(() => {
     const fetchAssignment = async () => {
+      console.log("Called at least once");
       try {
         const response = await getAssignment(assignmentId, headers);
         const assignmentData = response.data;
@@ -68,11 +69,13 @@ const QuizBegin = ({ assignmentId }) => {
         setQuestions(fetchedQuestions);
 
         const totalQuizTime = assignmentData.totalTime * 1000;
-        const remaningTime =
+        const remainingTime =
           assignmentData.studentRemainingTimes[studentId] * 1000;
-        console.log("Student id", studentId);
-        setQuizStarted(assignmentData.totalTime !== remaningTime); //COMMENT THIS OUT
-        setGlobalTimer(remaningTime);
+        console.log(
+          "Total time" + totalQuizTime + " remainingTime " + remainingTime
+        );
+        setQuizStarted(!isNaN(remainingTime)); //COMMENT THIS OUT
+        setGlobalTimer(remainingTime);
         setTotalTime(totalQuizTime);
       } catch (error) {
         console.error("Failed to fetch assignment", error);
@@ -115,8 +118,6 @@ const QuizBegin = ({ assignmentId }) => {
   };
 
   const handleNextQuestion = (remainingTime) => {
-    console.log("Time remaining: ", remainingTime);
-
     setCurrentQuestion((prevQuestion) => {
       const nextQuestion = prevQuestion + 1;
       if (nextQuestion === questions.length - 1) {
@@ -249,9 +250,17 @@ const QuizBegin = ({ assignmentId }) => {
               handleAnswerClick={handleAnswerClick}
               initialTimer={globalTimer}
               isLastQuestion={isLastQuestion}
+              timet={globalTimer / 1000}
             />
           ) : (
-            <Score score={calculateScore()} name={studentName} />
+            <Score
+              score={() => {
+                let totalScore = calculateScore();
+                setScore(totalScore);
+                return totalScore;
+              }}
+              name={studentName}
+            />
           )
         ) : (
           <div className="flex justify-center my-20">

@@ -3,18 +3,21 @@ import React from "react";
 // import { faBook } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 
-function Card({ subject, icon, grade }) {
+function Card({ subject, icon, grade,pdfRef,subjectId }) {
   const navigate = useNavigate();
 
-  const formatSubjectName = (subject) => {
-    return subject.replace(/([A-Z])/g, " $1").trim();
-  };
+  // const formatSubjectName = (subject) => {
+  //   return subject.replace(/([A-Z])/g, " $1").trim();
+  // };
 
   return (
     <div
       className="subject-card shadow-xl card"
       onClick={() => {
-        navigate(`/subjects/subject/${grade}/${subject}`);
+        navigate(`/subjects/subject/${grade}/${subject}`, {
+          state: { subjectId, pdfRef,subject },
+        });
+        
       }}
     >
       <div className="card-icon">
@@ -23,7 +26,8 @@ function Card({ subject, icon, grade }) {
         <img src={`/src/assets/img/subjects/${icon}.png`} alt="" srcset="" />
       </div>
       <div className="card-text">
-        <h3>{formatSubjectName(subject)}</h3>
+       
+        <h3>{subject}</h3>
       </div>
     </div>
   );

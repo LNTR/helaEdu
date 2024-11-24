@@ -5,6 +5,7 @@ import banner from "@assets/img/subject_background.png";
 import { SubjectFilters } from "@components/subject";
 import { listSubjectsByGrade } from "@services/SubjectService";
 
+
 function SubjectCatalog() {
   const [subjects, setSubjects] = useState([]);
   const [selectedGrade, setSelectedGrade] = useState(null);
@@ -13,19 +14,18 @@ function SubjectCatalog() {
 
   useEffect(() => {
     if (selectedGrade) {
-      
-      fetchSubjects(selectedGrade);
+      fetchSubjects(selectedGrade); 
     }
   }, [selectedGrade]);
 
   const fetchSubjects = async (grade) => {
     setLoading(true);
     setError(null);
+
     try {
-      
-      const response = await listSubjectsByGrade({grade});
-      console.log("subjects",response);
-      setSubjects(Array.isArray(response) ? response : []); 
+      const response = await listSubjectsByGrade(grade); 
+      console.log("subjects", response.data);
+      setSubjects(Array.isArray(response.data) ? response.data : []);
     } catch (err) {
       console.error("Error fetching subjects:", err);
       setError("Failed to load subjects. Please try again.");
@@ -50,13 +50,14 @@ function SubjectCatalog() {
           <p className="text-center text-red-500">{error}</p>
         ) : subjects.length > 0 ? (
           <div className="catalog-ul">
-            {subjects.map(({ subject, icon, subjectId }, index) => (
+            {subjects.map(({ subjectName, language,pdfRef, grade, subjectId }, index) => (
               <Card
-                key={subjectId || index} 
-                subject={subject}
-                icon={icon}
-                grade={selectedGrade}
-                subjectId={subjectId} 
+                key={index}
+                subject={subjectName || "No Name Available"} 
+                icon={2} 
+                grade={grade }
+                pdfRef={pdfRef}
+                subjectId={subjectId || `unknown-${index}`} 
               />
             ))}
           </div>

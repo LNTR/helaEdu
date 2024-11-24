@@ -11,5 +11,7 @@ export const uploadPdf = (subjectId, formData) =>axios.post(`${REST_API_BASE_URL
     },
     params: { subjectId }
   });
-export const listSubjectsByGrade = (grade) =>axios.get(`${REST_API_BASE_URL}/byGrade`, {params: { grade }, });
+  export const listSubjectsByGrade = (grade) => 
+    axios.get(`${REST_API_BASE_URL}/byGrade/${grade}`);
+  
   

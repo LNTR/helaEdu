@@ -1,18 +1,15 @@
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
-import CheckoutForm from "./CheckOutForm";
+import CheckoutForm from "@components/payment/CheckOutForm";
 
 function PaymentGateway() {
-  const PUBLISHABLE_KEY = import.meta.env.VITE_PUBLISHABLE_KEY;
+  const PUBLISHABLE_KEY =
+    "pk_test_51PuWsmJGIQLjgkiJVy6MNIgKVp6CPmW56L1EVKCSYmbO2uLkz9mv5ootnv49w3FDVCCQICjV1gsrw439034YyG5Z00GRJSJWjM";
 
   const stripePromise = loadStripe(PUBLISHABLE_KEY);
-  const options = {
-    clientSecret:
-      "pi_3PuZltJGIQLjgkiJ0M1fJFLY_secret_oeJx8HDHEozOSGGiS3PbSD5Ft",
-  };
 
   return (
-    <Elements stripe={stripePromise} options={options}>
+    <Elements stripe={stripePromise}>
       <CheckoutForm />
     </Elements>
   );

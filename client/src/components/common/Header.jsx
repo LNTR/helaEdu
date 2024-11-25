@@ -63,6 +63,13 @@ function Header() {
               </div>
             </Link>
             {currentUserRole == userRoles.Student ? (
+              <Link to="/assignmentView">
+                <a className="nav-text flex-c m-4 cursor-pointer">
+                  <h4>Assignments</h4>
+                </a>
+              </Link>
+            ) : null}
+            {currentUserRole == userRoles.Student ? (
               <Link to="/quiz/leaderboard/1">
                 <a className="nav-text flex-c m-4 cursor-pointer">
                   <h4>Leaderboard</h4>

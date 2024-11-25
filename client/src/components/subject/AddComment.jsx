@@ -1,26 +1,64 @@
 import React, { useState } from "react";
+import { addCommentForForum } from "@services/SubjectService";
+import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 
-export default function AddComment({ onAddComment }) {
+export default function AddComment({ subjectId }) {
+  const authHeader = useAuthHeader();
+  const headers = {
+    Authorization: authHeader,
+  };
+
   const [commentText, setCommentText] = useState("");
 
-  const handlePostComment = () => {
-    onAddComment(commentText);
-    setCommentText("");
+  const handlePostComment = async (e) => {
+    e.preventDefault();
+    if (!commentText.trim()) return;
+   
+    try {
+      const comments = {
+        comment: commentText,
+        subjectId,
+        parentId: 0,
+      };
+      
+      const response = await addCommentForForum(comments, headers);
+      if (response.status === 200) {
+        setCommentText("");
+        window.location.reload();
+      }
+    } catch (err) {
+      if (err.response) {
+        console.error("Error posting comment:", err.response.data);
+      } else {
+        console.error("Error posting comment:", err.message);
+      }
+    }
   };
+
   return (
     <div className="m-12">
       <h1>Leave a Comment</h1>
-      <hr></hr>
+      <hr className="border-yellow border-t-4 w-96"></hr>
       <br></br>
-      <input className="border border-blue w-11/12 h-80 rounded-xl mt-7 mb-7"></input>
-      <div className="flex justify-start">
-        <button
-          className="bg-yellow text-white rounded-xl p-4 text-3xl"
-          onClick={handlePostComment}
-        >
-          Post Comment
-        </button>
-      </div>
+
+      <form onSubmit={handlePostComment}>
+        <input
+          type="text"
+          className="border border-blue w-11/12 h-80 rounded-xl mt-7 mb-7 px-10"
+          value={commentText}
+          onChange={(e) => setCommentText(e.target.value)}
+          placeholder="Write your comment..."
+        />
+
+        <div className="flex justify-start">
+          <button
+            type="submit"
+            className="bg-yellow text-white rounded-xl p-4 text-3xl"
+          >
+            Post Comment
+          </button>
+        </div>
+      </form>
     </div>
   );
 }

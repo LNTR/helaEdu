@@ -18,4 +18,5 @@ public class Forum {
     private String userId;
     private String parentId;
     private Instant publishedTimestamp;
+    private String subjectId;
 }

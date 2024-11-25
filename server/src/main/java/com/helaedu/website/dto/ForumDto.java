@@ -15,4 +15,5 @@ public class ForumDto {
     private String userId;
     private String parentId;
     private Instant publishedTimestamp;
+    private String subjectId;
 }

@@ -85,4 +85,8 @@ public class FirebaseStorageService {
         byte[] content = blob.getContent();
         return new ByteArrayResource(content);
     }
+    public String uploadCoverImage(MultipartFile file, String subjectId) throws IOException {
+        return uploadFile(file, "cover_img_pictures/" + subjectId);
+    }
+
 }

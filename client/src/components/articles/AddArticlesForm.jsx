@@ -150,7 +150,6 @@ export default function AddArticlesForm() {
   };
 
   const isSelected = (value) => selectedTags.includes(value);
-
   return (
     <div className="mx-96 my-20 mw:mx-10">
       <h1>Add Your Article</h1>

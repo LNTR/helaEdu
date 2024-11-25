@@ -37,7 +37,8 @@ public class ForumService {
                     forum.getArticleId(),
                     forum.getUserId(),
                     forum.getParentId(),
-                    forum.getPublishedTimestamp()
+                    forum.getPublishedTimestamp(),
+                    forum.getSubjectId()
             );
         }
         return null;
@@ -56,7 +57,8 @@ public class ForumService {
                 forumDto.getArticleId(),
                 forumDto.getUserId(),
                 forumDto.getParentId(),
-                publishedTimestamp
+                publishedTimestamp,
+                forumDto.getSubjectId()
         );
 
         return forumRepository.addComment(forum);
@@ -71,7 +73,22 @@ public class ForumService {
                         forum.getArticleId(),
                         forum.getUserId(),
                         forum.getParentId(),
-                        forum.getPublishedTimestamp()
+                        forum.getPublishedTimestamp(),
+                        forum.getSubjectId()
+                )
+        ).collect(Collectors.toList());
+    }
+    public List<ForumDto> getCommentsBySubjectId(String subjectId) throws ExecutionException, InterruptedException {
+        List<Forum> forums = forumRepository.getCommentsBySubjectId(subjectId);
+        return forums.stream().map(forum ->
+                new ForumDto(
+                        forum.getCommentId(),
+                        forum.getComment(),
+                        forum.getArticleId(),
+                        forum.getUserId(),
+                        forum.getParentId(),
+                        forum.getPublishedTimestamp(),
+                        forum.getSubjectId()
                 )
         ).collect(Collectors.toList());
     }

@@ -70,6 +70,7 @@ public class SecurityConfig {
 
                         .requestMatchers(HttpMethod.GET, "/files/teacher-proof").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.PUT, "/notes/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/notes/**").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/notes/**").permitAll()
                                 .requestMatchers(HttpMethod.DELETE, "/notes/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/forum/**").permitAll()
@@ -85,6 +86,10 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.PUT, "/subjects/**").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/subjects/**").permitAll()
                                 .requestMatchers(HttpMethod.DELETE, "/subjects/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/tm/**").permitAll()
+                                .requestMatchers(HttpMethod.PUT, "/tm/**").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/tm/**").permitAll()
+                                .requestMatchers(HttpMethod.DELETE, "/tm/**").permitAll()
 
                         .anyRequest().permitAll()
                 )

@@ -28,7 +28,7 @@ public class StudentDto {
     private String password;
 
     private String regTimestamp;
-    private String noteId;
+//    private String noteId;
     private String subscriptionId;
     private ArrayList<String> enrolledSubjects;
 

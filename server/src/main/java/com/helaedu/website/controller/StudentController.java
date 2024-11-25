@@ -179,79 +179,79 @@ public class StudentController {
     }
 
     @GetMapping("/{userId}/note")
-    public ResponseEntity<Object> getNote(@PathVariable String userId) throws ExecutionException, InterruptedException {
-        StudentDto studentDto = studentService.getStudent(userId);
-        NoteDto noteDto = noteService.getNote(studentDto.getNoteId());
-        if (noteDto != null) {
-            return ResponseEntity.ok(noteDto);
-        } else {
-            ValidationErrorResponse errorResponse = new ValidationErrorResponse();
-            errorResponse.addViolation("userId", "Student not found");
-            return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
-        }
-    }
+//    public ResponseEntity<Object> getNote(@PathVariable String userId) throws ExecutionException, InterruptedException {
+//        StudentDto studentDto = studentService.getStudent(userId);
+//        NoteDto noteDto = noteService.getNote(studentDto.getNoteId());
+//        if (noteDto != null) {
+//            return ResponseEntity.ok(noteDto);
+//        } else {
+//            ValidationErrorResponse errorResponse = new ValidationErrorResponse();
+//            errorResponse.addViolation("userId", "Student not found");
+//            return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+//        }
+//    }
 
-    @GetMapping("/note-by-email")
-    @PreAuthorize("#requestBody.email == authentication.principal.username")
-    public ResponseEntity<Object> getNoteByEmail(@RequestBody Map<String, String> requestBody) throws ExecutionException, InterruptedException {
-        String email = requestBody.get("email");
-        StudentDto studentDto = studentService.getStudentByEmail(email);
-        NoteDto noteDto = noteService.getNote(studentDto.getNoteId());
-        if (noteDto != null) {
-            return ResponseEntity.ok(noteDto);
-        } else {
-            ValidationErrorResponse errorResponse = new ValidationErrorResponse();
-            errorResponse.addViolation("email", "Email not found");
-            return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
-        }
-    }
+//    @GetMapping("/note-by-email")
+//    @PreAuthorize("#requestBody.email == authentication.principal.username")
+//    public ResponseEntity<Object> getNoteByEmail(@RequestBody Map<String, String> requestBody) throws ExecutionException, InterruptedException {
+//        String email = requestBody.get("email");
+//        StudentDto studentDto = studentService.getStudentByEmail(email);
+//        NoteDto noteDto = noteService.getNote(studentDto.getNoteId());
+//        if (noteDto != null) {
+//            return ResponseEntity.ok(noteDto);
+//        } else {
+//            ValidationErrorResponse errorResponse = new ValidationErrorResponse();
+//            errorResponse.addViolation("email", "Email not found");
+//            return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+//        }
+//    }
 
-    @PutMapping("/{userId}/note")
-    public ResponseEntity<Object> updateNote(@PathVariable String userId, @Valid @RequestBody NoteDto noteDto, BindingResult bindingResult) throws ExecutionException, InterruptedException {
-        if(bindingResult.hasErrors()) {
-            ValidationErrorResponse errorResponse = new ValidationErrorResponse();
-            for (FieldError fieldError : bindingResult.getFieldErrors()) {
-                errorResponse.addViolation(fieldError.getField(), fieldError.getDefaultMessage());
-            }
-            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-        }
-        try {
-            String result = noteService.updateNote(studentService.getStudent(userId).getNoteId(), noteDto);
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
-            ValidationErrorResponse errorResponse = new ValidationErrorResponse();
-            errorResponse.addViolation("userId", e.getMessage());
-            return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
-        } catch (ExecutionException | InterruptedException e) {
-            return new ResponseEntity<>("Error updating note", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+//    @PutMapping("/{userId}/note")
+//    public ResponseEntity<Object> updateNote(@PathVariable String userId, @Valid @RequestBody NoteDto noteDto, BindingResult bindingResult) throws ExecutionException, InterruptedException {
+//        if(bindingResult.hasErrors()) {
+//            ValidationErrorResponse errorResponse = new ValidationErrorResponse();
+//            for (FieldError fieldError : bindingResult.getFieldErrors()) {
+//                errorResponse.addViolation(fieldError.getField(), fieldError.getDefaultMessage());
+//            }
+//            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+//        }
+//        try {
+//            String result = noteService.updateNote(studentService.getStudent(userId).getNoteId(), noteDto);
+//            return new ResponseEntity<>(result, HttpStatus.OK);
+//        } catch (IllegalArgumentException e) {
+//            ValidationErrorResponse errorResponse = new ValidationErrorResponse();
+//            errorResponse.addViolation("userId", e.getMessage());
+//            return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+//        } catch (ExecutionException | InterruptedException e) {
+//            return new ResponseEntity<>("Error updating note", HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
 
-    @PutMapping("/note-by-email")
-    @PreAuthorize("#noteUpdateRequest.email == authentication.principal.username")
-    public ResponseEntity<Object> updateNoteByEmail(@Valid @RequestBody NoteUpdateRequest noteUpdateRequest, BindingResult bindingResult) throws ExecutionException, InterruptedException {
-        if(bindingResult.hasErrors()) {
-            ValidationErrorResponse errorResponse = new ValidationErrorResponse();
-            for (FieldError fieldError : bindingResult.getFieldErrors()) {
-                errorResponse.addViolation(fieldError.getField(), fieldError.getDefaultMessage());
-            }
-            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-        }
-
-        String email = noteUpdateRequest.getEmail();
-        NoteDto noteDto = noteUpdateRequest.getNoteDto();
-
-        try {
-            String result = noteService.updateNote(studentService.getStudentByEmail(email).getNoteId(), noteDto);
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
-            ValidationErrorResponse errorResponse = new ValidationErrorResponse();
-            errorResponse.addViolation("email", e.getMessage());
-            return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
-        } catch (ExecutionException | InterruptedException e) {
-            return new ResponseEntity<>("Error updating note", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+//    @PutMapping("/note-by-email")
+//    @PreAuthorize("#noteUpdateRequest.email == authentication.principal.username")
+//    public ResponseEntity<Object> updateNoteByEmail(@Valid @RequestBody NoteUpdateRequest noteUpdateRequest, BindingResult bindingResult) throws ExecutionException, InterruptedException {
+//        if(bindingResult.hasErrors()) {
+//            ValidationErrorResponse errorResponse = new ValidationErrorResponse();
+//            for (FieldError fieldError : bindingResult.getFieldErrors()) {
+//                errorResponse.addViolation(fieldError.getField(), fieldError.getDefaultMessage());
+//            }
+//            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+//        }
+//
+//        String email = noteUpdateRequest.getEmail();
+//        NoteDto noteDto = noteUpdateRequest.getNoteDto();
+//
+//        try {
+//            String result = noteService.updateNote(studentService.getStudentByEmail(email).getNoteId(), noteDto);
+//            return new ResponseEntity<>(result, HttpStatus.OK);
+//        } catch (IllegalArgumentException e) {
+//            ValidationErrorResponse errorResponse = new ValidationErrorResponse();
+//            errorResponse.addViolation("email", e.getMessage());
+//            return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+//        } catch (ExecutionException | InterruptedException e) {
+//            return new ResponseEntity<>("Error updating note", HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
 
 
     @PostMapping("/{userId}/subscribe")
@@ -467,19 +467,19 @@ public class StudentController {
         return deleteStudent(email);
     }
 
-    @GetMapping("/me/note")
-    public ResponseEntity<Object> getCurrentStudentNote() throws ExecutionException, InterruptedException {
-        String email = UserUtil.getCurrentUserEmail();
-        Map<String, String> requestBody = RequestUtil.createEmailRequestBody(email);
-        return getNoteByEmail(requestBody);
-    }
+//    @GetMapping("/me/note")
+//    public ResponseEntity<Object> getCurrentStudentNote() throws ExecutionException, InterruptedException {
+//        String email = UserUtil.getCurrentUserEmail();
+//        Map<String, String> requestBody = RequestUtil.createEmailRequestBody(email);
+//        return getNoteByEmail(requestBody);
+//    }
 
-    @PutMapping("/me/note")
-    public ResponseEntity<Object> updateCurrentUserNote(@Valid @RequestBody NoteDto noteDto, BindingResult bindingResult) throws ExecutionException, InterruptedException {
-        String email = UserUtil.getCurrentUserEmail();
-        NoteUpdateRequest noteUpdateRequest = new NoteUpdateRequest(email, noteDto);
-        return updateNoteByEmail(noteUpdateRequest, bindingResult);
-    }
+//    @PutMapping("/me/note")
+//    public ResponseEntity<Object> updateCurrentUserNote(@Valid @RequestBody NoteDto noteDto, BindingResult bindingResult) throws ExecutionException, InterruptedException {
+//        String email = UserUtil.getCurrentUserEmail();
+//        NoteUpdateRequest noteUpdateRequest = new NoteUpdateRequest(email, noteDto);
+//        return updateNoteByEmail(noteUpdateRequest, bindingResult);
+//    }
 
     @GetMapping("/me/subscription")
     public ResponseEntity<Object> getCurrentStudentSubscription() throws ExecutionException, InterruptedException {

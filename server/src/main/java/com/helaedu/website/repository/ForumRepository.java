@@ -53,6 +53,20 @@ public class ForumRepository {
         }
         return forums;
     }
+    public List<Forum> getCommentsBySubjectId(String subjectId) throws ExecutionException, InterruptedException {
+        Firestore dbFirestore = FirestoreClient.getFirestore();
+        CollectionReference forumCollection = dbFirestore.collection("forum");
+        Query query = forumCollection.whereEqualTo("subjectId", subjectId);
+        ApiFuture<QuerySnapshot> future = query.get();
+
+        List<Forum> forums = new ArrayList<>();
+        QuerySnapshot querySnapshot = future.get();
+        for (DocumentSnapshot document : querySnapshot.getDocuments()) {
+            Forum forum = document.toObject(Forum.class);
+            forums.add(forum);
+        }
+        return forums;
+    }
 
     public String deleteComment(String commentId) throws ExecutionException, InterruptedException {
         Firestore dbFirestore = FirestoreClient.getFirestore();

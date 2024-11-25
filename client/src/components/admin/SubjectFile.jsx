@@ -27,10 +27,14 @@ console.log(subject);
     <div>
       <div className='rounded-xl shadow-xl w-56 h-80 py-20 hover:scale-95 transition-transform '>
        
-        <div className='flex justify-center mb-5 text-black cursor-pointer' onClick={openPdf} ><FontAwesomeIcon icon={faFile} size="3x"/></div>
+        <div className='flex justify-center mb-5 text-black cursor-pointer' onClick={openPdf} >
+          {
+            subject.coverImgRef ?<img  className='w-36 h-24' src={subject.coverImgRef}/> : <FontAwesomeIcon icon={faFile} size="3x"/>
+          }
+         </div>
         <p className='text-3xl text-black text-center h-12'>{subject.subjectName}</p>
         
-        <div className='flex justify-center text-center mt-10'>  
+        <div className='flex justify-center text-center mt-2'>  
             <div className='bg-blue p-2 rounded-lg hover:translate-x-1 mx-3'>
                 <FontAwesomeIcon icon={faEye}  onClick={openPdf} className='text-xl m-2 text-white cursor-pointer'/>
                 <FontAwesomeIcon icon={faEdit} onClick={openEditPopup}  className='text-xl m-2 text-white cursor-pointer' />

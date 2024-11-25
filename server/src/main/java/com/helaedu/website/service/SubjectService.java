@@ -6,6 +6,7 @@ import com.helaedu.website.dto.SubjectNoteDto;
 import com.helaedu.website.entity.Student;
 import com.helaedu.website.entity.Subject;
 import com.helaedu.website.entity.SubjectNote;
+import com.helaedu.website.entity.Teacher;
 import com.helaedu.website.repository.SubjectRepository;
 import com.helaedu.website.util.UniqueIdGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +39,8 @@ public class SubjectService {
                 subjectDto.getSubjectName(),
                 subjectDto.getGrade(),
                 subjectDto.getLanguage(),
-                subjectDto.getPdfRef()
+                subjectDto.getPdfRef(),
+                subjectDto.getCoverImgRef()
         );
 
         return subjectRepository.createSubject(subject);
@@ -52,7 +54,8 @@ public class SubjectService {
                     subject.getSubjectName(),
                     subject.getGrade(),
                     subject.getLanguage(),
-                    subject.getPdfRef()
+                    subject.getPdfRef(),
+                    subject.getCoverImgRef()
             );
         }
         return null;
@@ -80,8 +83,23 @@ public class SubjectService {
                         subject.getSubjectName(),
                         subject.getGrade(),
                         subject.getLanguage(),
-                        subject.getPdfRef()))
+                        subject.getPdfRef(),
+                        subject.getCoverImgRef()))
                 .collect(Collectors.toList());
+    }
+    public String uploadCoverImage(String subjectId, MultipartFile profilePicture) throws IOException, ExecutionException, InterruptedException {
+
+        Subject subject = subjectRepository.getSubjectById(subjectId);
+        String coverImgRef;
+
+        if(subject != null) {
+            coverImgRef = firebaseStorageService.uploadCoverImage(profilePicture, subjectId);
+            subject.setCoverImgRef(coverImgRef);
+            subjectRepository.updateSubject(subjectId, subject);
+        } else {
+            throw new IllegalArgumentException("Subject not found");
+        }
+        return coverImgRef;
     }
 
 }

@@ -15,4 +15,5 @@ public class Subject {
     private String grade;
     private String language;
     private String pdfRef;
+    private String coverImgRef;
 }

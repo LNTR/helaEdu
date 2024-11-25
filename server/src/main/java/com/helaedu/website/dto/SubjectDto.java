@@ -21,4 +21,5 @@ public class SubjectDto {
     private String language;
 
     private String pdfRef;
+    private String coverImgRef;
 }

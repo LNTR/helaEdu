@@ -30,7 +30,8 @@ public class SubjectNoteRepository {
         CollectionReference subjectNotesCollection = dbFirestore.collection("subjectNotes");
         ApiFuture<QuerySnapshot> future = subjectNotesCollection.whereEqualTo("email", email).whereEqualTo("subjectId", subjectId).get();
         List<SubjectNote> subjectNotes =  future.get().toObjects(SubjectNote.class);
-        return subjectNotes.isEmpty() ? null : subjectNotes.get(0);
+        return subjectNotes.isEmpty() ? null :
+                subjectNotes.get(0);
     }
 
     public SubjectNote getSubjectNoteBySubjectId(String subjectId) throws ExecutionException, InterruptedException {

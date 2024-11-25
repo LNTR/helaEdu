@@ -5,6 +5,7 @@ import AddReply from './AddReply';
 import AddReport from "@components/articles/AddReport";
 import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
 import { getAllDetailsForCurrentUser } from '@services/AuthService';
+import { currentStudent } from '@services/StudentService';
 import DeleteComment from '@components/articles/DeleteComment'; 
 
 function Comment({ comment }) {
@@ -23,7 +24,8 @@ function Comment({ comment }) {
   useEffect(() => {
     async function fetchCurrentUser() {
       try {
-        const userDetails = await getAllDetailsForCurrentUser(headers);
+       
+        const userDetails = await currentStudent(headers);
         setCurrentUserId(userDetails.data.userId);
         console.log(userDetails.data);
         

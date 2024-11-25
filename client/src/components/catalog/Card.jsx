@@ -1,6 +1,7 @@
+
 import React from "react";
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import { faBook } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBook } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 
 function Card({ subject, icon, grade,pdfRef,subjectId }) {
@@ -21,9 +22,10 @@ function Card({ subject, icon, grade,pdfRef,subjectId }) {
       }}
     >
       <div className="card-icon">
-        {/* <FontAwesomeIcon icon={faBook} size="5x" />{" "}
-         */}
-        <img src={`/src/assets/img/subjects/${icon}.png`} alt="" srcset="" />
+       {
+        icon ? <img src={icon} alt="" srcset="" /> :<FontAwesomeIcon icon={faBook} size="5x"/>
+       }
+        
       </div>
       <div className="card-text">
        

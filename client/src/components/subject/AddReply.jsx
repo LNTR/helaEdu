@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { addCommentForForum } from '@services/SubjectService';
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 
-function AddReply({ onCancel, commentId, articleId }) {
+function AddReply({ onCancel, commentId, subjectId }) {
 
   const authHeader = useAuthHeader();
   const headers = {

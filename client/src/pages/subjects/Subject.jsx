@@ -36,7 +36,7 @@ function Subject() {
             sideBarComponentMap={sideBarComponentMap}
             setSideBarComponent={setSideBarComponent}
           />
-          <PdfBook subjectId={subjectId} pdfRef={pdfRef}/>
+          <PdfBook subject={subject} subjectId={subjectId} pdfRef={pdfRef}/>
         </div>
         <div className={`right-panel ${sideBarComponent ? "active" : ""}`}>
           {sideBarComponent}

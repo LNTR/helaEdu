@@ -3,7 +3,10 @@ import Comments from "./Comments";
 import AddComment from "./AddComment";
 import Profile from "@assets/img/articles/profile.jpg";
 import { getAllDetailsForCurrentUser } from '@services/AuthService';
+import { listAllUsersDetails } from "@services/TeacherService";
+import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import { getCommentsBySubjectId } from "@services/SubjectService";
+
 // const commentsData = [
 //   {
 //     author: "M.Perera",
@@ -41,7 +44,10 @@ function Discussion({subjectId}) {
 
   const [comments, setComments] = useState([]);
   const [error, setError] = useState("");
-
+  const authHeader = useAuthHeader();
+  const headers = {
+    Authorization: authHeader,
+  };
   useEffect(() => {
     const fetchComments = async () => {
       try {
@@ -50,7 +56,7 @@ function Discussion({subjectId}) {
         const structuredComments = await Promise.all(
           commentsData.map(async (comment) => {
             const userId = comment.userId;
-            const userDetails = await  getAllDetailsForCurrentUser(userId); 
+            const userDetails = await  listAllUsersDetails(userId); 
             return {
               ...comment,
               author: userDetails.data.firstName + userDetails.data.lastName,

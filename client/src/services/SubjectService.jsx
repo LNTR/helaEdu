@@ -11,6 +11,13 @@ export const uploadPdf = (subjectId, formData) =>axios.post(`${REST_API_BASE_URL
     },
     params: { subjectId }
   });
+  export const uploadSubjectCover = (subjectId, formData) => {
+    return axios.post(`${REST_API_BASE_URL}/${subjectId}/uploadCoverImg`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+  };
   export const listSubjectsByGrade = (grade) => axios.get(`${REST_API_BASE_URL}/byGrade/${grade}`);
 export const getCommentsBySubjectId =(subjectId)=>axios.get(`${REST_API_BASE_URL}/${subjectId}/comments`);
   

@@ -50,11 +50,11 @@ function SubjectCatalog() {
           <p className="text-center text-red-500">{error}</p>
         ) : subjects.length > 0 ? (
           <div className="catalog-ul">
-            {subjects.map(({ subjectName, language,pdfRef, grade, subjectId }, index) => (
+            {subjects.map(({ subjectName, language,pdfRef, grade, subjectId,coverImgRef }, index) => (
               <Card
                 key={index}
                 subject={subjectName || "No Name Available"} 
-                icon={2} 
+                icon={coverImgRef} 
                 grade={grade }
                 pdfRef={pdfRef}
                 subjectId={subjectId || `unknown-${index}`} 

@@ -80,6 +80,37 @@ public class ForumController {
             return new ResponseEntity<>("Error adding comment", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    @PostMapping("/subject/create")
+    public ResponseEntity<Object> addCommentBySubject(@Valid @RequestBody ForumDto forumDto, BindingResult bindingResult) throws ExecutionException, InterruptedException {
+        if (bindingResult.hasErrors()) {
+            ValidationErrorResponse errorResponse = new ValidationErrorResponse();
+            for(FieldError fieldError : bindingResult.getFieldErrors()) {
+                errorResponse.addViolation(fieldError.getField(), fieldError.getDefaultMessage());
+            }
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
+        try {
+            String email = UserUtil.getCurrentUserEmail();
+            TeacherDto teacherDto = tmService.getTMByEmail(email);
+
+            if (teacherDto == null) {
+                StudentDto studentDto = studentService.getStudentByEmail(email);
+                if (studentDto == null) {
+                    return new ResponseEntity<>("User not found", HttpStatus.UNAUTHORIZED);
+                }
+                forumDto.setUserId(studentDto.getUserId());
+            } else {
+                forumDto.setUserId(teacherDto.getUserId());
+            }
+
+            String commentId = forumService.addComment(forumDto);
+            return new ResponseEntity<>(commentId, HttpStatus.CREATED);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (ExecutionException | InterruptedException e) {
+            return new ResponseEntity<>("Error adding comment", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
     @DeleteMapping("/{commentId}")
     public ResponseEntity<Object> deleteComment(@PathVariable String commentId) throws ExecutionException, InterruptedException {

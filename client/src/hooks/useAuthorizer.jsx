@@ -7,7 +7,7 @@ function useAuthorizer() {
   const dispatch = useDispatch();
   const { authValue } = useReactAuthKit();
   const jwtToken = authValue.auth.token;
-  const loggedInUserId = jwtDecode(jwtToken);
+  const loggedInUserId = jwtDecode(jwtToken).sub;
   const authorizer = {
     authorize: function (validUserId) {
       dispatch(validateUserId({ loggedInUserId, validUserId }));

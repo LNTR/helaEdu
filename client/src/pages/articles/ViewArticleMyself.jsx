@@ -44,7 +44,8 @@ export default function ViewArticleMyself() {
           lastName: userDetails.lastName,
           coverImage: userDetails.profilePictureUrl,
         };
-        authorizer.authorize(userDetails.userId);
+
+        authorizer.authorize(userDetails.email);
         setArticle(articleWithUserDetails);
       } catch (error) {
         console.error("Failed to fetch article", error);
@@ -96,6 +97,7 @@ export default function ViewArticleMyself() {
             imageRef={article.imageRef}
             userProfile={article.coverImage}
             additionalFilesRefs={article.additionalFilesRefs}
+            upvote={[]}
           />
         </div>
         <div className="mt-64 w-3/12">

@@ -4,9 +4,12 @@ import PlanSelector from "@components/common/PlanSelector";
 import PaymentGateway from "@components/payment/PaymentGateway";
 export default function PremiumPlan() {
   const [isYearly, setIsYearly] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [planType, setPlanType] = useState("Monthly");
 
   const togglePlan = () => {
     setIsYearly(!isYearly);
+    setPlanType("Yearly");
   };
 
   const basicPlanPrice = "FREE";
@@ -99,14 +102,28 @@ export default function PremiumPlan() {
                   <span className="text-2xl">No ads</span>
                 </li>
               </ul>
-              <button className="mt-6 bg-blue text-3xl text-white py-3 px-6 rounded-xl">
+              <button
+                className="mt-6 bg-blue text-3xl text-white py-3 px-6 rounded-xl"
+                onClick={() => {
+                  setIsModalOpen(true);
+                }}
+              >
                 Subscribe
               </button>
             </div>
           </div>
         </div>
       </main>
-      <PaymentGateway />
+      {isModalOpen && (
+        <dialog open className="modal">
+          <div className="modal-box" style={{ width: "60%" }}>
+            <PaymentGateway
+              setIsModalOpen={setIsModalOpen}
+              planType={planType}
+            />
+          </div>
+        </dialog>
+      )}
       <Footer />
     </div>
   );

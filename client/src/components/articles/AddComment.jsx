@@ -22,7 +22,7 @@ export default function AddComment({ articleId }) {
       };
       console.log(headers);
       const response = await addComment(comments, headers);
-      if (response.status === 200) {
+      if (response.status === 200 || response.status === 201) {
         setCommentText("");
         window.location.reload();
       }

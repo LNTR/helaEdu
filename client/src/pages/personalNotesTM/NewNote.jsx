@@ -20,7 +20,7 @@ const NewNote = () => {
     const handleSubmit = async (e) => {
         e.preventDefault(); 
         setError(null);
-        setSuccess(false);
+        // setSuccess(false);
         setLoading(true);
 
         if (!title || !subject || !content) {
@@ -92,3 +92,4 @@ const NewNote = () => {
 };
 
 export default NewNote;
+

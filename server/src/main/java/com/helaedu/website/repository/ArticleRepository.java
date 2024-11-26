@@ -119,6 +119,27 @@ public class ArticleRepository {
         }
         return articles;
     }
+    public List<Article> getArticlesByStatusAndId(String status, String userId) throws ExecutionException, InterruptedException {
+        Firestore dbFirestore = FirestoreClient.getFirestore();
+        CollectionReference articlesCollection = dbFirestore.collection("articles");
+
+        Query query = articlesCollection.whereEqualTo("status", status.toUpperCase());
+
+        ApiFuture<QuerySnapshot> future = query.get();
+        List<Article> articles = new ArrayList<>();
+        QuerySnapshot querySnapshot = future.get();
+
+        for (DocumentSnapshot document : querySnapshot.getDocuments()) {
+            Article article = document.toObject(Article.class);
+
+            if (!article.getUserId().equals(userId)) {
+                articles.add(article);
+            }
+        }
+
+        return articles;
+    }
+
 
     public String updateArticleStatus(String articleId, String newStatus, String reviewedModeratorEmail) throws ExecutionException, InterruptedException {
         Firestore dbFirestore = FirestoreClient.getFirestore();
@@ -144,6 +165,25 @@ public class ArticleRepository {
         ApiFuture<WriteResult> future = documentReference.update(updates);
         return future.get().getUpdateTime().toString();
     }
+    public int getUpvoteCountByArticleId(String articleId) throws ExecutionException, InterruptedException {
+        Firestore dbFirestore = FirestoreClient.getFirestore();
+        CollectionReference articlesCollection = dbFirestore.collection("articles");
+
+        Query query = articlesCollection.whereEqualTo("articleId", articleId);
+        ApiFuture<QuerySnapshot> future = query.get();
+
+        QuerySnapshot querySnapshot = future.get();
+        if (!querySnapshot.isEmpty()) {
+            DocumentSnapshot document = querySnapshot.getDocuments().get(0);
+
+            List<String> upvoteList = (List<String>) document.get("upvote");
+            return upvoteList != null ? upvoteList.size() : 0;
+        }
+
+        return 0;
+    }
+
+
 
     public boolean exists(String articleId) throws ExecutionException, InterruptedException {
         return getArticleById(articleId) != null;

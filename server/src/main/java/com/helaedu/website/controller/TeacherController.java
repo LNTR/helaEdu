@@ -125,7 +125,7 @@ public class TeacherController {
     }
 
     @PutMapping("/update-by-email")
-    @PreAuthorize("#teacherDto.email == authentication.principal.username")
+//    @PreAuthorize("#teacherDto.email == authentication.principal.username")
     public ResponseEntity<Object> updateTeacher(@Valid @RequestBody TeacherDto teacherDto, BindingResult bindingResult) throws ExecutionException, InterruptedException {
         if(bindingResult.hasErrors()) {
             ValidationErrorResponse errorResponse = new ValidationErrorResponse();
@@ -136,6 +136,7 @@ public class TeacherController {
         }
         try {
             String result = teacherService.updateTeacher(teacherDto.getEmail(), teacherDto);
+
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             ValidationErrorResponse errorResponse = new ValidationErrorResponse();

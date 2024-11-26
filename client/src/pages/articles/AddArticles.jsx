@@ -56,6 +56,7 @@ export default function AddArticles() {
                     badges={article.tags}
                     status={article.status}
                     date={article.publishedTimestamp}
+                    articleId={article.articleId}
                   />
                 </Link>
               </div>

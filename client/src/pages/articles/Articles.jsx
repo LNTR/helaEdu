@@ -66,6 +66,7 @@ const Articles = () => {
                     title={article.title}
                     description={article.content}
                     badges={article.tags}
+                    articleId={article.articleId}
                   />
                 </Link>
               </div>

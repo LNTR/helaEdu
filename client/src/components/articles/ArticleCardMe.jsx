@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import HTMLReactParser from "html-react-parser";
 import Article from "@assets/img/articles/defaultArticle.jpg";
 import { getCommentCountByArticleId } from '@services/ArticleService';
+import { getUpvoteCountByArticleId } from '@services/ArticleService';
 export default function ArticleCardMe({
   imageUrl,
   title,
@@ -21,6 +22,7 @@ export default function ArticleCardMe({
   const [isMarked, setIsMarked] = useState(false);
   const formattedDate = new Date(date).toLocaleDateString();
   const [commentCount,setCommentCount] = useState(null);
+  const [upvoteCount,setUpvoteCount] = useState(null);
   const toggleLike = () => {
     setIsLiked(!isLiked);
   };
@@ -41,6 +43,21 @@ export default function ArticleCardMe({
 
     if (articleId) {
       fetchCommentCount();
+    }
+  }, [articleId]);
+  useEffect(() => {
+    const fetchUpvoteCount = async () => {
+      try {
+        const response = await getUpvoteCountByArticleId(articleId);
+        setUpvoteCount(response.data);
+        console.log(response.data);
+      } catch (error) {
+        console.error('Failed to fetch upvote count:', error);
+      }
+    };
+
+    if (articleId) {
+      fetchUpvoteCount();
     }
   }, [articleId]);
   return (
@@ -130,7 +147,7 @@ export default function ArticleCardMe({
                 }
               />
               <span className="absolute bottom-10 right-0 translate-x-1/2 translate-y-1/2 text-xs bg-black text-white rounded-full w-5 h-5 flex items-center justify-center">
-                12
+                {upvoteCount}
               </span>
             </div>
             <div className="relative">

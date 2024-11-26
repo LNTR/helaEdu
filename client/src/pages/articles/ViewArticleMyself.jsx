@@ -118,7 +118,7 @@ export default function ViewArticleMyself() {
           </div>
           <h2 className="text-4xl mt-10 mb-4">Overview</h2>
           <hr className="border-yellow border-t-4 w-1/3 hover:border-white transition duration-300 ease-in-out mb-10"></hr>
-          <Engagment />
+          <Engagment articleId={article.articleId}/>
           <div>
             <h2 className="text-4xl mt-10 mb-4">Moderator's Review</h2>
             <hr className="border-yellow border-t-4 w-2/3 hover:border-white transition duration-300 ease-in-out mb-10"></hr>

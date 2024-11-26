@@ -149,6 +149,29 @@ public class ModeratorService {
         }
         return null;
     }
+    public TeacherDto getModeratorByEmail(String email) throws ExecutionException, InterruptedException {
+        Teacher moderator = moderatorRepository.getModeratorByEmail(email);
+        if (moderator != null) {
+            return new TeacherDto(
+                    moderator.getUserId(),
+                    moderator.getFirstName(),
+                    moderator.getLastName(),
+                    email,
+                    moderator.getPassword(),
+                    moderator.getRegTimestamp(),
+                    moderator.getIsModerator(),
+                    moderator.getProofRef(),
+                    moderator.getRole(),
+                    moderator.isEmailVerified(),
+                    moderator.getProfilePictureUrl(),
+                    moderator.isApproved(),
+                    moderator.getAbout(),
+                    moderator.getPreferredSubjects(),
+                    moderator.getSchool()
+            );
+        }
+        return null;
+    }
 
     public String updateModerator(String userId, TeacherDto teacherDto) throws ExecutionException, InterruptedException {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();

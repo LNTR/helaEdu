@@ -200,7 +200,7 @@ public class TeacherService {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
         Teacher existingTeacher = teacherRepository.getTeacherByEmail(email);
-        if(existingTeacher == null || existingTeacher.getIsModerator()) {
+        if(existingTeacher == null ) {
             throw new IllegalArgumentException("Teacher not found");
         }
 

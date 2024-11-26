@@ -102,13 +102,31 @@ public class ModeratorRepository {
         }
     }
 
+//    public Teacher getModeratorByEmail(String email) throws ExecutionException, InterruptedException {
+//        Firestore dbFirestore = FirestoreClient.getFirestore();
+//        CollectionReference teachersCollection = dbFirestore.collection("teachers");
+//        ApiFuture<QuerySnapshot> future = teachersCollection.whereEqualTo("email", email).get();
+//        List<Teacher> teachers = future.get().toObjects(Teacher.class);
+//        return teachers.isEmpty() ? null : teachers.get(0);
+//    }
     public Teacher getModeratorByEmail(String email) throws ExecutionException, InterruptedException {
         Firestore dbFirestore = FirestoreClient.getFirestore();
         CollectionReference teachersCollection = dbFirestore.collection("teachers");
+
         ApiFuture<QuerySnapshot> future = teachersCollection.whereEqualTo("email", email).get();
         List<Teacher> teachers = future.get().toObjects(Teacher.class);
-        return teachers.isEmpty() ? null : teachers.get(0);
+
+        if (!teachers.isEmpty()) {
+            Teacher teacher = teachers.get(0);
+            if ((teacher.getIsModerator() != null && teacher.getIsModerator())
+                    && "ROLE_MODERATOR".equals(teacher.getRole())) {
+                return teacher;
+            }
+        }
+
+        return null;
     }
+
 
     public boolean exists(String userId) throws ExecutionException, InterruptedException {
         return getModeratorById(userId) != null;

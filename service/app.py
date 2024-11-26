@@ -14,6 +14,7 @@ def create_app():
     app = Flask(__name__)
     CORS(app, resources={"/*": {"origins": "*"}})
     fireo.connection(from_file="config/firebase-service-account.json")
+    app.config.from_pyfile("settings.py")
 
     # app.register_blueprint(chat, url_prefix="/chat")
     app.register_blueprint(articles, url_prefix="/articles")

@@ -26,12 +26,12 @@ services:
     ports:
       - 8080:8080
 
-  ollma:
-    build:
-      context: .
-      dockerfile: Llama.Dockerfile
+  # ollma:
+  #   build:
+  #     context: .
+  #     dockerfile: Llama.Dockerfile
 
-    volumes:
-      - ./ollama:/root/.ollama
-    ports:
-      - 11434:11434
+  #   volumes:
+  #     - ./ollama:/root/.ollama
+  #   ports:
+  #     - 11434:11434

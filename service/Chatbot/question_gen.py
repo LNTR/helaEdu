@@ -6,14 +6,7 @@ from langchain_core.output_parsers import JsonOutputParser
 from langchain_core.pydantic_v1 import BaseModel, Field, validator
 import os
 from langchain_openai import ChatOpenAI
-
-os.environ["TOKENIZERS_PARALLELISM"] = "false"
-os.environ["OPENAI_API_KEY"] = (
-    "sk-XTR_ACEcOmCAwv5kMsjyd3Jz65Xn24FEgx1yQbxk34T3BlbkFJHPQpYdsp__T_qZCQS8t4j51QEDcogVpKeJwIdXw48A"
-)
-
-openai_api_key = os.getenv("OPENAI_API_KEY")
-# llm = ChatOpenAI(model="gpt-4o", temperature=0)
+ 
 llm = Ollama(model="llama3.2:1b", temperature=0)
 
 class MCQ(BaseModel):
@@ -67,4 +60,4 @@ def get_question(chapter, grade, chain):
     return response
 
 if __name__ == "__main__":
-    output = get_quiz(10, 10, quiz_chain_ret)
+    output = get_question("context", "topic", quiz_chain_ret, type="MCQ")

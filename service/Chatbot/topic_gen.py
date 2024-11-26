@@ -47,9 +47,9 @@ def topic_gen_chain(grade, subject, number, start_page, end_page):
     3. Focus on different areas to ensure broad coverage of the material.
 
     **Additional Instructions:**
-    1.  that `{text}` contains meaningful content before proceeding.
+    1. Validate that `{text}` contains meaningful content before proceeding.
     2. Ensure sub-areas are directly derived from `{text}` and not speculative.
-    3. If more than {number} sub-areas are identified, prioritize the most relevant ones based on their frequency, prominence, or significance in `{text}`.
+    3. If  than {number} sub-areas are identified, prioritize the most relevant ones based on their frequency, prominence, or significance in `{text}`.
 
     Provide the sub-areas in the {format_instructions} format.
 

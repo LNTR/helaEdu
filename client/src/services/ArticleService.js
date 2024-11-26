@@ -60,3 +60,4 @@ export const deleteCommentByAuthor = (commentId,headers) =>
 
 export const deleteCommentByAdmin = (commentId) =>
   axios.put(`${GET_COMMENTS_ARTICLES_URL}/admin/${commentId}`);
+export const getCommentCountByArticleId =(articleId)=>axios.get(`${GET_COMMENTS_ARTICLES_URL}/${articleId}/commentCount`);

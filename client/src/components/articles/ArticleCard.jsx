@@ -1,20 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState ,useEffect} from 'react';
 import { faComment as faCommentRegular } from '@fortawesome/free-solid-svg-icons';
 import { faThumbsUp as faThumbsUpRegular } from '@fortawesome/free-regular-svg-icons';
 import { faThumbsUp as faThumbsUpSolid } from '@fortawesome/free-solid-svg-icons';
 import { faBookmark as faBookmarkRegular } from '@fortawesome/free-regular-svg-icons';
 import { faBookmark as faBookmarkSolid } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
+import { getCommentCountByArticleId } from '@services/ArticleService';
 import HTMLReactParser from 'html-react-parser';
 import Article from "@assets/img/articles/article.jpg";
 import Profile from '@assets/img/articles/profile.jpg';
 import DefaultArticle from '@assets/img/articles/defaultArticle.jpg'
 
-export default function ArticleCard({ imageUrl, firstName,lastName, date, title, badges ,profilePictureUrl}) {
+export default function ArticleCard({ imageUrl, firstName,lastName, date, title, badges ,profilePictureUrl,articleId}) {
   const [isLiked, setIsLiked] = useState(false);
   const [isMarked, setIsMarked] = useState(false);
   const formattedDate = new Date(date).toLocaleDateString();
+  const [commentCount,setCommentCount] = useState(null);
 
   const toggleLike = () => {
     setIsLiked(!isLiked);
@@ -23,6 +24,21 @@ export default function ArticleCard({ imageUrl, firstName,lastName, date, title,
   const toggleMark = () => {
     setIsMarked(!isMarked);
   };
+  useEffect(() => {
+    const fetchCommentCount = async () => {
+      try {
+        const response = await getCommentCountByArticleId(articleId);
+        setCommentCount(response.data);
+        console.log(response.data);
+      } catch (error) {
+        console.error('Failed to fetch comment count:', error);
+      }
+    };
+
+    if (articleId) {
+      fetchCommentCount();
+    }
+  }, [articleId]);
 
   return (
     <div className="card w-96 h-auto shadow-xl bg-white hover:scale-105 transition-transform overflow-hidden">
@@ -90,7 +106,7 @@ export default function ArticleCard({ imageUrl, firstName,lastName, date, title,
               onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
               onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
             />
-            <span className="absolute bottom-10 right-0 translate-x-1/2 translate-y-1/2 text-xs bg-white text-black rounded-full w-5 h-5 flex items-center justify-center">12</span>
+            <span className="absolute bottom-10 right-0 translate-x-1/2 translate-y-1/2 text-xs bg-white text-black rounded-full w-5 h-5 flex items-center justify-center">{commentCount}</span>
           </div>
           <div className="relative">
             <FontAwesomeIcon

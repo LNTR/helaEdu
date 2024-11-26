@@ -24,6 +24,7 @@ const TProfile = () => {
     about: "",
     email: "",
     school: "",
+    password:"",
   });
 
   const authHeader = useAuthHeader();
@@ -41,6 +42,7 @@ const TProfile = () => {
           about: response.data.about,
           email: response.data.email,
           school: response.data.school,
+          password:response.data.password,
         });
       })
       .catch((error) => {

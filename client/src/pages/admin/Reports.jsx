@@ -6,7 +6,6 @@ import ReportBox from "@components/admin/ReportBox";
 // import Accessbtn from '@/components/admin/AccessBtn';
 // import Table from '@/components/admin/Table';
 // import SeeMoreBtn from '@/components/admin/SeeMoreBtn';
-import Preview from "@components/admin/Preview";
 const Reports = () => {
   return (
     <>
@@ -20,7 +19,7 @@ const Reports = () => {
             <div className="mx-32 mt-10">
               <h1>Report Generation</h1>
               <ReportBox/>
-              <Preview/>
+           
             </div>
            
            

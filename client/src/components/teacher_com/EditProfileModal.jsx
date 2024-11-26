@@ -17,6 +17,13 @@ const EditProfileModal = ({ isModalOpen, closeModal, handleSubmit, formData, han
               <hr className="border-yellow border-t-4 w-1/4 hover:border-white transition duration-300 ease-in-out"></hr>
               <br></br>
               <div className="mb-4">
+              <input
+                  name="password"
+                  type="password"
+                  className="w-full rounded-xl p-2 border border-blue focus:border-yellow hidden"
+                  value={formData.password}
+                  onChange={handleInputChange} 
+                disabled/>
                 <label className="block text-2xl font-medium mb-2">First Name</label>
                 <input
                   name="firstName"

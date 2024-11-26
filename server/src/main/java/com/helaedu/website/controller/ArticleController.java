@@ -204,4 +204,16 @@ public class ArticleController{
         List<ForumDto> forum = forumService.getCommentsByArticleId(articleId);
         return ResponseEntity.ok(forum);
     }
+    @GetMapping("/{articleId}/upvoteCount")
+    public ResponseEntity<Integer> getUpvoteCountByArticleId(@PathVariable String articleId) {
+        try {
+            int upvoteCount = articleService.getUpvoteCountForArticle(articleId);
+            return new ResponseEntity<>(upvoteCount, HttpStatus.OK);
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
 }

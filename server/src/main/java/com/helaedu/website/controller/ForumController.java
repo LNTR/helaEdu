@@ -170,4 +170,13 @@ public class ForumController {
             return new ResponseEntity<>("Error updating comment", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    @GetMapping("/{articleId}/commentCount")
+    public ResponseEntity<Integer> getCommentCountByArticleId(@PathVariable String articleId) {
+        try {
+            int commentCount = forumService.getCommentCountForArticle(articleId);
+            return new ResponseEntity<>(commentCount, HttpStatus.OK);
+        } catch (ExecutionException | InterruptedException e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

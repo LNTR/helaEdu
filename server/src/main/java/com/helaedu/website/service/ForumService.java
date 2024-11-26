@@ -98,6 +98,10 @@ public class ForumService {
     public String updateCommentAsDelete(String commentId) throws ExecutionException, InterruptedException {
         return forumRepository.updateCommentAsDelete(commentId, "*THIS MESSAGE WAS DELETED*");
     }
+    public int getCommentCountForArticle(String articleId) throws ExecutionException, InterruptedException {
+        return forumRepository.getCommentCountByArticleId(articleId);
+    }
+
 
 
 

@@ -268,6 +268,11 @@ public class ArticleService {
         }
         return article.getUserId();
     }
+    public int getUpvoteCountForArticle(String articleId) throws ExecutionException, InterruptedException {
+        return articleRepository.getUpvoteCountByArticleId(articleId);
+    }
+
+
 
 
 //    get article count for teacherId

@@ -84,6 +84,16 @@ public class ForumRepository {
         ApiFuture<WriteResult> future = documentReference.update(updates);
         return future.get().getUpdateTime().toString();
     }
+    public int getCommentCountByArticleId(String articleId) throws ExecutionException, InterruptedException {
+        Firestore dbFirestore = FirestoreClient.getFirestore();
+        CollectionReference forumCollection = dbFirestore.collection("forum");
+        Query query = forumCollection.whereEqualTo("articleId", articleId);
+        ApiFuture<QuerySnapshot> future = query.get();
+
+        QuerySnapshot querySnapshot = future.get();
+        return querySnapshot.size();
+    }
+
 
 
 

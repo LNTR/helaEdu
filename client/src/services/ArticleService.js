@@ -9,6 +9,7 @@ const ADD_COMMENTS_ARTICLES_URL=`${import.meta.env.VITE_REST_API_BASE_URL}/forum
 const GET_COMMENTS_ARTICLES_URL=`${import.meta.env.VITE_REST_API_BASE_URL}/forum`;
 
 
+
 export const listArticles = () => axios.get(REST_API_BASE_URL);
 export const listArticlesByTeacher = (headers) =>
   axios.get(TEACHER_ARTICLE_URL, { headers });
@@ -61,3 +62,4 @@ export const deleteCommentByAuthor = (commentId,headers) =>
 export const deleteCommentByAdmin = (commentId) =>
   axios.put(`${GET_COMMENTS_ARTICLES_URL}/admin/${commentId}`);
 export const getCommentCountByArticleId =(articleId)=>axios.get(`${GET_COMMENTS_ARTICLES_URL}/${articleId}/commentCount`);
+export const getUpvoteCountByArticleId =(articleId)=>axios.get(`${REST_API_BASE_URL}/${articleId}/upvoteCount`);

@@ -5,11 +5,12 @@ import {  faThumbsUp as faThumbsUpRegular } from '@fortawesome/free-solid-svg-ic
 import { faBookmark as faBookmarkRegular } from '@fortawesome/free-solid-svg-icons';
 import { faComment } from '@fortawesome/free-solid-svg-icons';
 import { getCommentCountByArticleId } from '@services/ArticleService';
-
+import { getUpvoteCountByArticleId } from '@services/ArticleService';
 
 export default function Engagment({articleId}) {
 
   const [commentCount,setCommentCount] = useState(null);
+  const [upvoteCount,setUpvoteCount] = useState(null);
   useEffect(() => {
     const fetchCommentCount = async () => {
       try {
@@ -25,14 +26,28 @@ export default function Engagment({articleId}) {
       fetchCommentCount();
     }
   }, [articleId]);
+  useEffect(() => {
+    const fetchUpvoteCount = async () => {
+      try {
+        const response = await getUpvoteCountByArticleId(articleId);
+        setUpvoteCount(response.data);
+        console.log(response.data);
+      } catch (error) {
+        console.error('Failed to fetch upvote count:', error);
+      }
+    };
 
+    if (articleId) {
+      fetchUpvoteCount();
+    }
+  }, [articleId]);
   return (
     <div>
       <div className='flex justify-between my-10'>
               <div className='rounded-xl w-72 h-48 shadow-2xl p-6 m-4'>
                   <div className='text-gray1 '><p className='text-3xl'>Total Likes</p></div>
                     <div className='flex justify-between items-center py-3'>
-                      <div><p className='text-purple-600 text-4xl'>25.6K</p></div>
+                      <div><p className='text-purple-600 text-4xl'>{upvoteCount}</p></div>
                       <div>
                         <FontAwesomeIcon icon={faThumbsUpRegular} className='text-3xl' style={{color:'#6A0DAD'}} />
                       </div>

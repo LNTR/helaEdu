@@ -105,16 +105,16 @@ export default function ViewArticleMyself() {
           <hr className="border-yellow border-t-4 w-1/3 hover:border-white transition duration-300 ease-in-out mb-10"></hr>
           <div className="my-7">
             <Link to={`../editArticle/${article.articleId}`}>
-              <h2 className="text-3xl text-gray1 hover:text-blue cursor-pointer my-2">
+              <button className="text-3xl text-white hover:bg-gray1 hover:text-white cursor-pointer my-2 bg-blue rounded-md px-3 py-2">
                 Edit Your Article
-              </h2>
-            </Link>
-            <h2
-              className="text-3xl text-gray1 hover:text-blue cursor-pointer"
+              </button>
+            </Link><br></br>
+            <button
+              className="text-3xl text-white hover:bg-gray1 hover:text-white cursor-pointer my-2 bg-red-600 rounded-md px-3 py-2"
               onClick={openDeleteModal}
             >
               Delete Your Article
-            </h2>
+            </button>
           </div>
           <h2 className="text-4xl mt-10 mb-4">Overview</h2>
           <hr className="border-yellow border-t-4 w-1/3 hover:border-white transition duration-300 ease-in-out mb-10"></hr>

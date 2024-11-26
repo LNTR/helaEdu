@@ -1,0 +1,37 @@
+name: "hela-edu"
+services:
+  flask:
+    build:
+      context: ./service
+      dockerfile: Flask.Dockerfile
+
+    ports:
+      - 8081:8081
+
+  react:
+    build:
+      context: ./client
+      dockerfile: React.Dockerfile
+
+    ports:
+      - 5173:5173
+
+  spring:
+    build:
+      context: .
+      dockerfile: Spring.Dockerfile
+
+    volumes:
+      - ./server:/app
+    ports:
+      - 8080:8080
+
+  # ollma:
+  #   build:
+  #     context: .
+  #     dockerfile: Llama.Dockerfile
+
+  #   volumes:
+  #     - ./ollama:/root/.ollama
+  #   ports:
+  #     - 11434:11434

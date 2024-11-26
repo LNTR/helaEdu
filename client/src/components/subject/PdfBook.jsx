@@ -1,5 +1,5 @@
 import React from "react";
-import test from '@assets/temp/test.pdf'
+import test from '@assets/temp/pdfICT.pdf'
 
 function PdfBook({ subject,subjectId, pdfRef }) {  return (
     <div className="pdf">

@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { Footer, Header } from '@components/common';
-import AverageScoreChart from '@components/assignments/AverageScoreChart';
-import TopScore from '@components/assignments/TopScore';
-import Participants from '@components/assignments/Participants';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faClock, faCalendar } from '@fortawesome/free-solid-svg-icons';
-import { useParams } from 'react-router-dom';
-import { getAssignment } from '@services/AssignmentService';
+import React, { useState, useEffect } from "react";
+import { Footer, Header } from "@components/common";
+import AverageScoreChart from "@components/assignments/AverageScoreChart";
+import TopScore from "@components/assignments/TopScore";
+import Participants from "@components/assignments/Participants";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faClock, faCalendar } from "@fortawesome/free-solid-svg-icons";
+import { useParams } from "react-router-dom";
+import { getAssignment } from "@services/AssignmentService";
 
 export default function ReviewdQuiz() {
   const { assignmentId } = useParams();
@@ -21,10 +21,10 @@ export default function ReviewdQuiz() {
           setAssignmentData(data.data);
         })
         .catch((error) => {
-          console.error('Failed to fetch assignment data:', error);
+          console.error("Failed to fetch assignment data:", error);
         });
     }
-  }, [assignmentId]);
+  }, []);
 
   // useEffect(() => {
   //   const scores = [];
@@ -37,8 +37,8 @@ export default function ReviewdQuiz() {
   //       }
   //     }
   //   }
-  //   scores.sort((a, b) => b.score - a.score); 
-  //   setTopScores(scores.slice(0, 3)); 
+  //   scores.sort((a, b) => b.score - a.score);
+  //   setTopScores(scores.slice(0, 3));
 
   //   if (scores.length > 0) {
   //     const total = scores.reduce((acc, curr) => acc + curr.score, 0);
@@ -57,13 +57,13 @@ export default function ReviewdQuiz() {
       });
 
       scores.sort((a, b) => b.score - a.score);
-      setTopScores(scores.slice(0, 3)); 
+      setTopScores(scores.slice(0, 3));
       if (scores.length > 0) {
         const totalScore = scores.reduce((acc, curr) => acc + curr.score, 0);
-        setAverageScoreCalc((totalScore / scores.length).toFixed(2)); 
+        setAverageScoreCalc((totalScore / scores.length).toFixed(2));
       }
     }
-  }, [assignmentData, assignmentId]);
+  }, [assignmentData]);
 
   if (!assignmentData) {
     return <div>Loading...</div>;
@@ -80,7 +80,9 @@ export default function ReviewdQuiz() {
         <div className="mx-64 my-14">
           <div className="flex justify-start space-x-6">
             <div>
-              <p className="text-black text-4xl">{assignmentData.quizzes.questionId}</p>
+              <p className="text-black text-4xl">
+                {assignmentData.quizzes.questionId}
+              </p>
               <h1 className="text-blue">{assignmentData.title}</h1>
               <div className="flex justify-start mt-3">
                 <p className="text-black mr-10">
@@ -103,12 +105,14 @@ export default function ReviewdQuiz() {
               </div>
               <div className="text-center mt-5">
                 <p className="text-2xl">Average Score: {averageScoreCalc}%</p>
-                <p className="text-2xl">No of Participants: {topScores.length}</p>
+                <p className="text-2xl">
+                  No of Participants: {topScores.length}
+                </p>
               </div>
             </div>
 
             <div className="bg-white rounded-xl shadow-lg p-8 w-3/5 text-center">
-              <TopScore topScores={topScores} /> 
+              <TopScore topScores={topScores} />
             </div>
           </div>
         </div>

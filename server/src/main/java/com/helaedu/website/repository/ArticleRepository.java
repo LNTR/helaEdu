@@ -119,6 +119,27 @@ public class ArticleRepository {
         }
         return articles;
     }
+    public List<Article> getArticlesByStatusAndId(String status, String userId) throws ExecutionException, InterruptedException {
+        Firestore dbFirestore = FirestoreClient.getFirestore();
+        CollectionReference articlesCollection = dbFirestore.collection("articles");
+
+        Query query = articlesCollection.whereEqualTo("status", status.toUpperCase());
+
+        ApiFuture<QuerySnapshot> future = query.get();
+        List<Article> articles = new ArrayList<>();
+        QuerySnapshot querySnapshot = future.get();
+
+        for (DocumentSnapshot document : querySnapshot.getDocuments()) {
+            Article article = document.toObject(Article.class);
+
+            if (!article.getUserId().equals(userId)) {
+                articles.add(article);
+            }
+        }
+
+        return articles;
+    }
+
 
     public String updateArticleStatus(String articleId, String newStatus, String reviewedModeratorEmail) throws ExecutionException, InterruptedException {
         Firestore dbFirestore = FirestoreClient.getFirestore();

@@ -6,6 +6,7 @@ import com.helaedu.website.dto.TeacherDto;
 import com.helaedu.website.dto.ValidationErrorResponse;
 import com.helaedu.website.service.ArticleService;
 import com.helaedu.website.service.ForumService;
+import com.helaedu.website.service.ModeratorService;
 import com.helaedu.website.service.TMService;
 import com.helaedu.website.util.UserUtil;
 import jakarta.validation.Valid;
@@ -30,11 +31,13 @@ public class ArticleController{
     private final TMService tmService;
 
     private final ForumService forumService;
+    private final ModeratorService moderatorService;
 
-    public ArticleController(ArticleService articleService, TMService tmService, ForumService forumService){
+    public ArticleController(ArticleService articleService, TMService tmService, ForumService forumService, ModeratorService moderatorService){
         this.articleService = articleService;
         this.tmService = tmService;
         this.forumService = forumService;
+        this.moderatorService = moderatorService;
     }
 
     @PostMapping("/create")
@@ -140,6 +143,15 @@ public class ArticleController{
         List<ArticleDto> articles = articleService.getPendingArticles();
         return ResponseEntity.ok(articles);
     }
+    @GetMapping("/pending/mod")
+    public ResponseEntity<List<ArticleDto>> getPendingArticlesForMod() throws ExecutionException, InterruptedException {
+            String email = UserUtil.getCurrentUserEmail();
+            TeacherDto teacherDto = tmService.getTMByEmail(email);
+            List<ArticleDto> articles = articleService.getPendingArticlesByMod(teacherDto.getUserId());
+            return ResponseEntity.ok(articles);
+
+    }
+
 
     @GetMapping("/approved")
     public ResponseEntity<List<ArticleDto>> getApprovedArticles() throws ExecutionException, InterruptedException {

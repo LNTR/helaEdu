@@ -141,6 +141,7 @@ public class ArticleService {
         if(existingArticle == null) {
             throw new IllegalArgumentException("Article not found");
         }
+        existingArticle.setStatus("PENDING");
         if(articleDto.getTitle() != null && !articleDto.getTitle().equals(existingArticle.getTitle())) {
             existingArticle.setTitle(articleDto.getTitle());
         }
@@ -156,9 +157,9 @@ public class ArticleService {
         if(articleDto.getTags() != null && !articleDto.getTags().equals(existingArticle.getTags())) {
             existingArticle.setTags(articleDto.getTags());
         }
-        if(articleDto.getStatus() != null && !articleDto.getStatus().equals(existingArticle.getStatus())) {
-            existingArticle.setStatus(articleDto.getStatus());
-        }
+//        if(articleDto.getStatus() != null && !articleDto.getStatus().equals(existingArticle.getStatus())) {
+//            existingArticle.setStatus(articleDto.getStatus());
+//        }
         if(articleDto.getReviewedModeratorId() != null && !articleDto.getReviewedModeratorId().equals(existingArticle.getReviewedModeratorId())) {
             existingArticle.setReviewedModeratorId(articleDto.getReviewedModeratorId());
         }
@@ -189,6 +190,30 @@ public class ArticleService {
                 )
         ).collect(Collectors.toList());
     }
+    public List<ArticleDto> getPendingArticlesByMod(String userId) throws ExecutionException, InterruptedException {
+        List<Article> articles = articleRepository.getArticlesByStatusAndId("PENDING", userId);
+
+        return articles.stream()
+                .map(article -> new ArticleDto(
+                        article.getArticleId(),
+                        article.getTitle(),
+                        article.getContent(),
+                        article.getImageRef(),
+                        article.getAdditionalFilesRefs(),
+                        article.getTags(),
+                        article.getPublishedTimestamp(),
+                        article.getLastUpdatedTimestamp(),
+                        article.getStatus(),
+                        article.getReviewedModeratorId(),
+                        article.getRejectedReason(),
+                        article.getUserId(),
+                        article.getUpvote(),
+                        article.getCluster()
+                ))
+                .collect(Collectors.toList());
+    }
+
+
 
     public List<ArticleDto> getApprovedArticles() throws ExecutionException, InterruptedException {
         List<Article> articles = articleRepository.getArticlesByStatus("APPROVED");

@@ -11,6 +11,7 @@ import Articles from "@pages/articles/Articles";
 import ReviewList from "@pages/articles/ReviewList";
 import ViewArticleMyself from "@pages/articles/ViewArticleMyself";
 import EditArticleForm from "@pages/articles/EditArticleForm";
+import ReviewedArticleListByMod from "@pages/articles/ReviewedArticleListByMod";
 
 function ArticleRoutes() {
   return (
@@ -38,6 +39,7 @@ function ArticleRoutes() {
       />
       <Route path="/reviewArticle/:articleId" element={<ReviewArticle />} />
       <Route path="/reviewList" element={<ReviewList />} />
+      <Route path="/reviewedArticleListByMod" element={<ReviewedArticleListByMod/>} />
       <Route path="/editArticle/:articleId" element={<EditArticleForm />} />
       <Route
         path="/viewArticleMyself/:articleId"

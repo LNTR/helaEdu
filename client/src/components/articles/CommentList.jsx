@@ -4,6 +4,7 @@ import AddComment from "./AddComment";
 import Profile from "@assets/img/articles/profile.jpg";
 import { listCommentsByArticleId } from "@services/ArticleService";
 import { getUserDetails } from "@services/TeacherService";
+import { listAllUsersDetails } from "@services/TeacherService";
 
 function CommentList({ articleId }) {
   const [comments, setComments] = useState([]);
@@ -17,7 +18,7 @@ function CommentList({ articleId }) {
         const structuredComments = await Promise.all(
           commentsData.map(async (comment) => {
             const userId = comment.userId;
-            const userDetails = await getUserDetails(userId); 
+            const userDetails = await listAllUsersDetails(userId); 
             return {
               ...comment,
               author: userDetails.data.firstName + userDetails.data.lastName,

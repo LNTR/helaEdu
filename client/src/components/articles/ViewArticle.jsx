@@ -11,11 +11,12 @@ import Default from '@assets/img/articles/defaultArticle.jpg';
 import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
 import { addUpvote } from '@services/ArticleService';
 import { listTeacherDetails } from '@services/TeacherService';
+import { getAllDetailsForCurrentUser } from '@services/AuthService';
 
 export default function ViewArticle({
     articleId,
-    articleAuthorId, // Renamed for clarity
-    upvote,// This is the list of users who have upvoted
+    articleAuthorId, 
+    upvote,
     title,
     content,
     tags,
@@ -40,7 +41,7 @@ export default function ViewArticle({
     useEffect(() => {
         const fetchUserData = async () => {
             try {
-                const response = await listTeacherDetails(headers);
+                const response = await getAllDetailsForCurrentUser(headers);
                 const userId = response.data.userId;
                 setLoggedInUserId(userId);
                
@@ -62,21 +63,19 @@ export default function ViewArticle({
         }
         try {
             if (isLiked) {
-                // If already liked, remove upvote
                 await addUpvote(articleId, headers);
                 setIsLiked(false);
-                setUpvoteCount((prevCount) => prevCount - 1); // Decrease upvote count
+                setUpvoteCount((prevCount) => prevCount - 1);
             } else {
-                // If not liked, add upvote
                 await addUpvote(articleId, headers);
                 setIsLiked(true);
-                setUpvoteCount((prevCount) => prevCount + 1); // Increase upvote count
+                setUpvoteCount((prevCount) => prevCount + 1); 
             }
         } catch (error) {
             console.error('Failed to toggle upvote:', error);
         }
     };
-    // Handle bookmark toggle (for future expansion)
+   
     const toggleMark = () => {
         setIsMarked(!isMarked);
     };
@@ -127,7 +126,7 @@ export default function ViewArticle({
                     </div>
                     <div className='flex justify-start'>
                         <div className='relative'>
-                            {/* Display the upvote count */}
+                          
                             <span className="absolute bottom-10 right-9 translate-x-1/2 translate-y-1/2 text-xs bg-black text-white rounded-full w-6 h-6 flex items-center justify-center">
                                 {upvoteCount}
                             </span>

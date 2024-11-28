@@ -12,7 +12,6 @@
 */dist-ssr
 */*.local
 
-*/serviceAccountKey.json
 */.vscode/*
 */!.vscode/extensions.json
 */.idea
@@ -23,7 +22,12 @@
 */*.njsproj
 */*.sln
 */*.sw?
+*/Dockerfile
+*/docker-compose.yml
 .idea
+*.Dockerfile
+docker-compose.yml
+compose.yml
 
 
 

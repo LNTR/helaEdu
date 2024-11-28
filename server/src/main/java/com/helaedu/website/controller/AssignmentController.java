@@ -111,7 +111,19 @@ public class AssignmentController {
         }
     }
 
-//    @PreAuthorize("hasRole('STUDENT')")
+    @GetMapping("/{assignmentId}/student/review")
+    public ResponseEntity<AssignmentDto> reviewAssignment(@PathVariable String assignmentId) {
+        try {
+            String email = UserUtil.getCurrentUserEmail();
+            StudentDto student = studentService.getStudentByEmail(email);
+            AssignmentDto assignmentReview = assignmentService.getAssignmentReview(assignmentId, student.getUserId());
+            return ResponseEntity.ok(assignmentReview);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+    //    @PreAuthorize("hasRole('STUDENT')")
     @PostMapping("/{assignmentId}/{quizId}/answer")
     public ResponseEntity<String> submitAnswer(@PathVariable String assignmentId, @PathVariable String quizId,
                                                @RequestBody List<String> providedAnswers) {

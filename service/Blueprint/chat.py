@@ -105,3 +105,19 @@ def get_contents():
     }
 
     return jsonify(response_payload)
+
+@chat.route("/topics", methods=["POST"])
+@chat.route("/topics/", methods=["POST"])
+# @authenticate
+def get_topics():
+    request_payload = request.get_json(silent=True)
+    number = request_payload["number"]
+    # book_info = request_payload["info"]
+    # subject = request_payload["subject"] 
+    # type = request_payload["type"]
+    topics = topics_gen(number)
+    response_payload = {
+        "response": topics,
+    }
+
+    return jsonify(response_payload)

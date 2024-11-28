@@ -1,21 +1,26 @@
 from flask import Blueprint, request, jsonify
 from utils import authenticate
 from firebase_admin import firestore
+from os import environ
+from dotenv import load_dotenv
+import stripe
 
 
 payment = Blueprint("payment", __name__)
 
+load_dotenv(".env")
 
-import stripe
+SECRET_KEY = environ.get("SECRET_KEY")
 
-stripe.api_key = "sk_test_51PuWsmJGIQLjgkiJQ82OFFFfWaq52JhHUZLIIyt17VZ1sZoE8ygJkbDR5D5TRnocHyblAmzM0hCKOqwCbkxONMft00M96ZIT35"
+
+stripe.api_key = SECRET_KEY
 
 
 @payment.route("/create-payment-intent", methods=["POST"])
 def create_payment_intent():
     try:
         data = request.json
-        price_id = data.get("priceId")  # Expecting Price ID from frontend
+        price_id = data.get("priceId")
 
         if not price_id:
             return jsonify({"error": "Price ID is required"}), 400

@@ -291,4 +291,29 @@ public class AssignmentService {
         assignment.getStudentMarks().put(userId, studentMarks);
         assignmentRepository.updateAssignment(assignmentId, assignment);
     }
+
+    public AssignmentDto getAssignmentReview(String assignmentId, String studentId) throws ExecutionException, InterruptedException {
+        Assignment assignment = assignmentRepository.getAssignmentById(assignmentId);
+
+        AssignmentDto assignmentDto = new AssignmentDto(
+                assignment.getAssignmentId(),
+                assignment.getTitle(),
+                assignment.getInstructions(),
+                assignment.getTotalTime(),
+                assignment.isStarted(),
+                assignment.getStudentMarks(),
+                assignment.getStudentRemainingTimes(),
+                assignment.getPublishedTimestamp(),
+                assignment.getEndedTimestamp(),
+                assignment.getUserId(),
+                assignment.getQuizzes()
+        );
+
+        assignmentDto.getQuizzes().forEach(question -> {
+            Map<String, List<String>> givenAnswers = question.getGivenAnswers();
+            question.setGivenAnswers(Map.of(studentId, givenAnswers.get(studentId)));
+        });
+
+        return assignmentDto;
+    }
 }

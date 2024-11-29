@@ -15,6 +15,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 @RestController
@@ -164,6 +165,42 @@ public class AssignmentController {
             return ResponseEntity.ok("Marks submitted");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/{assignmentId}/students/review")
+    public ResponseEntity<Map<String, Double>> getStudentsWithZeroRemainingTime(@PathVariable String assignmentId) {
+        try {
+            Map<String, Double> studentsWithZeroTime = assignmentService.getStudentsWithZeroRemainingTime(assignmentId);
+            return ResponseEntity.ok(studentsWithZeroTime);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", Double.NaN));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", Double.NaN));
+        }
+    }
+
+    @PostMapping("/{assignmentId}/student/finish")
+    public ResponseEntity<String> studentFinishAssignment(@PathVariable String assignmentId) {
+        try {
+            String email = UserUtil.getCurrentUserEmail();
+            StudentDto student = studentService.getStudentByEmail(email);
+            assignmentService.studentFinishAssignment(assignmentId, student.getUserId());
+            return ResponseEntity.ok("Assignment finished for student");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/student/completedAssignments")
+    public ResponseEntity<List<AssignmentDto>> getCompletedAssignmentsByStudent() {
+        try {
+            String email = UserUtil.getCurrentUserEmail();
+            StudentDto student = studentService.getStudentByEmail(email);
+            List<AssignmentDto> completedAssignments = assignmentService.getCompletedAssignmentsByStudent(student.getUserId());
+            return ResponseEntity.ok(completedAssignments);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(null);
         }
     }
 }

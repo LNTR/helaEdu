@@ -383,4 +383,26 @@ public class AssignmentService {
         }
     }
 
+    public List<AssignmentDto> getCompletedAssignmentsByStudent(String studentId) throws ExecutionException, InterruptedException {
+        List<Assignment> assignments = assignmentRepository.getAssignmentsCompletedByStudentId(studentId);
+        List<AssignmentDto> assignmentDtos = new ArrayList<>();
+
+        for (Assignment assignment : assignments) {
+            AssignmentDto assignmentDto = new AssignmentDto(
+                    assignment.getAssignmentId(),
+                    assignment.getTitle(),
+                    assignment.getInstructions(),
+                    assignment.getTotalTime(),
+                    assignment.isStarted(),
+                    assignment.getStudentMarks(),
+                    assignment.getStudentRemainingTimes(),
+                    assignment.getPublishedTimestamp(),
+                    assignment.getEndedTimestamp(),
+                    assignment.getUserId(),
+                    assignment.getQuizzes());
+            assignmentDtos.add(assignmentDto);
+        }
+        return assignmentDtos;
+    }
+
 }

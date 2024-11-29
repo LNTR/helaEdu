@@ -191,4 +191,16 @@ public class AssignmentController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @GetMapping("/student/completedAssignments")
+    public ResponseEntity<List<AssignmentDto>> getCompletedAssignmentsByStudent() {
+        try {
+            String email = UserUtil.getCurrentUserEmail();
+            StudentDto student = studentService.getStudentByEmail(email);
+            List<AssignmentDto> completedAssignments = assignmentService.getCompletedAssignmentsByStudent(student.getUserId());
+            return ResponseEntity.ok(completedAssignments);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
 }

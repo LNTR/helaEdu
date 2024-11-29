@@ -179,4 +179,16 @@ public class AssignmentController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", Double.NaN));
         }
     }
+
+    @PostMapping("/{assignmentId}/student/finish")
+    public ResponseEntity<String> studentFinishAssignment(@PathVariable String assignmentId) {
+        try {
+            String email = UserUtil.getCurrentUserEmail();
+            StudentDto student = studentService.getStudentByEmail(email);
+            assignmentService.studentFinishAssignment(assignmentId, student.getUserId());
+            return ResponseEntity.ok("Assignment finished for student");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }

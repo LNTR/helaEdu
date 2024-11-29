@@ -15,6 +15,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 @RestController
@@ -164,6 +165,18 @@ public class AssignmentController {
             return ResponseEntity.ok("Marks submitted");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/{assignmentId}/students/review")
+    public ResponseEntity<Map<String, Double>> getStudentsWithZeroRemainingTime(@PathVariable String assignmentId) {
+        try {
+            Map<String, Double> studentsWithZeroTime = assignmentService.getStudentsWithZeroRemainingTime(assignmentId);
+            return ResponseEntity.ok(studentsWithZeroTime);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", Double.NaN));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", Double.NaN));
         }
     }
 }

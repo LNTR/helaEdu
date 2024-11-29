@@ -316,4 +316,24 @@ public class AssignmentService {
 
         return assignmentDto;
     }
+
+    public Map<String, Double> getStudentsWithZeroRemainingTime(String assignmentId) throws ExecutionException, InterruptedException {
+        Assignment assignment = assignmentRepository.getAssignmentById(assignmentId);
+
+        if (assignment == null) {
+            throw new IllegalArgumentException("Assignment not found");
+        }
+
+        Map<String, Long> remainingTimes = assignment.getStudentRemainingTimes();
+        Map<String, Double> studentMarks = assignment.getStudentMarks();
+
+        Map<String, Double> filteredStudents = new HashMap<>();
+        remainingTimes.forEach((studentId, time) -> {
+            if (time == 0L && studentMarks.containsKey(studentId)) {
+                filteredStudents.put(studentId, studentMarks.get(studentId));
+            }
+        });
+
+        return filteredStudents;
+    }
 }

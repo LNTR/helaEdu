@@ -14,7 +14,7 @@ articles = Blueprint("articles", __name__)
 @articles.route("/<article_id>/approve", methods=["GET"])
 @articles.route("/<article_id>/approve/", methods=["GET"])
 def approve_article(article_id):
-    article = Article.collection.get(article_id)
+    article: Article = Article.collection.get(article_id)
     article.approve()
     article.classify_article()
     article.update()

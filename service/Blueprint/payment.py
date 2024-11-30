@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 from utils import authenticate
 from firebase_admin import firestore
 from os import environ
+from Models.Student import Student
 from dotenv import load_dotenv
 import stripe
 
@@ -40,4 +41,15 @@ def create_payment_intent():
 
 @payment.route("/success", methods=["GET"])
 def success_payment():
-    return jsonify({"success": "Success"})
+    intent = request.args.get("payment_intent")
+    email = request.args.get("student_id")
+    student: Student = Student.collection.filter("email", "==", email).get()
+    student.subscriptionId = intent
+    student.update()
+
+    return jsonify({"success": True})
+
+
+@payment.route("/subscribers", method=["GET"])
+def get_all_subscribers():
+    pass

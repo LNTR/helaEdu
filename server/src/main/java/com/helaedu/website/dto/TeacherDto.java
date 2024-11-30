@@ -37,4 +37,5 @@ public class TeacherDto {
     private String about;
     private ArrayList<String> preferredSubjects;
     private String school;
+    private int points;
 }

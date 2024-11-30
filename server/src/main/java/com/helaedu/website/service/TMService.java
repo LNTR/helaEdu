@@ -43,7 +43,8 @@ public class TMService {
                     tm.isApproved(),
                     tm.getAbout(),
                     tm.getPreferredSubjects(),
-                    tm.getSchool()
+                    tm.getSchool(),
+                    tm.getPoints()
             );
         }
         return null;
@@ -67,7 +68,8 @@ public class TMService {
                     tm.isApproved(),
                     tm.getAbout(),
                     tm.getPreferredSubjects(),
-                    tm.getSchool()
+                    tm.getSchool(),
+                    tm.getPoints()
             );
         }
         return null;
@@ -85,6 +87,30 @@ public class TMService {
             throw new IllegalArgumentException("Teacher or moderator not found");
         }
         return profilePictureUrl;
+    }
+
+    public int increasePointsBy5(String userId) throws ExecutionException, InterruptedException {
+        Teacher tm = tmRepository.getTMById(userId);
+
+        if(tm != null) {
+            int currentPoints = tm.getPoints();
+            tm.setPoints(currentPoints + 5);
+        } else {
+            throw new IllegalArgumentException("Teacher or moderator not found");
+        }
+        return tm.getPoints();
+    }
+
+    public int increasePointsBy10(String userId) throws ExecutionException, InterruptedException {
+        Teacher tm = tmRepository.getTMById(userId);
+
+        if(tm != null) {
+            int currentPoints = tm.getPoints();
+            tm.setPoints(currentPoints + 10);
+        } else {
+            throw new IllegalArgumentException("Teacher or moderator not found");
+        }
+        return tm.getPoints();
     }
 
     public void deleteProfilePicture(String email) throws IOException, ExecutionException, InterruptedException {
@@ -122,7 +148,8 @@ public class TMService {
                                 tm.isApproved(),
                                 tm.getAbout(),
                                 tm.getPreferredSubjects(),
-                                tm.getSchool()
+                                tm.getSchool(),
+                                tm.getPoints()
                         )
                 )
                 .collect(Collectors.toList());

@@ -21,7 +21,7 @@ function CommentList({ articleId }) {
             const userDetails = await listAllUsersDetails(userId); 
             return {
               ...comment,
-              author: userDetails.data.firstName + userDetails.data.lastName,
+              author: userDetails.data.firstName +" " + userDetails.data.lastName,
               avatar: userDetails.data.profilePictureUrl || Profile, 
               replies: [],
             };

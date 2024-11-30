@@ -29,8 +29,10 @@ export default function ViewArticle({
 }) {
     const formattedDate = new Date(date).toLocaleDateString();
     const [isLiked, setIsLiked] = useState(false);
+    const [isDbLiked , setDbLiked] = useState(false);
     const [isMarked, setIsMarked] = useState(false);
-    const [loggedInUserId, setLoggedInUserId] = useState(null); 
+    const [loggedInUserId, setLoggedInUserId] = useState(null);
+    const [loggedInUserEmail, setLoggedInUserEmail] = useState(null); 
     const [upvoteCount, setUpvoteCount] = useState(upvote.length); 
     const authHeader = useAuthHeader();
     const headers = {
@@ -43,9 +45,14 @@ export default function ViewArticle({
             try {
                 const response = await getAllDetailsForCurrentUser(headers);
                 const userId = response.data.userId;
+                const userEmail = response.data.userEmail;
+                if(upvote.includes(userEmail)){
+                    setDbLiked(true);
+                }
                 setLoggedInUserId(userId);
+                setLoggedInUserEmail(userEmail);
                
-                const isUserLiked = upvote.includes(userId);
+                const isUserLiked = upvote.includes(loggedInUserEmail);
                 setIsLiked(isUserLiked);
             } catch (error) {
                 console.error('Failed to fetch user details:', error);
@@ -71,6 +78,7 @@ export default function ViewArticle({
                 setIsLiked(true);
                 setUpvoteCount((prevCount) => prevCount + 1); 
             }
+           
         } catch (error) {
             console.error('Failed to toggle upvote:', error);
         }
@@ -131,9 +139,9 @@ export default function ViewArticle({
                                 {upvoteCount}
                             </span>
                             <FontAwesomeIcon
-                                icon={isLiked ? faThumbsUpSolid : faThumbsUpRegular}
+                                icon={isLiked || isDbLiked ? faThumbsUpSolid : faThumbsUpRegular}
                                 className='text-xl  size-14 mx-10 relative'
-                                style={{ color: isLiked ? "blue" : "gray", cursor: 'pointer' }}
+                                style={{ color: isLiked  || isDbLiked ?  "blue" : "gray", cursor: 'pointer' }}
                                 onClick={toggleLike}
                                 onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
                                 onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}

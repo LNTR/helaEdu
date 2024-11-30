@@ -9,7 +9,7 @@ const REVIEWED_ARTICLE_LIST_BY_MOD_URL = `${import.meta.env.VITE_REST_API_BASE_U
 const APPROVE_TEACHERS_URL = `${import.meta.env.VITE_REST_API_BASE_URL}/teachers/by-email/approve`;
 // const GET_TEACHER_DETAILS_URL = `${import.meta.env.VITE_REST_API_BASE_URL}/teachers/page`;
 const EDIT_TEACHER_PROFILE = `${import.meta.env.VITE_REST_API_BASE_URL}/teachers/me`;
-
+const GET_TOP_TEACHERS=`${import.meta.env.VITE_REST_API_BASE_URL}/teachers/topTeachers`;
 const GET_TEACHER_DETAILS_URL = `${import.meta.env.VITE_REST_API_BASE_URL}/teachers/page`;
 const CREATE_TEACHER_FORM_URL = `${import.meta.env.VITE_REST_API_BASE_URL}/teachers/create`;
 const TEACHER_PROOF = `${import.meta.env.VITE_REST_API_BASE_URL}/teachers/uploadProofFile`;
@@ -43,3 +43,4 @@ export const uploadTeacherProof = (proofFile, email) =>axios.post(`${TEACHER_PRO
   // axios.get(`${GET_TEACHER_DETAILS_URL}/${pageNo}`);
 export const listAllUsersDetails = (userId)  =>axios.get(`${GET_USER_DETAILS_URL}/${userId}/all`);
 export const reviewedArticlesByMod = (headers) => axios.get(`${REVIEWED_ARTICLE_LIST_BY_MOD_URL}`,{headers});
+export const getTopTeachers = () => axios.get(GET_TOP_TEACHERS);

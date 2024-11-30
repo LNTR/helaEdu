@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 @Repository
 public class TeacherRepository {
@@ -31,6 +32,21 @@ public class TeacherRepository {
             teachers.add(teacher);
         }
         return teachers;
+    }
+    public List<Teacher> getTopTeachers() throws ExecutionException, InterruptedException {
+        Firestore dbFirestore = FirestoreClient.getFirestore();
+        CollectionReference teachersCollection = dbFirestore.collection("teachers");
+
+        ApiFuture<QuerySnapshot> future = teachersCollection.whereEqualTo("isModerator", false).get();
+        List<Teacher> teachers = new ArrayList<>();
+        QuerySnapshot querySnapshot = future.get();
+
+        for (DocumentSnapshot document : querySnapshot.getDocuments()) {
+            Teacher teacher = document.toObject(Teacher.class);
+            teachers.add(teacher);
+        }
+        teachers.sort((teacher1, teacher2) -> Integer.compare(teacher2.getPoints(), teacher1.getPoints()));
+        return teachers.stream().limit(10).collect(Collectors.toList());
     }
 
     public List<Teacher> getAllTeachers(int page) throws ExecutionException, InterruptedException {

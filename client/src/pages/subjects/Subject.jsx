@@ -10,6 +10,7 @@ import {
 import { useLocation } from "react-router-dom";
 
 function Subject() {
+  
   const { state } = useLocation(); 
   const { subjectId, pdfRef, subject } = state || {};
  
@@ -17,7 +18,7 @@ function Subject() {
     PASSIVE: false,
     DISCUSSION: <Discussion subjectId={subjectId}/>,
     CHATBOT: <ChatBot  subject={subject}/>,
-    STICKYNOTE: <StickyNote />,
+    STICKYNOTE: <StickyNote subjectId={subjectId}/>,
   });
 
   const [sideBarComponent, setSideBarComponent] = useState(

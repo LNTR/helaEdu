@@ -58,7 +58,8 @@ public class TeacherService {
                 false,
                 null,
                 teacherDto.getPreferredSubjects(),
-                null
+                null,
+                0
         );
         teacherDto.setUserId(teacher.getUserId());
 
@@ -119,7 +120,8 @@ public class TeacherService {
                                 teacher.isApproved(),
                                 teacher.getAbout(),
                                 teacher.getPreferredSubjects(),
-                                teacher.getSchool()
+                                teacher.getSchool(),
+                                teacher.getPoints()
                         )
                 )
                 .collect(Collectors.toList());
@@ -143,7 +145,8 @@ public class TeacherService {
                         teacher.isApproved(),
                         teacher.getAbout(),
                         teacher.getPreferredSubjects(),
-                        teacher.getSchool()
+                        teacher.getSchool(),
+                        teacher.getPoints()
                 )
         ).collect(Collectors.toList());
     }
@@ -166,7 +169,8 @@ public class TeacherService {
                     teacher.isApproved(),
                     teacher.getAbout(),
                     teacher.getPreferredSubjects(),
-                    teacher.getSchool()
+                    teacher.getSchool(),
+                    teacher.getPoints()
             );
         }
         return null;
@@ -190,7 +194,8 @@ public class TeacherService {
                     teacher.isApproved(),
                     teacher.getAbout(),
                     teacher.getPreferredSubjects(),
-                    teacher.getSchool()
+                    teacher.getSchool(),
+                    teacher.getPoints()
             );
         }
         return null;

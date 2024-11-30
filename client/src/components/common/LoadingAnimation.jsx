@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-function LoadingAnimation() {
+function LoadingAnimation({ loadingState }) {
   return (
     <div className="loading-body">
       <span

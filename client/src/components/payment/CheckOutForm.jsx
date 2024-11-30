@@ -8,6 +8,9 @@ import {
   subscribeToMonthlyPlan,
   subscribeToYearlyPlan,
 } from "@services/PaymentService";
+import { useReactAuthKit } from "react-auth-kit/AuthContext";
+import { jwtDecode } from "jwt-decode";
+const PAYMENT_ACK_API = `${import.meta.env.VITE_SERVICE_API}/payment/success`;
 
 const CheckoutForm = ({ setIsModalOpen, planType = "Monthly" }) => {
   const stripe = useStripe();
@@ -15,6 +18,9 @@ const CheckoutForm = ({ setIsModalOpen, planType = "Monthly" }) => {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const { authValue } = useReactAuthKit();
+  const jwtToken = authValue.auth.token;
+  const loggedInUserId = jwtDecode(jwtToken).sub;
 
   const handlePayment = async (e) => {
     e.preventDefault();
@@ -27,7 +33,7 @@ const CheckoutForm = ({ setIsModalOpen, planType = "Monthly" }) => {
       const { error } = await stripe.confirmPayment({
         elements,
         confirmParams: {
-          return_url: "http://localhost:8081/payment/success",
+          return_url: `${PAYMENT_ACK_API}?student_id=${loggedInUserId}&planType=${planType}`,
         },
       });
 
@@ -35,7 +41,7 @@ const CheckoutForm = ({ setIsModalOpen, planType = "Monthly" }) => {
         setError(error.message);
       } else {
         setSuccess(true);
-        setIsModalOpen(false); // Close the modal on success
+        setIsModalOpen(false);
       }
     } catch (err) {
       console.error(err);

@@ -4,6 +4,7 @@ from flask import Flask, jsonify, redirect
 from Blueprint.status_codes import status_codes
 from Blueprint.articles import articles
 from Blueprint.payment import payment
+from Blueprint.chat import chat
 from flask_cors import CORS
 
 

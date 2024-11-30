@@ -33,7 +33,7 @@ const CheckoutForm = ({ setIsModalOpen, planType = "Monthly" }) => {
       const { error } = await stripe.confirmPayment({
         elements,
         confirmParams: {
-          return_url: `${PAYMENT_ACK_API}?student_id=${loggedInUserId}`,
+          return_url: `${PAYMENT_ACK_API}?student_id=${loggedInUserId}&planType=${planType}`,
         },
       });
 

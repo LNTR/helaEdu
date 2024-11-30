@@ -32,8 +32,8 @@ public class AssignmentDto {
     private Long totalTime;
 
     private boolean started;
-    private Map<String, Double> studentMarks;
-    private Map<String, Long> studentRemainingTimes;
+    private Map<String, Double> studentMarks; //userId and marks
+    private Map<String, Long> studentRemainingTimes; //userId and time in millis
     private Long publishedTimestamp;
     private Long EndedTimestamp;
     private String userId;

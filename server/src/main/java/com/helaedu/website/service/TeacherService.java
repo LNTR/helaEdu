@@ -16,7 +16,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
@@ -58,7 +62,9 @@ public class TeacherService {
                 false,
                 null,
                 teacherDto.getPreferredSubjects(),
-                null
+                null,
+                0,
+                new ArrayList<>()
         );
         teacherDto.setUserId(teacher.getUserId());
 
@@ -119,7 +125,9 @@ public class TeacherService {
                                 teacher.isApproved(),
                                 teacher.getAbout(),
                                 teacher.getPreferredSubjects(),
-                                teacher.getSchool()
+                                teacher.getSchool(),
+                                teacher.getPoints(),
+                                teacher.getBadges()
                         )
                 )
                 .collect(Collectors.toList());
@@ -143,7 +151,9 @@ public class TeacherService {
                         teacher.isApproved(),
                         teacher.getAbout(),
                         teacher.getPreferredSubjects(),
-                        teacher.getSchool()
+                        teacher.getSchool(),
+                        teacher.getPoints(),
+                        teacher.getBadges()
                 )
         ).collect(Collectors.toList());
     }
@@ -166,7 +176,9 @@ public class TeacherService {
                     teacher.isApproved(),
                     teacher.getAbout(),
                     teacher.getPreferredSubjects(),
-                    teacher.getSchool()
+                    teacher.getSchool(),
+                    teacher.getPoints(),
+                    teacher.getBadges()
             );
         }
         return null;
@@ -190,7 +202,9 @@ public class TeacherService {
                     teacher.isApproved(),
                     teacher.getAbout(),
                     teacher.getPreferredSubjects(),
-                    teacher.getSchool()
+                    teacher.getSchool(),
+                    teacher.getPoints(),
+                    teacher.getBadges()
             );
         }
         return null;
@@ -243,5 +257,23 @@ public class TeacherService {
 
     public String approveTeacher(String userId) throws ExecutionException, InterruptedException {
         return teacherRepository.approveTeacher(userId);
+    }
+
+    public Map<String, Integer> getTeachersCountForReport(String startDate, String endDate) throws ExecutionException, InterruptedException {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate start = LocalDate.parse(startDate, formatter);
+        LocalDate end = LocalDate.parse(endDate, formatter);
+
+        List<Teacher> teachers = teacherRepository.getAllTeachers();
+
+        return teachers.stream()
+                .filter(teacher -> {
+                    LocalDate regDate = LocalDate.parse(teacher.getRegTimestamp(), formatter);
+                    return (regDate.isEqual(start) || regDate.isAfter(start)) && (regDate.isEqual(end) || regDate.isBefore(end));
+                })
+                .collect(Collectors.groupingBy(
+                        teacher -> LocalDate.parse(teacher.getRegTimestamp(), formatter).toString(),
+                        Collectors.summingInt(student -> 1)
+                ));
     }
 }

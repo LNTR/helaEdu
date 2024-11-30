@@ -76,4 +76,22 @@ public class AssignmentRepository {
     public boolean exists(String assignmentId) throws ExecutionException, InterruptedException {
         return getAssignmentById(assignmentId) != null;
     }
+
+    public List<Assignment> getAssignmentsCompletedByStudentId(String studentId) throws ExecutionException, InterruptedException {
+        Firestore dbFirestore = FirestoreClient.getFirestore();
+        CollectionReference assignmentsRef = dbFirestore.collection("assignments");
+
+        String fieldPath = "studentRemainingTimes." + studentId;
+        Query query = assignmentsRef.whereEqualTo(fieldPath, 0L);
+
+        ApiFuture<QuerySnapshot> future = query.get();
+        List<QueryDocumentSnapshot> documents = future.get().getDocuments();
+        List<Assignment> assignments = new ArrayList<>();
+        for (QueryDocumentSnapshot document : documents) {
+            Assignment assignment = document.toObject(Assignment.class);
+            assignments.add(assignment);
+        }
+        return assignments;
+    }
+
 }

@@ -4,6 +4,7 @@ from Chatbot.retrieve_history import chat_history
 from Chatbot.quiz_gen import get_quiz
 from Chatbot.embeddings import embed
 from Chatbot.contents import contents
+from Chatbot.topic_gen import get_topics
 
 
 def student_chat_response(query, grade, subject, student_id, chat_session_id):
@@ -25,6 +26,10 @@ def embeddings_gen(grade, subject, toc, type):
 
 def contents_gen(grade, subject, book_info, type):
     return contents(grade, subject, book_info, type)
+
+def topics_gen(number):
+    return get_topics(number)
+
 
 # def main():
 #     output = student_chat_response(

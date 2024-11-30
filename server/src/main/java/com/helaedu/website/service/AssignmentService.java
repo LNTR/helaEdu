@@ -384,25 +384,28 @@ public class AssignmentService {
     }
 
     public List<AssignmentDto> getCompletedAssignmentsByStudent(String studentId) throws ExecutionException, InterruptedException {
-        List<Assignment> assignments = assignmentRepository.getAssignmentsCompletedByStudentId(studentId);
-        List<AssignmentDto> assignmentDtos = new ArrayList<>();
+        List<Assignment> allAssignments = assignmentRepository.getAllAssignments();
+        List<AssignmentDto> assignmentsWithStudentMarks = new ArrayList<>();
 
-        for (Assignment assignment : assignments) {
-            AssignmentDto assignmentDto = new AssignmentDto(
-                    assignment.getAssignmentId(),
-                    assignment.getTitle(),
-                    assignment.getInstructions(),
-                    assignment.getTotalTime(),
-                    assignment.isStarted(),
-                    assignment.getStudentMarks(),
-                    assignment.getStudentRemainingTimes(),
-                    assignment.getPublishedTimestamp(),
-                    assignment.getEndedTimestamp(),
-                    assignment.getUserId(),
-                    assignment.getQuizzes());
-            assignmentDtos.add(assignmentDto);
+        for (Assignment assignment : allAssignments) {
+            Map<String, Double> studentMarks = assignment.getStudentMarks();
+            if (studentMarks != null && studentMarks.containsKey(studentId)) {
+                AssignmentDto assignmentDto = new AssignmentDto(
+                        assignment.getAssignmentId(),
+                        assignment.getTitle(),
+                        assignment.getInstructions(),
+                        assignment.getTotalTime(),
+                        assignment.isStarted(),
+                        assignment.getStudentMarks(),
+                        assignment.getStudentRemainingTimes(),
+                        assignment.getPublishedTimestamp(),
+                        assignment.getEndedTimestamp(),
+                        assignment.getUserId(),
+                        assignment.getQuizzes()
+                );
+                assignmentsWithStudentMarks.add(assignmentDto);
+            }
         }
-        return assignmentDtos;
+        return assignmentsWithStudentMarks;
     }
-
 }

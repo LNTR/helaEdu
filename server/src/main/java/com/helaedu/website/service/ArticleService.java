@@ -21,8 +21,12 @@ public class ArticleService {
     @Autowired
     private FirebaseStorageService firebaseStorageService;
 
-    public ArticleService(ArticleRepository articleRepository, FirebaseStorageService firebaseStorageService) {
+    @Autowired
+    private TMService tmService;
+
+    public ArticleService(ArticleRepository articleRepository, TMService tmService, FirebaseStorageService firebaseStorageService) {
         this.articleRepository = articleRepository;
+        this.tmService = tmService;
         this.firebaseStorageService = firebaseStorageService;
     }
 
@@ -260,6 +264,8 @@ public class ArticleService {
     }
 
     public String approveArticle(String articleId, String reviewedModeratorId) throws ExecutionException, InterruptedException {
+        Article article = articleRepository.getArticleById(articleId);
+        tmService.increasePointsBy10(article.getUserId());
         return articleRepository.updateArticleStatus(articleId, "APPROVED", reviewedModeratorId);
     }
 
@@ -301,7 +307,9 @@ public class ArticleService {
         }
         if (!article.getUpvote().contains(email)) {
             article.getUpvote().add(email);
-            System.out.println("Adding upvote for: " + email);
+
+            tmService.increasePointsBy5(article.getUserId());
+
             articleRepository.updateArticle(articleId, article);
         } else {
             article.getUpvote().remove(email);

@@ -38,7 +38,7 @@ const ActivityBar = () => {
             <FontAwesomeIcon icon={faChartLine} className="mr-4" />
             Summary
           </Link>
-          <Link
+          {/* <Link
             to="/reputationPoints"
             className={`text-2xl flex items-center p-4 rounded transition-colors duration-300 ${
               isActive("/reputationPoints")
@@ -48,7 +48,7 @@ const ActivityBar = () => {
           >
             <FontAwesomeIcon icon={faUsers} className="mr-4" />
             Reputation
-          </Link>
+          </Link> */}
          
          
           <Link

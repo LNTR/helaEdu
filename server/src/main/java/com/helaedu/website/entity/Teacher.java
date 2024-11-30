@@ -14,12 +14,13 @@ import java.util.ArrayList;
 public class Teacher extends User{
     private Boolean isModerator;
     private String proofRef;
-//    private String school;
     private String role;
     private boolean approved;
     private String about;
     private ArrayList<String> preferredSubjects;
     private String school;
+    private int points;
+    private ArrayList<Badge> badges;
 
     public Teacher(
             String userId,
@@ -35,7 +36,9 @@ public class Teacher extends User{
             boolean approved,
             String about,
             ArrayList<String> preferredSubjects,
-            String school
+            String school,
+            int points,
+            ArrayList<Badge> badges
     ) {
         super.setUserId(userId);
         super.setFirstName(firstName);
@@ -51,6 +54,7 @@ public class Teacher extends User{
         this.about = about;
         this.preferredSubjects = preferredSubjects;
         this.school = school;
-
+        this.points = points;
+        this.badges = badges;
     }
 }

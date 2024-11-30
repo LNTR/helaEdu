@@ -15,9 +15,7 @@ const CREATE_TEACHER_FORM_URL = `${import.meta.env.VITE_REST_API_BASE_URL}/teach
 const TEACHER_PROOF = `${import.meta.env.VITE_REST_API_BASE_URL}/teachers/uploadProofFile`;
 const GET_MODERATOR_DETAILS_URL = `${import.meta.env.VITE_REST_API_BASE_URL}/moderators/page`;
 
-
-
-export const listTeacherDetails = (headers) =>axios.get(REST_API_BASE_URL, { headers });
+export const listTeacherDetails = (headers) =>axios.get(REST_API_BASE_URL,{ headers });
 export const getUserDetails = (userId) =>axios.get(`${GET_USER_DETAILS_URL}/${userId}`);
 export const addProfileImageToTeacher = (email, formData, headers) =>axios.post(ADD_PROFILE_IMAGE, formData, {
     headers: { ...headers, "Content-Type": "multipart/form-data" },
@@ -45,4 +43,3 @@ export const uploadTeacherProof = (proofFile, email) =>axios.post(`${TEACHER_PRO
   // axios.get(`${GET_TEACHER_DETAILS_URL}/${pageNo}`);
 export const listAllUsersDetails = (userId)  =>axios.get(`${GET_USER_DETAILS_URL}/${userId}/all`);
 export const reviewedArticlesByMod = (headers) => axios.get(`${REVIEWED_ARTICLE_LIST_BY_MOD_URL}`,{headers});
-

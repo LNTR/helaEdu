@@ -20,6 +20,7 @@ public class Teacher extends User{
     private ArrayList<String> preferredSubjects;
     private String school;
     private int points;
+    private ArrayList<Badge> badges;
 
     public Teacher(
             String userId,
@@ -36,7 +37,8 @@ public class Teacher extends User{
             String about,
             ArrayList<String> preferredSubjects,
             String school,
-            int points
+            int points,
+            ArrayList<Badge> badges
     ) {
         super.setUserId(userId);
         super.setFirstName(firstName);
@@ -53,5 +55,6 @@ public class Teacher extends User{
         this.preferredSubjects = preferredSubjects;
         this.school = school;
         this.points = points;
+        this.badges = badges;
     }
 }

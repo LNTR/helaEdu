@@ -97,6 +97,7 @@ public class TMService {
         if(tm != null) {
             int currentPoints = tm.getPoints();
             tm.setPoints(currentPoints + 5);
+            tmRepository.updateTMByEmail(tm.getEmail(), tm);
         } else {
             throw new IllegalArgumentException("Teacher or moderator not found");
         }
@@ -109,6 +110,7 @@ public class TMService {
         if(tm != null) {
             int currentPoints = tm.getPoints();
             tm.setPoints(currentPoints + 10);
+            tmRepository.updateTMByEmail(tm.getEmail(), tm);
         } else {
             throw new IllegalArgumentException("Teacher or moderator not found");
         }

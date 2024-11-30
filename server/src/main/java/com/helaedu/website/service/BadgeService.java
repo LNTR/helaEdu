@@ -18,4 +18,6 @@ public class BadgeService {
     public BadgeService(BadgeRepository badgeRepository) {
         this.badgeRepository = badgeRepository;
     }
+
+
 }

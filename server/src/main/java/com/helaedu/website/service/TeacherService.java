@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
@@ -59,7 +60,8 @@ public class TeacherService {
                 null,
                 teacherDto.getPreferredSubjects(),
                 null,
-                0
+                0,
+                new ArrayList<>()
         );
         teacherDto.setUserId(teacher.getUserId());
 
@@ -121,7 +123,8 @@ public class TeacherService {
                                 teacher.getAbout(),
                                 teacher.getPreferredSubjects(),
                                 teacher.getSchool(),
-                                teacher.getPoints()
+                                teacher.getPoints(),
+                                teacher.getBadges()
                         )
                 )
                 .collect(Collectors.toList());
@@ -146,7 +149,8 @@ public class TeacherService {
                         teacher.getAbout(),
                         teacher.getPreferredSubjects(),
                         teacher.getSchool(),
-                        teacher.getPoints()
+                        teacher.getPoints(),
+                        teacher.getBadges()
                 )
         ).collect(Collectors.toList());
     }
@@ -170,7 +174,8 @@ public class TeacherService {
                     teacher.getAbout(),
                     teacher.getPreferredSubjects(),
                     teacher.getSchool(),
-                    teacher.getPoints()
+                    teacher.getPoints(),
+                    teacher.getBadges()
             );
         }
         return null;
@@ -195,7 +200,8 @@ public class TeacherService {
                     teacher.getAbout(),
                     teacher.getPreferredSubjects(),
                     teacher.getSchool(),
-                    teacher.getPoints()
+                    teacher.getPoints(),
+                    teacher.getBadges()
             );
         }
         return null;

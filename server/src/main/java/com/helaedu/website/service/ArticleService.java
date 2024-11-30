@@ -212,6 +212,28 @@ public class ArticleService {
                 ))
                 .collect(Collectors.toList());
     }
+    public List<ArticleDto> getReviewedArticlesByUser(String userId) throws ExecutionException, InterruptedException {
+        List<Article> articles = articleRepository.getReviewedArticlesById(userId,"PENDING");
+
+        return articles.stream()
+                .map(article -> new ArticleDto(
+                        article.getArticleId(),
+                        article.getTitle(),
+                        article.getContent(),
+                        article.getImageRef(),
+                        article.getAdditionalFilesRefs(),
+                        article.getTags(),
+                        article.getPublishedTimestamp(),
+                        article.getLastUpdatedTimestamp(),
+                        article.getStatus(),
+                        article.getReviewedModeratorId(),
+                        article.getRejectedReason(),
+                        article.getUserId(),
+                        article.getUpvote(),
+                        article.getCluster()
+                ))
+                .collect(Collectors.toList());
+    }
 
 
 
@@ -270,14 +292,20 @@ public class ArticleService {
 
     public void upvoteArticle(String articleId, String email) throws ExecutionException, InterruptedException {
         Article article = articleRepository.getArticleById(articleId);
+        if (email == null || email.isEmpty()) {
+            System.out.println(email);
+            throw new IllegalArgumentException("User email is missing");
+        }
         if(article == null) {
             throw new IllegalArgumentException("Article not found");
         }
         if (!article.getUpvote().contains(email)) {
             article.getUpvote().add(email);
+            System.out.println("Adding upvote for: " + email);
             articleRepository.updateArticle(articleId, article);
         } else {
             article.getUpvote().remove(email);
+            System.out.println("Removing upvote for: " + email);
             articleRepository.updateArticle(articleId, article);
         }
     }

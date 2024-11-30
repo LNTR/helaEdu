@@ -16,6 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Article {
+
     private String articleId;
     private String title;
     private String content;

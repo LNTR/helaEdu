@@ -41,7 +41,7 @@ import Resource from "@pages/admin/Resourses";
 import SelectedSub from "@pages/admin/SelectedSub";
 import AssignmentView from "@pages/assignments/AssignmentView";
 import EditNote from "@pages/personalNotesTM/EditNote";
-
+import Subscription from "@pages/admin/Subscription";
 function GlobalRoutes() {
   return (
     <Routes>
@@ -86,6 +86,7 @@ function GlobalRoutes() {
       <Route path="/selectedSub" element={<SelectedSub />} />
       <Route path="/assignmentView" element={<AssignmentView/>} />
       <Route path="/notes/edit" element={<EditNote/>} />
+      <Route path="/subscriptionList" element={<Subscription/>} />
     </Routes>
   );
 }

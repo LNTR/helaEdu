@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Question_progress from "@components/Quiz/Question_progress";
 
-// Helper function to format time in hh:mm:ss
+
 const formatTime = (time) => {
   const hours = Math.floor(time / (1000 * 60 * 60));
   const minutes = Math.floor((time % (1000 * 60 * 60)) / (1000 * 60));
@@ -14,7 +14,7 @@ const formatTime = (time) => {
 };
 
 const Question = ({ question_no, question, totalQuizTime, questionLength, timet }) => {
-  const [progress, setProgress] = useState(100); // Start at 100%
+  const [progress, setProgress] = useState(100); 
   const navigate = useNavigate();
 
   useEffect(() => {

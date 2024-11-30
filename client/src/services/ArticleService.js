@@ -46,7 +46,7 @@ export const updateArticle = (articleId, article, headers) =>
 export const deleteArticle = (articleId) =>
   axios.delete(`${REST_API_BASE_URL}/${articleId}`);
 export const addUpvote = (articleId, headers) =>
-  axios.put(`${REST_API_BASE_URL}/${articleId}/upvote`, { headers });
+  axios.put(`${REST_API_BASE_URL}/${articleId}/upvote`,{} ,{headers});
 
 export const listCommentsByArticleId = (articleId) =>
   axios.get(`${REST_API_BASE_URL}/${articleId}/comments`);

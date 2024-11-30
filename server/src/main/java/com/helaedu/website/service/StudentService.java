@@ -21,10 +21,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
@@ -362,5 +366,23 @@ public class StudentService {
                         null
                 ))
                 .collect(Collectors.toList());
+    }
+
+    public Map<String, Integer> getStudentsCountForReport(String startDate, String endDate) throws ExecutionException, InterruptedException {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate start = LocalDate.parse(startDate, formatter);
+        LocalDate end = LocalDate.parse(endDate, formatter);
+
+        List<Student> students = studentRepository.getAllStudents();
+
+        return students.stream()
+                .filter(student -> {
+                    LocalDate regDate = LocalDate.parse(student.getRegTimestamp(), formatter);
+                    return (regDate.isEqual(start) || regDate.isAfter(start)) && (regDate.isEqual(end) || regDate.isBefore(end));
+                })
+                .collect(Collectors.groupingBy(
+                        student -> LocalDate.parse(student.getRegTimestamp(), formatter).toString(),
+                        Collectors.summingInt(student -> 1)
+                ));
     }
 }

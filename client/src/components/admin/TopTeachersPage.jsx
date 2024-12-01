@@ -61,7 +61,7 @@ export default function TopTeachersPage({ searchQuery}) {
           <p>Loading...</p>
         ) : (
           <>
-            <TableHeaderForUsers />
+            <TableHeaderForUsers isTopTeacher={true}/>
             <div>{currentRows}</div>
             <Pagination
               totalPages={totalPages}

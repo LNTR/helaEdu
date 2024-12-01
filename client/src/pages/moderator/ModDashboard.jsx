@@ -34,7 +34,7 @@ export default function ModDashboard() {
                 <h2 className="card-title text-header1">Weekly Quizzes</h2>
                 <p className='text-1 text-gray1 pt-4'>Generate and review weekly quizzes for this weeek</p>
                 <div className="card-actions justify-end mt-8">
-                  <button className="btn border-none text-white bg-blue shadow-lg w-28 hover:text-black hover:bg-yellow" onClick={() => handleCardClick("reviewQuizList")}>Review</button>
+                  <button className="btn border-none text-white bg-blue shadow-lg w-28 hover:text-black hover:bg-yellow" onClick={() => handleCardClick("reviewQuizHome")}>Review</button>
                 </div>
               </div>
             </div>

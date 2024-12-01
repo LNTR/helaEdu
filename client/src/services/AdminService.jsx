@@ -1,5 +1,6 @@
 import axios from "axios";
 const REST_API_BASE_URL = `${import.meta.env.VITE_REST_API_BASE_URL}/admins`;
+const SUBSCRIPTION_FLASK_BASE_URL = `${import.meta.env.VITE_SERVICE_API}/payment/subscribers`;
 const GET_CURRENT_ADMIN_BASIC_URL =`${import.meta.env.VITE_REST_API_BASE_URL}/admins/me`;
 const ADD_PROFILE_IMAGE = `${import.meta.env.VITE_REST_API_BASE_URL}/admins/uploadProfilePicture`;
 const EDIT_ADMIN_PROFILE = `${import.meta.env.VITE_REST_API_BASE_URL}/admins/me`;
@@ -14,4 +15,4 @@ export const addProfileImageToAdmin = (email, formData, headers) =>axios.post(AD
 
 export const listComplaints = () => axios.get(COMPLAINTS_ARTICLE_URL);
 
-
+export const getSubscribersList = () => axios.get(SUBSCRIPTION_FLASK_BASE_URL);

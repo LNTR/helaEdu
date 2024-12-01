@@ -42,6 +42,8 @@ import SelectedSub from "@pages/admin/SelectedSub";
 import AssignmentView from "@pages/assignments/AssignmentView";
 import EditNote from "@pages/personalNotesTM/EditNote";
 import Subscription from "@pages/admin/Subscription";
+import ReviewQuizHome from "@pages/ReviewQuizzes/ReviewQuizHome";
+import GenerateQuiz from "@pages/ReviewQuizzes/GenerateQuiz";
 function GlobalRoutes() {
   return (
     <Routes>
@@ -65,7 +67,7 @@ function GlobalRoutes() {
       <Route path="/Settings" element={<Settings />}></Route>
       <Route path="/Reports" element={<Reports />}></Route>
 
-      <Route path="/reviewQuiz" element={<ReviewQuiz />} />
+      <Route path="/reviewQuiz/:quizId" element={<ReviewQuiz />} />
       <Route path="/reviewQuizList" element={<ReviewQuizList />} />
       <Route path="/resources" element={<Resources />} />
       <Route path="/modDashboard" element={<ModDashboard />} />
@@ -87,6 +89,8 @@ function GlobalRoutes() {
       <Route path="/assignmentView" element={<AssignmentView/>} />
       <Route path="/notes/edit" element={<EditNote/>} />
       <Route path="/subscriptionList" element={<Subscription/>} />
+      <Route path="/reviewQuizHome" element={<ReviewQuizHome/>} />
+      <Route path="/generateQuiz" element={<GenerateQuiz/>}/>
     </Routes>
   );
 }

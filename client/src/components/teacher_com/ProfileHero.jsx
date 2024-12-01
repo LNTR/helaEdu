@@ -9,7 +9,8 @@ import { useNavigate } from 'react-router-dom';
 import Profile from "@assets/img/articles/profile.jpg"
 import SilverBadge from "@assets/icons/silverBadge.svg"
 import GoldBadge from "@assets/icons/goldBadge.svg"
-export default function ProfileHero({ email, firstName ,lastName,profileImg}) {
+import ModeratorRequestNotification from '@components/teacher_com/ModeratorRequestNotification';
+export default function ProfileHero({ userId,email, firstName ,lastName,profileImg,assignedSubject,upgradedStatus}) {
 
   const [profileImage, setProfileImage] = useState(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -117,6 +118,11 @@ export default function ProfileHero({ email, firstName ,lastName,profileImg}) {
           <img src={cover} className="w-full h-96 object-cover" alt="Cover" />
           <div className='absolute flex items-center justify-center rounded-full w-10 h-10 p-2 bottom-5 top-50 left-50 right-7 bg-yellow'>
             <FontAwesomeIcon icon={faPencil} className='size-6' />
+          </div>
+          <div className='absolute flex items-center justify-center p-2 bottom-40 top-0 left-50 right-7 '>
+            {upgradedStatus =="REQUESTED" ?
+              <ModeratorRequestNotification assignedSubject={assignedSubject} userId={userId}/> :null
+            }
           </div>
         </div>
         <div className="absolute top-3/4 left-32 rounded-full w-60 h-60">

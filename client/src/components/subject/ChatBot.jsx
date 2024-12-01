@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-
+import NoEnroll from "./NoEnroll";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPen,
@@ -10,7 +10,10 @@ import {
 import { sendToChatBot, getChatBotHistory } from "@services/ChatBotService";
 import ChatContent from "@components/subject/ChatContent";
 
-function ChatBot({ subject }) {
+function ChatBot({ subject, hasEnrolled }) {
+  if (!hasEnrolled) {
+    return <NoEnroll action={"Chatbot"} />;
+  }
   const [history, setHistory] = useState([]);
   const textInputRef = useRef(null);
   const rocketButtonRef = useRef(null);
@@ -63,7 +66,6 @@ function ChatBot({ subject }) {
       setHistory(...history);
     });
   }, []);
-
   return (
     <div className="chatbot">
       <div className="title-wrapper">

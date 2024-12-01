@@ -13,8 +13,8 @@ class Student(Model):
     role = TextField()
     subscriptionId = TextField()
     userId = TextField()
-    enrolledSubjects = TextField()
     subjectNoteList = MapField()
+    enrolledSubjects = ListField()
 
     class Meta:
         collection_name = "students"

@@ -23,7 +23,13 @@ function ActionMenu({
     <div className="action-menu">
       <ul>
         <li>
-          <FontAwesomeIcon icon={faShapes} size="1x" />
+          <FontAwesomeIcon
+            icon={faShapes}
+            size="1x"
+            onClick={() => {
+              setSideBarValue(sideBarComponentMap.ENROLLMENT);
+            }}
+          />
         </li>
         <li>
           <FontAwesomeIcon

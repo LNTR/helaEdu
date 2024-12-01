@@ -4,3 +4,4 @@ export { default as StickyNote } from "@components/subject/StickyNote";
 export { default as PdfBook } from "@components/subject/PdfBook";
 export { default as ActionMenu } from "@components/subject/ActionMenu";
 export { default as SubjectFilters } from "@components/subject/SubjectFilters";
+export { default as Enrollment } from "@components/subject/Enrollment";

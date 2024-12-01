@@ -13,14 +13,14 @@ export default function AddComment({ subjectId }) {
   const handlePostComment = async (e) => {
     e.preventDefault();
     if (!commentText.trim()) return;
-   
+
     try {
       const comments = {
         comment: commentText,
         subjectId,
         parentId: 0,
       };
-      
+
       const response = await addCommentForForum(comments, headers);
       if (response.status === 200 || response.status === 201) {
         setCommentText("");

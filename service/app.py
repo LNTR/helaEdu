@@ -6,6 +6,7 @@ from Blueprint.articles import articles
 from Blueprint.payment import payment
 from Blueprint.chat import chat
 from Blueprint.notes import notes
+from Blueprint.subject import subjects
 from flask_cors import CORS
 
 
@@ -18,6 +19,7 @@ def create_app():
     fireo.connection(from_file="config/firebase-service-account.json")
     app.config.from_pyfile("setting.py")
 
+    app.register_blueprint(subjects, url_prefix="/subjects")
     app.register_blueprint(notes, url_prefix="/notes")
     app.register_blueprint(chat, url_prefix="/chat")
     app.register_blueprint(articles, url_prefix="/articles")

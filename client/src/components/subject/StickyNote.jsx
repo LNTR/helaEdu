@@ -2,8 +2,12 @@ import React, { useMemo, useEffect, useState } from "react";
 import { viewNote, updateNote } from "@services/SubjectNoteService";
 import JoditEditor from "jodit-react";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
+import NoEnroll from "./NoEnroll";
 
-function StickyNote({ subjectId }) {
+function StickyNote({ subjectId, hasEnrolled }) {
+  if (!hasEnrolled) {
+    return <NoEnroll action={"Notes"} />;
+  }
   const authHeader = useAuthHeader();
   const headers = {
     Authorization: authHeader,

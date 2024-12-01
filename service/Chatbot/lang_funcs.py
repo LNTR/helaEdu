@@ -118,9 +118,6 @@ def create_chain(history_aware_retriever, llm, qa_prompt):
 
 
 class ChatHistory(BaseChatMessageHistory, BaseModel):
-    class Config:
-        arbitrary_types_allowed = True
-    """In memory implementation of chat message history."""
     user_id: str 
     chat_id: str
     messages: List[BaseMessage] = Field(default_factory=list)

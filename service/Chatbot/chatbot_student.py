@@ -70,6 +70,7 @@ def chat_response(prompt, grade, subject, student_id, chat_session_id):
     if not chat_session_id:
         chat_session_id = generate_chat_id()
 
+    print("chat_id", chat_session_id)
     documents = check_docs(prompt, grade, subject)
     print(len(documents))
     retrieved_docs = retrieve_docs(grade, subject)

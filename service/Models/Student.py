@@ -1,5 +1,5 @@
 from fireo.models import Model
-from fireo.fields import TextField
+from fireo.fields import TextField, ListField, MapField
 
 
 class Student(Model):
@@ -13,6 +13,16 @@ class Student(Model):
     role = TextField()
     subscriptionId = TextField()
     userId = TextField()
+    subjectNoteList = MapField()
+    enrolledSubjects = ListField()
 
     class Meta:
         collection_name = "students"
+
+    @classmethod
+    def find_by_email(cls, email):
+        try:
+            return cls.collection.filter("email", "==", email).get()
+        except Exception as e:
+            print(f"Error fetching subject by email: {e}")
+            return None

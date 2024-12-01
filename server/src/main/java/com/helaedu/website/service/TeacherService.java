@@ -132,6 +132,31 @@ public class TeacherService {
                 )
                 .collect(Collectors.toList());
     }
+    public List<TeacherDto> getTopTeachers() throws ExecutionException, InterruptedException {
+        List<Teacher> teachers = teacherRepository.getTopTeachers();
+        return teachers.stream().map(teacher ->
+                        new TeacherDto(
+                                teacher.getUserId(),
+                                teacher.getFirstName(),
+                                teacher.getLastName(),
+                                teacher.getEmail(),
+                                teacher.getPassword(),
+                                teacher.getRegTimestamp(),
+                                teacher.getIsModerator(),
+                                teacher.getProofRef(),
+                                teacher.getRole(),
+                                teacher.isEmailVerified(),
+                                teacher.getProfilePictureUrl(),
+                                teacher.isApproved(),
+                                teacher.getAbout(),
+                                teacher.getPreferredSubjects(),
+                                teacher.getSchool(),
+                                teacher.getPoints(),
+                                teacher.getBadges()
+                        )
+                )
+                .collect(Collectors.toList());
+    }
 
     public List<TeacherDto> getAllTeachers(int page) throws ExecutionException, InterruptedException {
         List<Teacher> teachers = teacherRepository.getAllTeachers(page);

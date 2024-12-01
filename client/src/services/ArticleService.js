@@ -3,6 +3,7 @@ const REST_API_BASE_URL = `${import.meta.env.VITE_REST_API_BASE_URL}/articles`;
 const TEACHER_ARTICLE_URL = `${import.meta.env.VITE_REST_API_BASE_URL}/tm/me/articles`;
 const APPROVE_ARTICLE_URL = `${import.meta.env.VITE_REST_API_BASE_URL}/articles/approved`;
 const PENDING_ARTICLE_URL = `${import.meta.env.VITE_REST_API_BASE_URL}/articles/pending`;
+const PENDING_ARTICLE_BY_MOD_URL = `${import.meta.env.VITE_REST_API_BASE_URL}/articles/pending/mod`;
 const CREATE_ARTICLE_URL = `${import.meta.env.VITE_REST_API_BASE_URL}/articles/create`;
 const RECCOMEND_ARTICLE_URL = `${import.meta.env.VITE_SERVICE_API}/articles/get-recommendation`;
 const ADD_COMMENTS_ARTICLES_URL=`${import.meta.env.VITE_REST_API_BASE_URL}/forum/create`;
@@ -15,6 +16,7 @@ export const listArticlesByTeacher = (headers) =>
   axios.get(TEACHER_ARTICLE_URL, { headers });
 export const approvedArticles = () => axios.get(APPROVE_ARTICLE_URL);
 export const pendingArticles = () => axios.get(PENDING_ARTICLE_URL);
+export const pendingArticlesByMod = (headers) => axios.get(`${PENDING_ARTICLE_BY_MOD_URL}`,{headers});
 export const getArticleById = (articleId) =>
   axios.get(`${REST_API_BASE_URL}/${articleId}`);
 export const createArticle = (article, headers) =>
@@ -44,7 +46,7 @@ export const updateArticle = (articleId, article, headers) =>
 export const deleteArticle = (articleId) =>
   axios.delete(`${REST_API_BASE_URL}/${articleId}`);
 export const addUpvote = (articleId, headers) =>
-  axios.put(`${REST_API_BASE_URL}/${articleId}/upvote`, { headers });
+  axios.put(`${REST_API_BASE_URL}/${articleId}/upvote`,{} ,{headers});
 
 export const listCommentsByArticleId = (articleId) =>
   axios.get(`${REST_API_BASE_URL}/${articleId}/comments`);

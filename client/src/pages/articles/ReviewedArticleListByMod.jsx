@@ -1,27 +1,27 @@
 import React, { useState, useEffect } from "react";
 import Header from "@components/common/Header";
 import ArticleCard from "@components/articles/ArticleCard";
-import { pendingArticlesByMod } from "@services/ArticleService";
+import { reviewedArticlesByMod } from "@services/TeacherService";
 import { getUserDetails } from "@services/TeacherService";
 import { Link } from "react-router-dom";
 import Sort from "@components/articles/Sort";
 import Sidebar from "@components/moderator_com/ModeratorSidebar";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
+import ArticleCardMe from "@components/articles/ArticleCardMe";
 
-export default function reviewList() {
+export default function ReviewedArticleListByMod() {
 
   const authHeader = useAuthHeader();
   const headers = {
     Authorization: authHeader,
   };
-  const [filteredArticles, setFilteredArticles] = useState([]);
   const [articles, setArticles] = useState([]); 
   const [sidebar, setSidebar] = useState(false);
 
   useEffect(() => {
-    const fetchApprovedArticles = async () => {
+    const fetchReviewedArticles = async () => {
       try {
-        const response = await pendingArticlesByMod(headers);
+        const response = await reviewedArticlesByMod(headers);
         const articles = response.data;
         console.log(articles);
 
@@ -45,9 +45,9 @@ export default function reviewList() {
       }
     };
 
-    fetchApprovedArticles();
+    fetchReviewedArticles();
   }, []);
-  
+
   return (
     <>
       <Header />
@@ -56,33 +56,38 @@ export default function reviewList() {
           <div className="content-wrapper mx-32">
             <div className="flex ">
               <div className="my-16 ">
-                <h1>Pending Articles</h1>
+                <h1>Reviewed Articles</h1>
                 <hr className="border-yellow border-t-4 "></hr>
               </div>
             </div>
             <div>
               {/* <Sort /> */}
             </div>
-
-            <div className=" grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              {articles.map((article) => (
-                <div key={article.articleId} className="p-2">
-                  <Link to={`/articles/reviewArticle/${article.articleId}`}>
-                    <ArticleCard
-                      key={article.articleId}
-                      imageUrl={article.imageRef}
-                      profilePictureUrl={article.coverImage}
-                      firstName={article.firstName}
-                      lastName={article.lastName}
-                      date={article.publishedTimestamp}
-                      title={article.title}
-                      description={article.content}
-                      badges={article.tags}
-                    />
-                  </Link>
+            {articles.length > 0  ?
+                <div className=" grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                
+                    {articles.map((article) => (
+                        <div key={article.articleId} className="p-2">
+                            <Link to={`/articles/reviewArticle/${article.articleId}`}>
+                                <ArticleCardMe
+                                key={article.articleId}
+                                imageUrl={article.imageRef}
+                                profilePictureUrl={article.coverImage}
+                                firstName={article.firstName}
+                                lastName={article.lastName}
+                                date={article.publishedTimestamp}
+                                title={article.title}
+                                description={article.content}
+                                badges={article.tags}
+                                status={article.status}
+                                />
+                            </Link>
+                        </div>
+                    )) } 
                 </div>
-              ))}
-            </div>
+            : <p className="text-black text-3xl text-center mt-60">No any reviewed Articles</p>
+
+            }
           </div>
         </div>
     

@@ -3,25 +3,24 @@ import { Header, Footer } from "@/components/common";
 import ArticleCard from "@components/articles/ArticleCard";
 import { approvedArticles } from "@/services/ArticleService";
 import { getUserDetails } from "@/services/TeacherService";
-import ArticleHead from "@/components/articles/ArticleHead";
 import { Link } from "react-router-dom";
 import banner from "@assets/img/subject_background.png";
+import ArticleHeadForAll from "@components/articles/ArticleHeadForAll";
 
 const Articles = () => {
-  const [articles, setArticles] = useState([]); 
-  const [visibleArticles, setVisibleArticles] = useState(8); 
+  const [articles, setArticles] = useState([]);
+  const [filteredArticles, setFilteredArticles] = useState([]);
+  const [visibleArticles, setVisibleArticles] = useState(8);
 
   useEffect(() => {
     const fetchApprovedArticles = async () => {
       try {
         const response = await approvedArticles();
         const articles = response.data;
-        console.log(articles);
 
         const articlesWithUserDetails = await Promise.all(
           articles.map(async (article) => {
-            console.log(article.userId);
-            const userResponse = await getUserDetails(article.userId); 
+            const userResponse = await getUserDetails(article.userId);
             const userDetails = userResponse.data;
             return {
               ...article,
@@ -33,6 +32,7 @@ const Articles = () => {
         );
 
         setArticles(articlesWithUserDetails);
+        setFilteredArticles(articlesWithUserDetails);
       } catch (error) {
         console.error(error);
       }
@@ -41,19 +41,53 @@ const Articles = () => {
     fetchApprovedArticles();
   }, []);
 
+  const handleSearch = (searchBy, query) => {
+    if (!query) {
+      setFilteredArticles(articles);
+      return;
+    }
+
+    const lowerCaseQuery = query.toLowerCase();
+    const filtered = articles.filter((article) => {
+      if (searchBy === "All") {
+        return (
+          article.title.toLowerCase().includes(lowerCaseQuery) ||
+          article.tags.some((tag) => tag.toLowerCase().includes(lowerCaseQuery)) ||
+          article.content.toLowerCase().includes(lowerCaseQuery) ||
+          `${article.firstName} ${article.lastName}`.toLowerCase().includes(lowerCaseQuery)
+        );
+      }
+      if (searchBy === "Author") {
+        return `${article.firstName} ${article.lastName}`.toLowerCase().includes(lowerCaseQuery);
+      }
+      if (searchBy === "Title") {
+        return article.title.toLowerCase().includes(lowerCaseQuery);
+      }
+      if (searchBy === "Tags") {
+        return article.tags.some((tag) => tag.toLowerCase().includes(lowerCaseQuery));
+      }
+      if (searchBy === "Description") {
+        return article.content.toLowerCase().includes(lowerCaseQuery);
+      }
+      return false;
+    });
+
+    setFilteredArticles(filtered);
+  };
+
   const handleSeeMore = () => {
-    setVisibleArticles((prevVisible) => prevVisible + 4); 
+    setVisibleArticles((prevVisible) => prevVisible + 4);
   };
 
   return (
     <>
       <Header />
       <div className="subject-catalog">
-        <img className="catalog-img" src={banner} alt="" srcSet="" />
-        <div className="">
-          <ArticleHead />
+        <img className="catalog-img" src={banner} alt="" />
+        <div>
+          <ArticleHeadForAll onSearch={handleSearch} />
           <div className="mx-44 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {articles.slice(0, visibleArticles).map((article) => (
+            {filteredArticles.slice(0, visibleArticles).map((article) => (
               <div key={article.articleId} className="p-2">
                 <Link to={`/articles/readArticles/${article.articleId}`}>
                   <ArticleCard
@@ -71,11 +105,11 @@ const Articles = () => {
                 </Link>
               </div>
             ))}
-          </div>       
-          {visibleArticles < articles.length && (
+          </div>
+          {visibleArticles < filteredArticles.length && (
             <div className="text-right mt-4">
               <button
-                className=" text-blue px-4 py-2 rounded text-2xl mr-64"
+                className="text-blue px-4 py-2 rounded text-2xl mr-64"
                 onClick={handleSeeMore}
               >
                 See More
@@ -88,4 +122,5 @@ const Articles = () => {
     </>
   );
 };
+
 export default Articles;

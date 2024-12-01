@@ -5,7 +5,6 @@ import Summaries from '@components/reputation/Summary'
 import ActivityList from '@components/reputation/ActivityList'
 export default function Summary() {
   return (
-    
     <>
       <Header />
       <div className="dashboard">

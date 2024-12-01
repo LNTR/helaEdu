@@ -45,31 +45,23 @@ public class ForumController {
     public ResponseEntity<Object> addComment(@Valid @RequestBody ForumDto forumDto, BindingResult bindingResult) throws ExecutionException, InterruptedException {
         if (bindingResult.hasErrors()) {
             ValidationErrorResponse errorResponse = new ValidationErrorResponse();
-            for(FieldError fieldError : bindingResult.getFieldErrors()) {
+            for (FieldError fieldError : bindingResult.getFieldErrors()) {
                 errorResponse.addViolation(fieldError.getField(), fieldError.getDefaultMessage());
             }
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         }
         try {
             String email = UserUtil.getCurrentUserEmail();
-            TeacherDto teacherDto = tmService.getTMByEmail(email);
 
-            if (teacherDto == null) {
+            TeacherDto teacherDto = tmService.getTMByEmail(email);
+            if (teacherDto != null) {
+                forumDto.setUserId(teacherDto.getUserId());
+            } else {
                 StudentDto studentDto = studentService.getStudentByEmail(email);
                 if (studentDto == null) {
                     return new ResponseEntity<>("User not found", HttpStatus.UNAUTHORIZED);
                 }
                 forumDto.setUserId(studentDto.getUserId());
-            } else {
-                forumDto.setUserId(teacherDto.getUserId());
-            }
-            boolean articleExists = articleService.doesArticleExist(forumDto.getArticleId());
-            if (!articleExists) {
-                return new ResponseEntity<>("Article does not exist", HttpStatus.BAD_REQUEST);
-            }
-            assert teacherDto != null;
-            if (teacherDto.getUserId().equals(articleService.getUserIdByArticleId(forumDto.getArticleId()))) {
-                return new ResponseEntity<>("You cannot comment on your own article", HttpStatus.FORBIDDEN);
             }
 
             String commentId = forumService.addComment(forumDto);
@@ -80,29 +72,29 @@ public class ForumController {
             return new ResponseEntity<>("Error adding comment", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     @PostMapping("/subject/create")
     public ResponseEntity<Object> addCommentBySubject(@Valid @RequestBody ForumDto forumDto, BindingResult bindingResult) throws ExecutionException, InterruptedException {
         if (bindingResult.hasErrors()) {
             ValidationErrorResponse errorResponse = new ValidationErrorResponse();
-            for(FieldError fieldError : bindingResult.getFieldErrors()) {
+            for (FieldError fieldError : bindingResult.getFieldErrors()) {
                 errorResponse.addViolation(fieldError.getField(), fieldError.getDefaultMessage());
             }
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         }
         try {
             String email = UserUtil.getCurrentUserEmail();
-            TeacherDto teacherDto = tmService.getTMByEmail(email);
 
-            if (teacherDto == null) {
+            TeacherDto teacherDto = tmService.getTMByEmail(email);
+            if (teacherDto != null) {
+                forumDto.setUserId(teacherDto.getUserId());
+            } else {
                 StudentDto studentDto = studentService.getStudentByEmail(email);
                 if (studentDto == null) {
                     return new ResponseEntity<>("User not found", HttpStatus.UNAUTHORIZED);
                 }
                 forumDto.setUserId(studentDto.getUserId());
-            } else {
-                forumDto.setUserId(teacherDto.getUserId());
             }
-
             String commentId = forumService.addComment(forumDto);
             return new ResponseEntity<>(commentId, HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
@@ -111,6 +103,7 @@ public class ForumController {
             return new ResponseEntity<>("Error adding comment", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
     @DeleteMapping("/{commentId}")
     public ResponseEntity<Object> deleteComment(@PathVariable String commentId) throws ExecutionException, InterruptedException {

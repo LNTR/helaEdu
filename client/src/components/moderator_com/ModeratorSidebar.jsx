@@ -60,7 +60,17 @@ const ModeratorSidebar = (props) => {
                 }`}
             >
               <FontAwesomeIcon icon={faNewspaper} className="mr-4" />
-              Articles
+              Pending Articles
+            </Link>
+            <Link
+              to="/articles/reviewedArticleListByMod"
+              className={`text-2xl flex items-center p-4 rounded transition-colors duration-300 ${isActive("/articles/reviewedArticleListByMod")
+                ? "bg-blue text-white"
+                : "hover:bg-gray-200 text-black"
+                }`}
+            >
+              <FontAwesomeIcon icon={faNewspaper} className="mr-4" />
+              Reviewed Articles
             </Link>
             <Link
               to="/reviewQuizList"
@@ -72,7 +82,7 @@ const ModeratorSidebar = (props) => {
               <FontAwesomeIcon icon={faQuestionCircle} className="mr-4" />
               Weekly Quizzes
             </Link>
-            <Link
+            {/* <Link
               to="/resources"
               className={`text-2xl flex items-center p-4 rounded transition-colors duration-300 ${isActive("/resources")
                 ? "bg-blue text-white"
@@ -81,7 +91,7 @@ const ModeratorSidebar = (props) => {
             >
               <FontAwesomeIcon icon={faBook} className="mr-4" />
               Resources
-            </Link>
+            </Link> */}
             <Link
               to="/modNotifications"
               className={`text-2xl flex items-center p-4 rounded transition-colors duration-300 ${isActive("/modNotifications")

@@ -8,6 +8,8 @@ import {
   faBell,
   faCog,
   faSignOutAlt,
+  faBook,
+  faMoneyBills
 } from "@fortawesome/free-solid-svg-icons";
 
 const Sidebar = () => {
@@ -101,8 +103,19 @@ const Sidebar = () => {
                 : "hover:bg-gray-200 text-black"
             }`}
           >
-            <FontAwesomeIcon icon={faCog} className="mr-4" />
+            <FontAwesomeIcon icon={faBook} className="mr-4" />
             Resourses
+          </Link>
+          <Link
+            to="/subscriptionList"
+            className={`text-2xl flex items-center p-4 rounded transition-colors duration-300 ${
+              isActive("/resoursesubscriptionList") || isActive("/subscriptionList")
+                ? "bg-blue text-white"
+                : "hover:bg-gray-200 text-black"
+            }`}
+          >
+            <FontAwesomeIcon icon={faMoneyBills} className="mr-4" />
+            Subscriptions
           </Link>
         </div>
       </div>

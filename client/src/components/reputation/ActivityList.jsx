@@ -8,7 +8,7 @@ export default function ActivityList() {
   return (
     <div className='mx-10 mt-10'>
         <div className='flex justify-start '>
-        <div  className='w-full mx-10'>
+        {/* <div  className='w-full mx-10'>
             <div className='flex justify-between'>
                 <p className='my-5'>Reputations</p>
                 <p className='text-right text-blue  px-10 text-xl py-3 my-5 cursor-pointer'>See more</p>
@@ -45,7 +45,7 @@ export default function ActivityList() {
                     
                 </div>    
             </div>
-        </div>
+        </div> */}
         {/* <div  className='w-1/2 mx-10'>
             <div className='flex justify-between'>
                 <p className='my-5'>Votes</p>

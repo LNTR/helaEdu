@@ -53,7 +53,9 @@ public class ModeratorService {
                 teacherDto.getPreferredSubjects(),
                 null,
                 0,
-                new ArrayList<>()
+                new ArrayList<>(),
+                null,
+                null
         );
         teacherDto.setUserId(moderator.getUserId());
 
@@ -102,7 +104,9 @@ public class ModeratorService {
                                 moderator.getPreferredSubjects(),
                                 moderator.getSchool(),
                                 moderator.getPoints(),
-                                new ArrayList<>()
+                                new ArrayList<>(),
+                                moderator.getAssignedSubjects(),
+                                moderator.getUpgradedStatus()
                         )
                 )
                 .collect(Collectors.toList());
@@ -128,7 +132,9 @@ public class ModeratorService {
                         moderator.getPreferredSubjects(),
                         moderator.getSchool(),
                         moderator.getPoints(),
-                        moderator.getBadges()
+                        moderator.getBadges(),
+                        moderator.getAssignedSubjects(),
+                        moderator.getUpgradedStatus()
                 )
         ).collect(Collectors.toList());
     }
@@ -153,7 +159,9 @@ public class ModeratorService {
                     moderator.getPreferredSubjects(),
                     moderator.getSchool(),
                     moderator.getPoints(),
-                    moderator.getBadges()
+                    moderator.getBadges(),
+                    moderator.getAssignedSubjects(),
+                    moderator.getUpgradedStatus()
             );
         }
         return null;
@@ -178,7 +186,9 @@ public class ModeratorService {
                     moderator.getPreferredSubjects(),
                     moderator.getSchool(),
                     moderator.getPoints(),
-                    moderator.getBadges()
+                    moderator.getBadges(),
+                    moderator.getAssignedSubjects(),
+                    moderator.getUpgradedStatus()
             );
         }
         return null;

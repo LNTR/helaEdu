@@ -45,3 +45,5 @@ __pycache__/
 **/credentials.json
 /resources
 **/credentials.json
+*/venv
+*/venv/*.*

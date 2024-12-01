@@ -13,12 +13,12 @@ import java.util.concurrent.ExecutionException;
 
 @Repository
 public class BadgeRepository {
-    // public String createBadge(Badge badge) {
-    //     Firestore dbFirestore = FirestoreClient.getFirestore();
-    //     DocumentReference documentReference = dbFirestore.collection("badges").document(badge.getBadgeId());
-    //     documentReference.set(badge);
-    //     return badge.getBadgeId();
-    // }
+//    public String createBadge(Badge badge) {
+//        Firestore dbFirestore = FirestoreClient.getFirestore();
+//        DocumentReference documentReference = dbFirestore.collection("badges").document(badge.getBadgeId());
+//        documentReference.set(badge);
+//        return badge.getBadgeId();
+//    }
 
     public List<Badge> getAllBadges() throws ExecutionException, InterruptedException {
         Firestore dbFirestore = FirestoreClient.getFirestore();

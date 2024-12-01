@@ -1,20 +1,20 @@
 import React, { useState } from "react";
 import Question from "./Question";
 import Answer from "./Answer";
-import { submitAnswer } from "@services/AssignmentService";
-import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
+import { submitAnswer, finishAttempt } from "@services/AssignmentService";
+import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
+
 const Questions = ({
   questions,
   givenAnswers,
   handleNextQuestion,
   currentQuestion,
-  handleAnswerClick,
   initialTimer,
   isLastQuestion,
   timet,
   assignmentId,
+  handleQuizEnd, 
 }) => {
-  
   const authHeader = useAuthHeader();
   const headers = {
     Authorization: authHeader,
@@ -25,7 +25,7 @@ const Questions = ({
 
   const currentQuiz = questions[currentQuestion];
   const studentAnswer = givenAnswers[currentQuiz?.id] || [];
-  const isAlreadyAnswered = studentAnswer.length > 0; 
+  const isAlreadyAnswered = studentAnswer.length > 0;
 
   const handleOptionClick = (option) => {
     if (!isAlreadyAnswered) {
@@ -37,32 +37,39 @@ const Questions = ({
     }
   };
 
-  const handleNextButtonClick = () => {
+  const handleNextButtonClick = async () => {
     const currentQuiz = questions[currentQuestion];
+
     if (!isAlreadyAnswered) {
       const providedAnswers = selectedOptions;
-       console.log("Submitting answer for quiz ID:", currentQuiz.id);
-      console.log("Provided answers:", providedAnswers);
-  
+
       if (providedAnswers.length === 0) {
-        console.error("No answers selected for question:", currentQuiz.id);
         alert("Select your answer");
         return;
       }
-      submitAnswer(assignmentId, currentQuiz.id, providedAnswers,headers)
-        .then((response) => {
-          console.log("Answer submitted successfully", response);
-        })
-        .catch((error) => {
-          console.error("Error submitting answer", error);
-        });
-  
-      setSelectedOptions([]);
+
+      try {
+        await submitAnswer(assignmentId, currentQuiz.id, providedAnswers, headers);
+        setSelectedOptions([]);
+      } catch (error) {
+        console.error("Error submitting answer", error);
+        return;
+      }
     }
 
-    handleNextQuestion(timet);
+    if (isLastQuestion) {
+      try {
+        await finishAttempt(assignmentId, headers);
+        alert("Assignment completed successfully!");
+        handleQuizEnd(); 
+      } catch (error) {
+        console.error("Error finishing attempt", error);
+      }
+    } else {
+      handleNextQuestion(timet);
+    }
   };
-  
+
   return (
     <div>
       <div>
@@ -90,16 +97,14 @@ const Questions = ({
             onclick={() => handleOptionClick(option)}
             isSelected={isAlreadyAnswered
               ? studentAnswer.includes(option)
-              : selectedOptions.includes(option)} 
-            isDisabled={isAlreadyAnswered} 
+              : selectedOptions.includes(option)}
+            isDisabled={isAlreadyAnswered}
           />
         ))}
       </div>
 
       <div className="flex justify-end mx-32 mt-32">
-        <button
-          className="gold-button w-64"
-          onClick={handleNextButtonClick} >
+        <button className="gold-button w-64" onClick={handleNextButtonClick}>
           <h4>{isLastQuestion ? "Submit" : "Next"}</h4>
         </button>
       </div>

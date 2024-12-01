@@ -23,7 +23,7 @@ export default function ReviewedTableRow({ assignmentId,userId,name,email,score 
          </div>
         
          <div className=' w-1/4 flex justify-center'>
-            <button className='bg-blue text-white text-xl rounded-xl px-4 py-1 mr-7'>Reviewed</button>
+            {/* <button className='bg-blue text-white text-xl rounded-xl px-4 py-1 mr-7'>Reviewed</button> */}
 
             <Link to={`/questionList/${assignmentId}/${userId}`} className="bg-blue text-white text-xl rounded-xl px-4 py-1">
               View

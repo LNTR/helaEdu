@@ -119,6 +119,22 @@ public class ArticleRepository {
         }
         return articles;
     }
+    public List<Article> getReviewedArticlesById(String userId,String status) throws ExecutionException, InterruptedException {
+        Firestore dbFirestore = FirestoreClient.getFirestore();
+        CollectionReference articlesCollection = dbFirestore.collection("articles");
+        Query query = articlesCollection.whereEqualTo("reviewedModeratorId",userId);
+        ApiFuture<QuerySnapshot> future = query.get();
+        List<Article> articles = new ArrayList<>();
+        QuerySnapshot querySnapshot = future.get();
+        for (DocumentSnapshot document : querySnapshot.getDocuments()) {
+            Article article = document.toObject(Article.class);
+            if(article !=null && !article.getStatus().equals(status)){
+                articles.add(article);
+            }
+
+        }
+        return articles;
+    }
     public List<Article> getArticlesByStatusAndId(String status, String userId) throws ExecutionException, InterruptedException {
         Firestore dbFirestore = FirestoreClient.getFirestore();
         CollectionReference articlesCollection = dbFirestore.collection("articles");
@@ -132,14 +148,19 @@ public class ArticleRepository {
         for (DocumentSnapshot document : querySnapshot.getDocuments()) {
             Article article = document.toObject(Article.class);
 
-            if (!article.getUserId().equals(userId)) {
-                articles.add(article);
+            if (article != null && !article.getUserId().equals(userId)) {
+                if(article.getReviewedModeratorId()==null){
+                    articles.add(article);
+                }
+                if(article.getReviewedModeratorId() != null  &&  article.getReviewedModeratorId().equals(userId) ){
+                    articles.add(article);
+                }
+
             }
         }
 
         return articles;
     }
-
 
     public String updateArticleStatus(String articleId, String newStatus, String reviewedModeratorEmail) throws ExecutionException, InterruptedException {
         Firestore dbFirestore = FirestoreClient.getFirestore();

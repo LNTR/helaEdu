@@ -22,7 +22,7 @@ export default function AddComment({ subjectId }) {
       };
       
       const response = await addCommentForForum(comments, headers);
-      if (response.status === 200) {
+      if (response.status === 200 || response.status === 201) {
         setCommentText("");
         window.location.reload();
       }

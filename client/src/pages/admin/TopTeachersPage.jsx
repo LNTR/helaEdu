@@ -2,6 +2,7 @@ import TableRawTopTeachers from '@components/admin/TableRowTopTeachers';
 import { Header, Footer } from '@components/common';
 import React ,{useState} from 'react';
 import Pagination from '@components/articles/Pagination';
+import { getTopTeachers } from '@services/TeacherService';
 const teacher = [
     {
       teacherId: 1,

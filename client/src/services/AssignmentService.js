@@ -18,4 +18,12 @@ export const submitAnswer = (assignmentId, quizId, providedAnswers, headers) => 
 export const submitStudentMark = (assignmentId, marks, headers) => axios.post(`${REST_API_BASE_URL}/${assignmentId}/marks?studentMarks=${marks}`, null,{ headers });
 
 export const deleteAssignment=(assignmentId)=>axios.delete(`${REST_API_BASE_URL}/${assignmentId}`);
-
+export const studentsReviewAssignmentList=(headers)=>axios.get(`${REST_API_BASE_URL}/student/completedAssignments`,{headers});
+// export const  finishAttempt=(assignmentId,headers)=>axios.post(`${REST_API_BASE_URL}/${assignmentId}/student/finish`,{headers});
+export const finishAttempt = (assignmentId, headers) => 
+    axios.post(
+      `${REST_API_BASE_URL}/${assignmentId}/student/finish`,
+      null,
+      { headers } 
+    );
+  

@@ -220,4 +220,10 @@ public class TeacherController {
         Map<String, String> requestBody = RequestUtil.createEmailRequestBody(email);
         return getAllArticlesByTeacher(requestBody);
     }
+    @GetMapping("/topTeachers")
+    public ResponseEntity<List<TeacherDto>> getTopTeachers() throws ExecutionException, InterruptedException {
+        List<TeacherDto> teachers = teacherService.getTopTeachers();
+        return ResponseEntity.ok(teachers);
+    }
+
 }

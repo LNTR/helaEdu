@@ -32,6 +32,13 @@ function Header() {
                 <h4>Home</h4>
               </div>
             </Link>
+            {currentUserRole == userRoles.Admin ? (
+              <Link to="/dashboard">
+                <a className="nav-text flex-c m-4 cursor-pointer">
+                  <h4>Dashboard</h4>
+                </a>
+              </Link>
+            ) : null}
             <Link to="/subjects/SubjectCatalog">
               <div className="nav-text flex-c m-4 cursor-pointer">
                 <h4>Subject</h4>

@@ -22,7 +22,6 @@ const QuizBegin = ({ assignmentId }) => {
   const [assignment, setAssignment] = useState(null);
   const [questions, setQuestions] = useState([]);
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [score, setScore] = useState(0);
   const [globalTimer, setGlobalTimer] = useState(0);
   const [quizStarted, setQuizStarted] = useState(false);
   const [isLastQuestion, setIsLastQuestion] = useState(false);
@@ -31,7 +30,12 @@ const QuizBegin = ({ assignmentId }) => {
   const [studentId, setStudentId] = useState(null);
   const [studentName, setStudentName] = useState("");
   const [givenAnswers, setGivenAnswers] = useState({});
+  const [score, setScore] = useState(0);
+  const [showScore, setShowScore] = useState(false); 
 
+  const handleQuizEnd = () => {
+    setShowScore(true); 
+  };
   useEffect(() => {
     const fetchStudent = async () => {
       try {
@@ -44,6 +48,7 @@ const QuizBegin = ({ assignmentId }) => {
     };
     fetchStudent();
   }, []);
+
   useEffect(() => {
     const fetchAssignment = async () => {
       console.log("Called at least once");
@@ -74,7 +79,7 @@ const QuizBegin = ({ assignmentId }) => {
         console.log(
           "Total time" + totalQuizTime + " remainingTime " + remainingTime
         );
-        setQuizStarted(!isNaN(remainingTime)); //COMMENT THIS OUT
+        setQuizStarted(!isNaN(remainingTime)); 
         setGlobalTimer(remainingTime);
         setTotalTime(totalQuizTime);
       } catch (error) {
@@ -143,49 +148,6 @@ const QuizBegin = ({ assignmentId }) => {
     }
   };
 
-  const calculateScore = () => {
-    if (!assignment) return 0;
-    let totalScore = 0;
-    let totalMarks = 0;
-
-    assignment.quizzes.forEach((q) => {
-      const userAnswers = q.givenAnswers && q.givenAnswers[studentId];
-      const correctAnswers = q.correctAnswers || [];
-      const questionMarks = q.marks;
-
-      if (!userAnswers) return;
-
-      if (
-        userAnswers.length === correctAnswers.length &&
-        userAnswers.every((answer) => correctAnswers.includes(answer))
-      ) {
-        totalScore += questionMarks;
-      } else if (
-        userAnswers.some((answer) => correctAnswers.includes(answer))
-      ) {
-        const correctCount = userAnswers.filter((answer) =>
-          correctAnswers.includes(answer)
-        ).length;
-        const percentage = correctCount / correctAnswers.length;
-        totalScore += questionMarks * percentage;
-      }
-      totalMarks += questionMarks;
-    });
-    const scorePercentage = (totalScore / totalMarks) * 100;
-    const roundedScore = parseFloat(scorePercentage.toFixed(2));
-
-    submitStudentMark(assignmentId, roundedScore, headers)
-      .then((response) => {
-        console.log("Score submitted successfully:", response);
-      })
-      .catch((error) => {
-        alert(error);
-        console.error("Error submitting score:", error);
-      });
-
-    return roundedScore;
-  };
-
   if (!assignment) {
     return <div>Loading...</div>;
   }
@@ -197,6 +159,18 @@ const QuizBegin = ({ assignmentId }) => {
       : undefined;
   const isTimeRemainingDefined = typeof remainingTimesForUser !== "undefined";
 
+  const finishedByUser =
+  assignment.studentMarks &&
+  assignment.studentMarks.hasOwnProperty(studentId)
+    ? assignment.studentMarks[studentId]
+    : undefined;
+  const isFinishedUser = typeof finishedByUser !== "undefined";
+
+
+  if (showScore) {
+    return <Score assignmentId={assignmentId} studentId={studentId} name={studentName} />;
+  }
+
   return (
     <div
       className="relative min-h-screen bg-cover bg-fixed"
@@ -205,62 +179,64 @@ const QuizBegin = ({ assignmentId }) => {
       <Header />
       <div className="min-h-screen">
         {assignment.started ? (
-          isTimeRemainingDefined ? (
-            remainingTimesForUser > 0 ? (
-              currentQuestion < questions.length ? (
-                <Questions
-                  questions={questions}
-                  givenAnswers={givenAnswers}
-                  handleNextQuestion={handleNextQuestion}
-                  currentQuestion={currentQuestion}
-                  handleAnswerClick={handleAnswerClick}
-                  initialTimer={totalTime}
-                  isLastQuestion={isLastQuestion}
-                  timet={globalTimer / 1000}
-                  assignmentId={assignmentId}
-                />
+          ! isFinishedUser ?(
+            isTimeRemainingDefined ? (
+              remainingTimesForUser > 0 ? (
+                currentQuestion < questions.length ? (
+                  <Questions
+                    questions={questions}
+                    givenAnswers={givenAnswers}
+                    handleNextQuestion={handleNextQuestion}
+                    currentQuestion={currentQuestion}
+                    handleAnswerClick={handleAnswerClick}
+                    initialTimer={totalTime}
+                    isLastQuestion={isLastQuestion}
+                    timet={globalTimer / 1000}
+                    assignmentId={assignmentId}
+                    handleQuizEnd ={handleQuizEnd }
+                  />
+                ) : (
+                  <Score assignmentId={assignmentId}  studentId={studentId} name={studentName} />
+                )
               ) : (
-                <Score score={calculateScore()} name={studentName} />
+                <div className="flex justify-center my-20">
+                  <p className="text-3xl">
+                    You have already attempted the quiz and have no remaining
+                    time.
+                  </p>
+                </div>
               )
-            ) : (
-              <div className="flex justify-center my-20">
-                <p className="text-3xl">
-                  You have already attempted the quiz and have no remaining
-                  time.
-                </p>
-              </div>
-            )
-          ) : !quizStarted && !showPopup ? (
-            <div>
-              <Guidlines assignmentId={assignmentId} />
-              <div className="text-center m-10">
-                <div className="button-29 mt-10" onClick={showStartPopup}>
-                  Start Quiz!
+            ) : !quizStarted && !showPopup ? (
+              <div>
+                <Guidlines assignmentId={assignmentId} />
+                <div className="text-center m-10">
+                  <div className="button-29 mt-10" onClick={showStartPopup}>
+                    Start Quiz!
+                  </div>
                 </div>
               </div>
+            ) : showPopup && !quizStarted ? (
+              <StartPopup onComplete={startQuiz} />
+            ) : quizStarted && currentQuestion < questions.length ? (
+              <Questions
+                questions={questions}
+                givenAnswers={givenAnswers}
+                handleNextQuestion={handleNextQuestion}
+                currentQuestion={currentQuestion}
+                handleAnswerClick={handleAnswerClick}
+                initialTimer={globalTimer}
+                isLastQuestion={isLastQuestion}
+                timet={globalTimer / 1000}
+                assignmentId={assignmentId}
+                handleQuizEnd={handleQuizEnd}
+              />
+            ) : (
+              <Score assignmentId={assignmentId}  studentId={studentId} name={studentName}/>
+            )
+          ) :(
+            <div className="flex justify-center my-20">
+              <p className="text-3xl">You have already finished this Assignment</p>
             </div>
-          ) : showPopup && !quizStarted ? (
-            <StartPopup onComplete={startQuiz} />
-          ) : quizStarted && currentQuestion < questions.length ? (
-            <Questions
-              questions={questions}
-              givenAnswers={givenAnswers}
-              handleNextQuestion={handleNextQuestion}
-              currentQuestion={currentQuestion}
-              handleAnswerClick={handleAnswerClick}
-              initialTimer={globalTimer}
-              isLastQuestion={isLastQuestion}
-              timet={globalTimer / 1000}
-            />
-          ) : (
-            <Score
-              score={() => {
-                let totalScore = calculateScore();
-                setScore(totalScore);
-                return totalScore;
-              }}
-              name={studentName}
-            />
           )
         ) : (
           <div className="flex justify-center my-20">
@@ -268,6 +244,8 @@ const QuizBegin = ({ assignmentId }) => {
           </div>
         )}
       </div>
+
+  
       <Footer />
     </div>
   );

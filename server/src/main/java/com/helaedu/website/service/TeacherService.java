@@ -64,7 +64,9 @@ public class TeacherService {
                 teacherDto.getPreferredSubjects(),
                 null,
                 0,
-                new ArrayList<>()
+                new ArrayList<>(),
+                new ArrayList<>(),
+                null
         );
         teacherDto.setUserId(teacher.getUserId());
 
@@ -127,7 +129,9 @@ public class TeacherService {
                                 teacher.getPreferredSubjects(),
                                 teacher.getSchool(),
                                 teacher.getPoints(),
-                                teacher.getBadges()
+                                teacher.getBadges(),
+                                teacher.getAssignedSubjects(),
+                                teacher.getUpgradedStatus()
                         )
                 )
                 .collect(Collectors.toList());
@@ -152,7 +156,9 @@ public class TeacherService {
                                 teacher.getPreferredSubjects(),
                                 teacher.getSchool(),
                                 teacher.getPoints(),
-                                teacher.getBadges()
+                                teacher.getBadges(),
+                                teacher.getAssignedSubjects(),
+                                teacher.getUpgradedStatus()
                         )
                 )
                 .collect(Collectors.toList());
@@ -178,7 +184,9 @@ public class TeacherService {
                         teacher.getPreferredSubjects(),
                         teacher.getSchool(),
                         teacher.getPoints(),
-                        teacher.getBadges()
+                        teacher.getBadges(),
+                        teacher.getAssignedSubjects(),
+                        teacher.getUpgradedStatus()
                 )
         ).collect(Collectors.toList());
     }
@@ -203,7 +211,9 @@ public class TeacherService {
                     teacher.getPreferredSubjects(),
                     teacher.getSchool(),
                     teacher.getPoints(),
-                    teacher.getBadges()
+                    teacher.getBadges(),
+                    teacher.getAssignedSubjects(),
+                    teacher.getUpgradedStatus()
             );
         }
         return null;
@@ -229,7 +239,9 @@ public class TeacherService {
                     teacher.getPreferredSubjects(),
                     teacher.getSchool(),
                     teacher.getPoints(),
-                    teacher.getBadges()
+                    teacher.getBadges(),
+                    teacher.getAssignedSubjects(),
+                    teacher.getUpgradedStatus()
             );
         }
         return null;
@@ -278,6 +290,12 @@ public class TeacherService {
 
     public String promoteToModerator(String userId) throws ExecutionException, InterruptedException {
         return teacherRepository.promoteToModerator(userId);
+    }
+    public String declinePromoting(String userId) throws ExecutionException, InterruptedException {
+        return teacherRepository.DeclinePromoting(userId);
+    }
+    public String askingPromoteToModerator(String userId, List<String> assignedSubjects ) throws ExecutionException, InterruptedException {
+        return teacherRepository.askingPromoteToModerator(userId , assignedSubjects);
     }
 
     public String approveTeacher(String userId) throws ExecutionException, InterruptedException {

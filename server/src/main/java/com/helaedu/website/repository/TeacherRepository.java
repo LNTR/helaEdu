@@ -43,7 +43,10 @@ public class TeacherRepository {
 
         for (DocumentSnapshot document : querySnapshot.getDocuments()) {
             Teacher teacher = document.toObject(Teacher.class);
-            teachers.add(teacher);
+
+            if( teacher!=null && teacher.getUpgradedStatus()==null) {
+                teachers.add(teacher);
+            }
         }
         teachers.sort((teacher1, teacher2) -> Integer.compare(teacher2.getPoints(), teacher1.getPoints()));
         return teachers.stream().limit(10).collect(Collectors.toList());
@@ -149,11 +152,40 @@ public class TeacherRepository {
         if (document.exists()) {
             documentReference.update("isModerator", true);
             documentReference.update("role", "ROLE_MODERATOR");
+            documentReference.update("upgradedStatus", "AGREED");
             return "Teacher promoted to moderator";
         } else {
             throw new IllegalArgumentException("Teacher not found");
         }
     }
+    public String DeclinePromoting(String userId) throws ExecutionException, InterruptedException {
+        Firestore dbFirestore = FirestoreClient.getFirestore();
+        DocumentReference documentReference = dbFirestore.collection("teachers").document(userId);
+        ApiFuture<DocumentSnapshot> future = documentReference.get();
+        DocumentSnapshot document = future.get();
+        if(document.exists()) {
+            documentReference.update("upgradedStatus", "DECLINED");
+            return "Teacher decline promoting  to Moderator";
+        } else {
+            throw new IllegalArgumentException("Teacher not found");
+        }
+    }
+    public String askingPromoteToModerator(String userId, List<String> assignedSubjects) throws ExecutionException, InterruptedException {
+        Firestore dbFirestore = FirestoreClient.getFirestore();
+        DocumentReference documentReference = dbFirestore.collection("teachers").document(userId);
+        ApiFuture<DocumentSnapshot> future = documentReference.get();
+        DocumentSnapshot document = future.get();
+
+        if (document.exists()) {
+            documentReference.update("upgradedStatus", "REQUESTED");
+            documentReference.update("assignedSubjects", assignedSubjects);
+            return "Asking permission to promote a teacher to moderator";
+        } else {
+            throw new IllegalArgumentException("Teacher not found");
+        }
+    }
+
+
 
     public String approveTeacher(String userId) throws ExecutionException, InterruptedException {
         Firestore dbFirestore = FirestoreClient.getFirestore();

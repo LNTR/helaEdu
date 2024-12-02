@@ -8,7 +8,7 @@ import Sort from "@components/articles/Sort";
 import Sidebar from "@components/moderator_com/ModeratorSidebar";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import ArticleCardMe from "@components/articles/ArticleCardMe";
-
+import LoadingComponent from "@components/common/LoadingComponent";
 export default function ReviewedArticleListByMod() {
 
   const authHeader = useAuthHeader();
@@ -17,8 +17,9 @@ export default function ReviewedArticleListByMod() {
   };
   const [articles, setArticles] = useState([]); 
   const [sidebar, setSidebar] = useState(false);
-
+  const [loadingState,setLoadingState] =useState(false);
   useEffect(() => {
+    setLoadingState(true);
     const fetchReviewedArticles = async () => {
       try {
         const response = await reviewedArticlesByMod(headers);
@@ -42,6 +43,8 @@ export default function ReviewedArticleListByMod() {
         setArticles(articlesWithUserDetails);
       } catch (error) {
         console.error(error);
+      }finally{
+        setLoadingState(false);
       }
     };
 
@@ -54,6 +57,10 @@ export default function ReviewedArticleListByMod() {
       <div className="dashboard h-screen mx-auto" style={{ width: sidebar ? `calc(100vw - 384px)` : '100vw' }} onClick={() => setSidebar(false)}>
           <Sidebar value={sidebar} setValue={setSidebar} />
           <div className="content-wrapper mx-32">
+          {loadingState && (
+              <LoadingComponent/>
+            )}
+
             <div className="flex ">
               <div className="my-16 ">
                 <h1>Reviewed Articles</h1>

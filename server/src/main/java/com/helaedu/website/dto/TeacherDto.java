@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -40,4 +41,7 @@ public class TeacherDto {
     private String school;
     private int points;
     private ArrayList<Badge> badges;
+    private List<String> assignedSubjects;
+    private String UpgradedStatus;
+
 }

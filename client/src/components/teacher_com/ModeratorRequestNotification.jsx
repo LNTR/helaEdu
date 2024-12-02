@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState ,useEffects} from 'react';
 import { promoteToModerator, declinePromoting } from '@services/TeacherService';
 
 export default function ModeratorRequestNotification({ assignedSubject, userId }) {
@@ -63,9 +63,9 @@ export default function ModeratorRequestNotification({ assignedSubject, userId }
           <div className="text-lg">
             Admin has requested to upgrade your account to a Moderator role.
             Please review and take action.
-            <p className="text-lg">
-              Your Assigned Subject is <span className="text-blue font-bold">{assignedSubject}</span>
-            </p>
+            {/* <p className="text-lg">
+              Your Assigned Subjects : <span className="text-blue font-bold">{assignedSubject}</span>
+            </p> */}
           </div>
         </div>
         <button onClick={openApproveModal} className="btn btn-sm bg-blue text-white">

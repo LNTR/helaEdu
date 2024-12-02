@@ -12,6 +12,7 @@ import {
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import { currentStudent } from "@services/StudentService";
 import { submitStudentMark } from "@services/AssignmentService";
+import LoadingComponent from "@components/common/LoadingComponent";
 
 const QuizBegin = ({ assignmentId }) => {
   const authHeader = useAuthHeader();
@@ -149,7 +150,7 @@ const QuizBegin = ({ assignmentId }) => {
   };
 
   if (!assignment) {
-    return <div>Loading...</div>;
+    return <LoadingComponent/>;
   }
 
   const remainingTimesForUser =

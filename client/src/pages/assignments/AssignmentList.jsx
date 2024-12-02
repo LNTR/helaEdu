@@ -9,13 +9,14 @@ import { listTeacherDetails } from "@services/TeacherService";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import DetailesView from "@components/assignments/DetailesView";
 import { deleteAssignment } from "@services/AssignmentService";
+import LoadingComponent from "@components/common/LoadingComponent";
 
 export default function AssignmentList() {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isViewPopup, setIsViewPopupOpen] = useState(false);
   const [assignment, setAssignment] = useState([]);
   const [selectedAssignmentId, setSelectedAssignmentId] = useState(null);
-
+  const [loadingState,setLoadingState] = useState(false);
   const authHeader = useAuthHeader();
   const headers = {
     Authorization: authHeader,
@@ -39,6 +40,7 @@ export default function AssignmentList() {
   };
 
   const handleDelete = async () => {
+    
     try {
       await deleteAssignment(selectedAssignmentId);
       setAssignment((prev) => prev.filter((a) => a.assignmentId !== selectedAssignmentId));
@@ -51,7 +53,9 @@ export default function AssignmentList() {
   };
 
   useEffect(() => {
+   
     const fetchAssignments = async () => {
+      setLoadingState(true);
       try {
         const teacherDetails = await listTeacherDetails(headers);
         const teacherResponse = teacherDetails.data.userId;
@@ -63,6 +67,8 @@ export default function AssignmentList() {
         setAssignment(assignment);
       } catch (error) {
         console.error(error);
+      }finally{
+        setLoadingState(false);
       }
     };
 
@@ -153,8 +159,12 @@ export default function AssignmentList() {
             </Link>
           </div>
         </div>
+        {loadingState && (
+          <LoadingComponent/>
+        )}
+
         <TableRowHeader />
-        <div>{currentRows}</div>
+        <div className="min-h-screen">{currentRows}</div>
         <div>
           <Pagination
             totalPages={totalPages}

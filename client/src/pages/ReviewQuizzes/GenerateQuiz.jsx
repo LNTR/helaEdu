@@ -36,7 +36,7 @@ export default function GenerateQuiz() {
 
   const [sidebar, setSidebar] = useState(false);
   const location = useLocation();
-  const { grade } = location.state || { grade: 'Default Grade' }; // Added default grade fallback
+  const { grade } = location.state || { grade: 'Default Grade' }; 
   const [showModal, setShowModal] = useState(false);
   const [generatedData, setGeneratedData] = useState(null);
 

@@ -67,7 +67,9 @@ public class TMService {
                     tm.getPreferredSubjects(),
                     tm.getSchool(),
                     tm.getPoints(),
-                    tm.getBadges()
+                    tm.getBadges(),
+                    tm.getAssignedSubjects(),
+                    tm.getUpgradedStatus()
             );
         }
         return null;
@@ -114,7 +116,9 @@ public class TMService {
                     tm.getPreferredSubjects(),
                     tm.getSchool(),
                     tm.getPoints(),
-                    tm.getBadges()
+                    tm.getBadges(),
+                    tm.getAssignedSubjects(),
+                    tm.getUpgradedStatus()
             );
         }
         return null;
@@ -197,7 +201,9 @@ public class TMService {
                                 tm.getPreferredSubjects(),
                                 tm.getSchool(),
                                 tm.getPoints(),
-                                tm.getBadges()
+                                tm.getBadges(),
+                                tm.getAssignedSubjects(),
+                                tm.getUpgradedStatus()
                         )
                 )
                 .collect(Collectors.toList());

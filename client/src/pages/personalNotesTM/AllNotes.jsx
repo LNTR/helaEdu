@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { getNotesByTeacherId } from '@services/NotesService';
 import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
 import NoteView from '@components/notes/NoteView';
+import LoadingComponent from '@components/common/LoadingComponent';
 
 const AllNotes = () => {
     const [notes, setNotes] = useState([]);
@@ -14,9 +15,12 @@ const AllNotes = () => {
     const [selectedNote, setSelectedNote] = useState(null);  
     const authHeader = useAuthHeader();
     const navigate = useNavigate();
+    const [loadingState,setLoadingState] = useState(false);
 
     useEffect(() => {
+     
         const fetchNotes = async () => {
+            setLoadingState(true);
             try {
                 const headers = {
                     Authorization: authHeader,
@@ -27,6 +31,8 @@ const AllNotes = () => {
             } catch (err) {
                 console.error("Error fetching notes:", err);
                 setError("Failed to fetch notes");
+            }finally{
+                setLoadingState(false);
             }
         };
 
@@ -50,6 +56,10 @@ const AllNotes = () => {
         <div className="w-full">
             <Header />
             <div className='px-64 mt-12 h-full w-full'>
+            {loadingState && (
+                <LoadingComponent/>
+            )}
+
                 <div className='flex justify-between items-center'>
                     <div className='p-10 h-1/5'>
                         <div className='s-topic'>Sticky Notes</div>

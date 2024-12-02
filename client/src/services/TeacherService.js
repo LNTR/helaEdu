@@ -24,11 +24,7 @@ export const approveTeachers = (email) =>axios.put(APPROVE_TEACHERS_URL, email);
 export const getPendingTeachers = () => axios.get(GET_PENDING_USER_DETAILS_URL);
 export const promoteToModerator =(userId)=>axios.put(`${TEACHER_BASE_URL}/${userId}/promote`);
 export const declinePromoting =(userId)=>axios.put(`${TEACHER_BASE_URL}/${userId}/declinePromoting`);
-export const askingToPromote = (userId, assignedSubject) =>
-  axios.put(`${TEACHER_BASE_URL}/${userId}/askToPromote`, null, {
-    params: { assignedSubject },
-  });
-
+export const askingToPromote = (userId, assignedSubjects) =>axios.put(`${TEACHER_BASE_URL}/${userId}/askToPromote`, assignedSubjects); 
 export const listAllTeachersDetails = (pageNo)  =>axios.get(`${GET_TEACHER_DETAILS_URL}/${pageNo}`);
 export const editTeacherProfile = (formData, headers) =>axios.put(`${EDIT_TEACHER_PROFILE}`, formData, { headers });
 

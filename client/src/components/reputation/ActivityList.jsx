@@ -1,10 +1,52 @@
-import React from 'react'
+import React , {useState,useEffect} from 'react'
 import ReputationG from '@components/reputation/ReputationG'
 import VotesG from '@components/reputation/VotesG'
 import BronzeBadge from '@assets/icons/bronzeBadge.svg'
 import SilverBadge from '@assets/icons/silverBadge.svg'
 import GoldBadge from '@assets/icons/goldBadge.svg'
+import { listTeacherDetails } from '@services/TeacherService'
+import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader'
+
 export default function ActivityList() {
+const [teacherDetails, setTeacherDetails] = useState(null); 
+  const authHeader = useAuthHeader();
+  const headers = {
+    Authorization: authHeader,
+  };
+  useEffect(() => {
+    const fetchTeacherDetails = async () => {
+      try {
+        const response = await listTeacherDetails(headers);
+        setTeacherDetails(response.data); 
+        console.log(response);
+      } catch (error) {
+        console.error('Error fetching teacher details:', error);
+      }
+    };
+
+    fetchTeacherDetails();
+  }, []);
+  const [badgeCounts, setBadgeCounts] = useState({
+    Gold: 0,
+    Silver: 0,
+    Bronze: 0,
+  });
+  useEffect(() => {
+    if (teacherDetails?.badges?.length) {
+      const counts = teacherDetails.badges.reduce(
+        (acc, badge) => {
+          if (badge.badgeType === 'Gold') acc.Gold++;
+          if (badge.badgeType === 'Silver') acc.Silver++;
+          if (badge.badgeType === 'Bronze') acc.Bronze++;
+          return acc;
+        },
+        { Gold: 0, Silver: 0, Bronze: 0 }
+      );
+      setBadgeCounts(counts);
+    } else {
+      setBadgeCounts({ Gold: 0, Silver: 0, Bronze: 0 });
+    }
+  }, [teacherDetails]);
   return (
     <div className='mx-10 mt-10'>
         <div className='flex justify-start '>
@@ -59,30 +101,42 @@ export default function ActivityList() {
       </div>
 
       
-      <div  className='w-full mx-10'>
-            <p className='my-5'>Badges</p>
-            <div className='flex justify-start '>
-                <div className='rounded-xl w-1/3 h-56 shadow-xl  mx-7 '>
-                    <div className='flex justify-center items-center my-9 '>
-                        <img src={BronzeBadge} className='w-20 h-20 ' /><br></br>
-                       
-                    </div>
-                    <p className='text-center'>You don't have a gold badge yet. </p>
-                </div>
-                <div className='rounded-xl w-1/3 h-56 shadow-xl  mx-7'>
-                    <div className='flex justify-center items-center my-9'>
-                        <img src={SilverBadge} className='w-20 h-20 ' />
-                    </div>
-                    <p className='text-center'>You have 3 silver badges</p>
-                </div>
-                <div className='rounded-xl w-1/3 h-56 shadow-xl mx-7'>
-                    <div className=' flex justify-center items-center my-9 '>
-                        <img src={GoldBadge} className='w-20 h-20 ' />
-                    </div>
-                    <p className='text-center'>You have 2 bronze badges</p>
-                </div>
+      <div className='w-full mx-10'>
+        <p className='my-5'>Badges</p>
+        <div className='flex justify-start'>
+            <div className='rounded-xl w-1/3 h-56 shadow-xl mx-7'>
+            <div className='flex justify-center items-center my-9'>
+                <img src={GoldBadge} className='w-20 h-20' />
             </div>
-      </div>
+            <p className='text-center'>
+                {badgeCounts.Gold > 0
+                ? `You have ${badgeCounts.Gold} gold badge${badgeCounts.Gold > 1 ? 's' : ''}.`
+                : "You don't have a gold badge yet."}
+            </p>
+            </div>
+            <div className='rounded-xl w-1/3 h-56 shadow-xl mx-7'>
+            <div className='flex justify-center items-center my-9'>
+                <img src={SilverBadge} className='w-20 h-20' />
+            </div>
+            <p className='text-center'>
+                {badgeCounts.Silver > 0
+                ? `You have ${badgeCounts.Silver} silver badge${badgeCounts.Silver > 1 ? 's' : ''}.`
+                : "You don't have a silver badge yet."}
+            </p>
+            </div>
+            <div className='rounded-xl w-1/3 h-56 shadow-xl mx-7'>
+            <div className='flex justify-center items-center my-9'>
+                <img src={BronzeBadge} className='w-20 h-20' />
+            </div>
+            <p className='text-center'>
+                {badgeCounts.Bronze > 0
+                ? `You have ${badgeCounts.Bronze} bronze badge${badgeCounts.Bronze > 1 ? 's' : ''}.`
+                : "You don't have a bronze badge yet."}
+            </p>
+            </div>
+        </div>
+        </div>
+
     </div>
   )
 }

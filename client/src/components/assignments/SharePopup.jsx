@@ -24,7 +24,7 @@ function SharePopup({ closePopup ,assignmentId }) {
     <div className='fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 p-10'>
       <div className='bg-white rounded-lg p-6 '>
         <div className='flex justify-between mb-4'>
-          <div className='w-1/2 pr-4'>
+          <div className='w-full pr-4'>
             
 
             <div className=' p-2  mb-4'>
@@ -50,7 +50,7 @@ function SharePopup({ closePopup ,assignmentId }) {
             </div>
             
           </div>
-          <div className='w-1/2 pl-4'>
+          {/* <div className='w-1/2 pl-4'>
             <h2 className='text-3xl mb-4'>Invite students to your assignment</h2>
             <span className='text-xl text-blue '>We'll email them instructions and a link to access this assignemnt</span>
             <br></br>
@@ -91,7 +91,7 @@ function SharePopup({ closePopup ,assignmentId }) {
                 </div>
 
             
-          </div>
+          </div> */}
         </div>
         <button className='mt-4 text-white bg-blue p-3 text-xl ' onClick={closePopup}>
           Close

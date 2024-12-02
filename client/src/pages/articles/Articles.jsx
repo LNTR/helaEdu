@@ -6,14 +6,16 @@ import { getUserDetails } from "@/services/TeacherService";
 import { Link } from "react-router-dom";
 import banner from "@assets/img/subject_background.png";
 import ArticleHeadForAll from "@components/articles/ArticleHeadForAll";
+import LoadingComponent from "@components/common/LoadingComponent";
 
 const Articles = () => {
   const [articles, setArticles] = useState([]);
   const [filteredArticles, setFilteredArticles] = useState([]);
   const [visibleArticles, setVisibleArticles] = useState(8);
-
+  const [loadingState, setLoadingState] = useState(false);
   useEffect(() => {
     const fetchApprovedArticles = async () => {
+      setLoadingState(true); 
       try {
         const response = await approvedArticles();
         const articles = response.data;
@@ -35,6 +37,8 @@ const Articles = () => {
         setFilteredArticles(articlesWithUserDetails);
       } catch (error) {
         console.error(error);
+      } finally {
+        setLoadingState(false); 
       }
     };
 
@@ -82,7 +86,12 @@ const Articles = () => {
   return (
     <>
       <Header />
-      <div className="subject-catalog">
+      <div className={`subject-catalog `}>
+      {loadingState && (
+        <LoadingComponent/>
+      )}
+
+
         <img className="catalog-img" src={banner} alt="" />
         <div>
           <ArticleHeadForAll onSearch={handleSearch} />

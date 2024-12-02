@@ -37,6 +37,27 @@ export default function Summary() {
   const closeBadgeList = () => {
     setIsPopupOpen(false);
   };
+  const [badgeCounts, setBadgeCounts] = useState({
+    Gold: 0,
+    Silver: 0,
+    Bronze: 0,
+  });
+  useEffect(() => {
+    if (teacherDetails?.badges?.length) {
+      const counts = teacherDetails.badges.reduce(
+        (acc, badge) => {
+          if (badge.badgeType === 'Gold') acc.Gold++;
+          if (badge.badgeType === 'Silver') acc.Silver++;
+          if (badge.badgeType === 'Bronze') acc.Bronze++;
+          return acc;
+        },
+        { Gold: 0, Silver: 0, Bronze: 0 }
+      );
+      setBadgeCounts(counts);
+    } else {
+      setBadgeCounts({ Gold: 0, Silver: 0, Bronze: 0 });
+    }
+  }, [teacherDetails]);
 
   return (
     <div>
@@ -75,40 +96,43 @@ export default function Summary() {
           <p className="text-center px-10 text-2xl py-3">
             <b>Badges</b>
           </p>
+              {["Gold", "Silver", "Bronze"].map((badgeType) => {
+            const count = badgeCounts[badgeType] || 0; // Default to 0 if count doesn't exist
+            const badgeImage =
+              badgeType === "Gold"
+                ? GoldBadge
+                : badgeType === "Silver"
+                ? SilverBadge
+                : BronzeBadge;
 
-          <div className="rounded-xl bg-blue2 h-12 mx-4 my-3 flex items-center relative">
-            <div className="w-8 h-8 ml-3">
-              <img src={GoldBadge} alt="gold badge" />
-            </div>
-            <span className="ml-40 text-2xl">{teacherDetails?.badges?.gold ?? 0}</span>
-          </div>
-
-          <div className="rounded-xl bg-blue2 h-12 mx-4 my-3 flex items-center relative">
-            <div className="w-8 h-8 ml-3">
-              <img src={SilverBadge} alt="silver badge" />
-            </div>
-            <span className="ml-40 text-2xl">{teacherDetails?.badges?.silver ?? 0}</span>
-          </div>
-          <div className="rounded-xl bg-blue2 h-12 mx-4 my-3 flex items-center relative">
-            <div className="w-8 h-8 ml-3">
-              <img src={BronzeBadge} alt="bronze badge" />
-            </div>
-            <span className="ml-40 text-2xl">{teacherDetails?.badges?.bronze ?? 0}</span>
-          </div>
-          <div className="flex justify-end">
-            <p className="text-2xl">Next Badge</p>
-
-            <div
-              className="rounded-xl bg-black px-3 py-2 flex justify-between mx-5 cursor-pointer"
-              onClick={openBadgeList}
-            >
-              <div className="w-8 h-8 ml-1">
-                <img src={BronzeBadge} alt="next badge" />
+            return (
+              <div
+                key={badgeType}
+                className="rounded-xl bg-blue2 h-12 mx-4 my-3 flex items-center relative"
+              >
+                <div className="w-8 h-8 ml-3">
+                  <img src={badgeImage} alt={`${badgeType} badge`} />
+                </div>
+                <span className="ml-40 text-2xl">{count}</span>
               </div>
-              <span className="ml-5 text-xl text-white">Top Contributor</span>
+            );
+          })}
+
+        {/* <div className="flex justify-end">
+          <p className="text-2xl">Next Badge</p>
+
+          <div
+            className="rounded-xl bg-black px-3 py-2 flex justify-between mx-5 cursor-pointer"
+            onClick={openBadgeList}
+          >
+            <div className="w-8 h-8 ml-1">
+              <img src={BronzeBadge} alt="next badge" />
             </div>
+            <span className="ml-5 text-xl text-white">Top Contributor</span>
           </div>
-        </div>
+        </div> */}
+      </div>
+
 
         <div className="rounded-xl shadow-2xl p-10 w-96 h-96 mx-8">
           <div className="flex justify-center items-center my-9">

@@ -41,7 +41,9 @@ function Auth() {
             }}
           />
           <p>
-          Your ultimate self-study platform, designed to make learning engaging and effective. Start your journey to academic excellence today with HelaEdu!
+            Your ultimate self-study platform, designed to make learning
+            engaging and effective. Start your journey to academic excellence
+            today with HelaEdu!
           </p>
         </div>
       </div>

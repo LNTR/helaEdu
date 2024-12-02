@@ -32,7 +32,7 @@ def split_docs(documents, chunk_size=1000, chunk_overlap=200):
 
 def create_embeddings(chunks, type, grade, subject):
     storing_path=f"Chatbot/vectorstore/{grade}"
-    storing_path2=f"Chatbot/vectorstore"
+    storing_path2="Chatbot/vectorstore"
     embedding_model = load_embedding_model(model_path="all-MiniLM-L6-v2")
 
     os.makedirs(os.path.dirname(storing_path), exist_ok=True) 

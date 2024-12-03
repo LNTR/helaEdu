@@ -5,6 +5,7 @@ import Pagination from '@components/admin/Pagination';
 import TableRowSubscription from '@components/admin/TableRowSubscription';
 import { getSubscribersList } from '@services/AdminService';
 import { getStudentById } from '@services/StudentService';
+import LoadingComponent from '@components/common/LoadingComponent';
 
 export default function Subscription() {
   const [subscriptions, setSubscriptions] = useState([]);
@@ -51,7 +52,7 @@ export default function Subscription() {
   };
 
   if (loading) {
-    return <p>Loading...</p>;
+    return <LoadingComponent/>;
   }
 
   return (

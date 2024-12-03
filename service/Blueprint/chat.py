@@ -3,6 +3,7 @@ from utils import authenticate
 from firebase_admin import firestore
 from Models.Student import Student
 from Chatbot.main import *
+from Models.Quiz import Quiz
 
 chat = Blueprint("chat", __name__)
 # Look in version history for comments
@@ -68,14 +69,78 @@ def get_history():
 # @authenticate
 def get_quiz():
     request_payload = request.get_json(silent=True)
+    subjectId = request_payload["subjectId"]
+    subject = request_payload["subject"]
     grade = request_payload["grade"]
-    number = request_payload["number"]
-    quiz_response = quiz_gen(grade, number)
+    start = request_payload["start"]
+    end = request_payload["end"]
+    quiz_response = quiz_gen(subjectId, subject, grade, start, end)
+    q = Quiz()
+    q.quiz = quiz_response["quiz"]
+    q.subjectId = subjectId
+    q.subject = subject
+    q.grade = grade
+    q.status = "PENDING"
+    q.save()
+    print(q.id)
+    print(q.key)
+    quiz_response["quizId"] = q.id
     response_payload = {
         "response": quiz_response,
     }
 
+
+    
+
     return jsonify(response_payload)
+
+@chat.route("/regen", methods=["POST"])
+@chat.route("/regen/", methods=["POST"])
+# @authenticate
+def get_MCQ():
+    request_payload = request.get_json(silent=True)
+    subject = request_payload["subject"] 
+    grade = request_payload["grade"]
+    topic = request_payload["topic"]
+    quizId = request_payload["quizId"]
+    questionId = request_payload["questionId"]
+    # mcq = mcq_gen(subject, grade, topic)
+    mcq = [
+        {
+                "answer": "WVegetables",
+                "id": 1,
+                "options": [
+                    "Tea",
+                    "Rubber",
+                    "Vegetables",
+                    "Paddy"
+                ],
+                "question": "What is not a major export crop in Sri Lanka?"
+            },
+    ]
+    if mcq:  # Check if the list is not empty
+        quiz = Quiz()
+        question_data = mcq[0] 
+
+        if quiz.update_question(quizId, question_data["id"], question_data["question"], question_data["answer"], question_data["options"]):
+            response_payload = {
+                "response": question_data,
+            }
+            return jsonify(response_payload)
+        else:
+            return jsonify({"success": False, "message": "Failed to update question."}), 400
+
+
+@chat.route("/<quiz_id>/review", methods=["GET"])
+@chat.route("/<quiz_id>/review/", methods=["GET"])
+def approve_quiz(quiz_id):
+    quiz: Quiz = Quiz.collection.get(quiz_id)
+    quiz.reviewed()
+    quiz.update()
+    return jsonify({"message": "update complete"})
+
+
+   
 
 
 @chat.route("/embed", methods=["POST"])
@@ -89,10 +154,12 @@ def get_textbook():
     type = request_payload["type"]
     embeddings = embeddings_gen(grade, subject, toc, type)
     response_payload = {
-        "response": embeddings,
+        "response": "True",
     }
 
     return jsonify(response_payload)
+
+
 
 
 @chat.route("/contents", methods=["POST"])
@@ -127,3 +194,4 @@ def get_topics():
     }
 
     return jsonify(response_payload)
+

@@ -4,7 +4,7 @@ import NoteCard from '@components/notes/NoteCard';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
-import { getNotesByTeacherId } from '@services/NotesService';
+import {getNotesByUserId } from '@services/NotesService';
 import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
 import NoteView from '@components/notes/NoteView';
 import LoadingComponent from '@components/common/LoadingComponent';
@@ -25,7 +25,7 @@ const AllNotes = () => {
                 const headers = {
                     Authorization: authHeader,
                 };
-                const response = await getNotesByTeacherId(headers);
+                const response = await getNotesByUserId(headers);
                 console.log("API Response:", response);
                 setNotes(response.data || []);
             } catch (err) {
@@ -53,13 +53,12 @@ const AllNotes = () => {
     }
 
     return (
-        <div className="w-full">
+        <div className="min-h-screen">
             <Header />
-            <div className='px-64 mt-12 h-full w-full'>
-            {loadingState && (
-                <LoadingComponent/>
-            )}
-
+            <div className='px-64 mt-12 h-full w-full min-h-screen'>
+                {loadingState && (
+                    <LoadingComponent/>
+                )}
                 <div className='flex justify-between items-center'>
                     <div className='p-10 h-1/5'>
                         <div className='s-topic'>Sticky Notes</div>
@@ -75,6 +74,7 @@ const AllNotes = () => {
 
                 <div className='p-10 h-4/5 w-full grid grid-cols-3'>
                     {(Array.isArray(notes) ? notes : []).map((note, index) => (
+                       
                         <NoteCard 
                             key={index} 
                             topic={note.title} 
@@ -84,6 +84,7 @@ const AllNotes = () => {
                             onClick={() => handleCardClick(note)}
                         />
                     ))}
+                   
                 </div>
             </div>
             <Footer />

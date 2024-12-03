@@ -12,6 +12,7 @@ import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import { useDropzone } from "react-dropzone";
 
 export default function AddArticlesForm() {
+
   const coverImageInputRef = useRef(null);
   const additionalFilesInputRef = useRef(null);
   const handleUploadClick = (ref) => {
@@ -163,7 +164,7 @@ export default function AddArticlesForm() {
             </div>
             <div className="w-4/6 mw:w-2/3">
               <input
-                className="border border-blue rounded-2xl w-full h-20 hover:border-yellow"
+                className="border border-blue rounded-2xl w-full h-20 hover:border-yellow px-4"
                 type="text"
                 value={title}
                 onChange={handleTitle}

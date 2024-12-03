@@ -147,7 +147,7 @@ export default function ViewArticle({
                                 onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
                             />
                         </div>
-                        <div className='relative'>
+                        {/* <div className='relative'>
                             <FontAwesomeIcon
                                 icon={isMarked ? faBookmarkSolid : faBookmarkRegular}
                                 className='text-xl size-14'
@@ -156,7 +156,7 @@ export default function ViewArticle({
                                 onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
                                 onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
                             />
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </div>

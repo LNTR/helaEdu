@@ -9,14 +9,12 @@ import os
 from typing import List, Dict
 from langchain_openai import ChatOpenAI
 
-os.environ["TOKENIZERS_PARALLELISM"] = "false"
-os.environ["OPENAI_API_KEY"] = (
-    "sk-XTR_ACEcOmCAwv5kMsjyd3Jz65Xn24FEgx1yQbxk34T3BlbkFJHPQpYdsp__T_qZCQS8t4j51QEDcogVpKeJwIdXw48A"
-)
+os.environ["LANGCHAIN_TRACING_V2"] = "true"
+os.environ["LANGCHAIN_API_KEY"] = "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"
+os.environ["LANGCHAIN_ENDPOINT"]="https://api.smith.langchain.com"
+os.environ["LANGCHAIN_PROJECT"]="helaEdu"
 
-openai_api_key = os.getenv("OPENAI_API_KEY")
-# llm = ChatOpenAI(model="gpt-4o", temperature=0)
-llm = Ollama(model="llama3.1:8b", temperature=0)
+llm = Ollama(model="llama3.2:1b", temperature=0)
 
 def extract_text_from_page(pdf_file, page_number_list):
     # Open the PDF file in binary read mode

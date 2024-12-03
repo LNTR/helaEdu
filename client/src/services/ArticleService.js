@@ -11,6 +11,7 @@ const GET_COMMENTS_ARTICLES_URL=`${import.meta.env.VITE_REST_API_BASE_URL}/forum
 
 
 
+
 export const listArticles = () => axios.get(REST_API_BASE_URL);
 export const listArticlesByTeacher = (headers) =>
   axios.get(TEACHER_ARTICLE_URL, { headers });
@@ -59,9 +60,10 @@ export const getCommentById = (commentId) =>
   axios.get(`${GET_COMMENTS_ARTICLES_URL}/${commentId}`);
 
 export const deleteCommentByAuthor = (commentId,headers) =>
-  axios.put(`${GET_COMMENTS_ARTICLES_URL}/author/${commentId}`,{headers});
+  axios.put(`${GET_COMMENTS_ARTICLES_URL}/author/${commentId}`,{},{headers});
 
 export const deleteCommentByAdmin = (commentId) =>
   axios.put(`${GET_COMMENTS_ARTICLES_URL}/admin/${commentId}`);
 export const getCommentCountByArticleId =(articleId)=>axios.get(`${GET_COMMENTS_ARTICLES_URL}/${articleId}/commentCount`);
 export const getUpvoteCountByArticleId =(articleId)=>axios.get(`${REST_API_BASE_URL}/${articleId}/upvoteCount`);
+export const getTopArticles=()=>axios.get(`${REST_API_BASE_URL}/popular`);

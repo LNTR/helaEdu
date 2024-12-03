@@ -3,16 +3,29 @@ from fireo.fields import TextField
 
 
 class Subjects(Model):
+ 
+    coverImgRef  = TextField()
+    language   = TextField()
+    pdfRef  = TextField()
+    subjectId = TextField()
+    subjectName  = TextField() 
 
-    email = TextField()
-    firstName = TextField()
-    lastName = TextField()
-    noteId = TextField()
-    password = TextField()
-    regTimestamp = TextField()
-    role = TextField()
-    subscriptionId = TextField()
-    userId = TextField()
+    def getSubjects(subjectList):
+        subjects_details = []
+        for subject in subjectList:
+            subject_id = subject.replace("_", "-").replace("/", "_")
+            s = Subjects.collection.get(subject_id)
+            subjects_details.append(
+                    {
+                        "subjectId": s.subjectId,
+                        "subjectName": s.subjectName,
+                        "coverImgRef": s.coverImgRef,
+                    }
+            )
+            
+        return subjects_details
 
     class Meta:
-        collection_name = "students"
+        collection_name = "subjects"
+
+    

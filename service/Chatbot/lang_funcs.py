@@ -84,7 +84,7 @@ def create_embeddings(chunks, embedding_model, storing_path="Chatbot/vectorstore
     return vectorstore
 
 
-def load_vectorstore(embedding_model, storing_path="Chatbot/vectorstore/10"):
+def load_vectorstore(embedding_model, storing_path="Chatbot/vectorstore"):
 
     embeddings = load_embedding_model(embedding_model)
     vectorstore = FAISS.load_local(
@@ -119,9 +119,7 @@ def create_chain(history_aware_retriever, llm, qa_prompt):
 
 
 class ChatHistory(BaseChatMessageHistory, BaseModel):
-    """In memory implementation of chat message history."""
-
-    user_id: str
+    user_id: str 
     chat_id: str
     messages: List[BaseMessage] = Field(default_factory=list)
 

@@ -73,8 +73,8 @@ const ModeratorSidebar = (props) => {
               Reviewed Articles
             </Link>
             <Link
-              to="/reviewQuizList"
-              className={`text-2xl flex items-center p-4 rounded transition-colors duration-300 ${isActive("/reviewQuizList")
+              to="/reviewQuizHome"
+              className={`text-2xl flex items-center p-4 rounded transition-colors duration-300 ${isActive("/reviewQuizHome")
                 ? "bg-blue text-white"
                 : "hover:bg-gray-200 text-black"
                 }`}
@@ -92,7 +92,7 @@ const ModeratorSidebar = (props) => {
               <FontAwesomeIcon icon={faBook} className="mr-4" />
               Resources
             </Link> */}
-            <Link
+            {/* <Link
               to="/modNotifications"
               className={`text-2xl flex items-center p-4 rounded transition-colors duration-300 ${isActive("/modNotifications")
                 ? "bg-blue text-white"
@@ -101,7 +101,7 @@ const ModeratorSidebar = (props) => {
             >
               <FontAwesomeIcon icon={faBell} className="mr-4" />
               Notifications
-            </Link>
+            </Link> */}
             <Link
               to="/tProfile"
               className={`text-2xl flex items-center p-4 rounded transition-colors duration-300 ${isActive("/tProfile")
@@ -114,12 +114,12 @@ const ModeratorSidebar = (props) => {
             </Link>
           </div>
         </div>
-        <div>
+        {/* <div>
           <button className="text-2xl flex items-center p-4 rounded transition-colors duration-300 bg-white text-black hover:bg-gray-200 w-full">
             <FontAwesomeIcon icon={faSignOutAlt} className="mr-4" />
             Logout
           </button>
-        </div>
+        </div> */}
       </div>
     </>
 

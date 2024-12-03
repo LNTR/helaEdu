@@ -50,7 +50,7 @@ const ModeratorSidebar = () => {
             Articles
           </Link>
           <Link
-            to="/reviewQuizList"
+            to="/reviewQuizHome"
             className={`text-2xl flex items-center p-4 rounded transition-colors duration-300 ${
               isActive("/reports")
                 ? "bg-blue text-white"

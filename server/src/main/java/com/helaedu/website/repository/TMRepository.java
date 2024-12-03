@@ -3,6 +3,7 @@ package com.helaedu.website.repository;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
+import com.helaedu.website.entity.Article;
 import com.helaedu.website.entity.Student;
 import com.helaedu.website.entity.Teacher;
 import org.springframework.stereotype.Repository;

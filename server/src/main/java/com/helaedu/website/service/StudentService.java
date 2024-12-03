@@ -22,7 +22,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
@@ -368,21 +370,67 @@ public class StudentService {
                 .collect(Collectors.toList());
     }
 
-    public Map<String, Integer> getStudentsCountForReport(String startDate, String endDate) throws ExecutionException, InterruptedException {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate start = LocalDate.parse(startDate, formatter);
-        LocalDate end = LocalDate.parse(endDate, formatter);
+//    public Map<String, Integer> getStudentsCountForReport(String startDate, String endDate) throws ExecutionException, InterruptedException {
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+//        LocalDate start = LocalDate.parse(startDate, formatter);
+//        LocalDate end = LocalDate.parse(endDate, formatter);
+//
+//        List<Student> students = studentRepository.getAllStudents();
+//
+//        return students.stream()
+//                .filter(student -> {
+//                    LocalDate regDate = LocalDate.parse(student.getRegTimestamp(), formatter);
+//                    return (regDate.isEqual(start) || regDate.isAfter(start)) && (regDate.isEqual(end) || regDate.isBefore(end));
+//                })
+//                .collect(Collectors.groupingBy(
+//                        student -> LocalDate.parse(student.getRegTimestamp(), formatter).toString(),
+//                        Collectors.summingInt(student -> 1)
+//                ));
+//    }
+        public Map<String, Integer> getStudentsCountForReport(String startDate, String endDate) throws ExecutionException, InterruptedException {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            DateTimeFormatter isoFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSSX");
 
-        List<Student> students = studentRepository.getAllStudents();
+            LocalDate start;
+            LocalDate end;
 
-        return students.stream()
-                .filter(student -> {
-                    LocalDate regDate = LocalDate.parse(student.getRegTimestamp(), formatter);
-                    return (regDate.isEqual(start) || regDate.isAfter(start)) && (regDate.isEqual(end) || regDate.isBefore(end));
-                })
-                .collect(Collectors.groupingBy(
-                        student -> LocalDate.parse(student.getRegTimestamp(), formatter).toString(),
-                        Collectors.summingInt(student -> 1)
-                ));
-    }
+            try {
+                startDate = startDate.trim();
+                endDate = endDate.trim();
+                start = LocalDate.parse(startDate, formatter);
+                end = LocalDate.parse(endDate, formatter);
+            } catch (DateTimeParseException e) {
+                throw new IllegalArgumentException(
+                        "Invalid date format for startDate or endDate. Expected format: yyyy-MM-dd. Received startDate: "
+                                + startDate + ", endDate: " + endDate, e
+                );
+            }
+            List<Student> students = studentRepository.getAllStudents();
+            if (students == null || students.isEmpty()) {
+                throw new RuntimeException("No students found in the database.");
+            }
+            return students.stream()
+                    .filter(student -> {
+                        String regTimestamp = student.getRegTimestamp();
+                        if (regTimestamp == null) {
+                            System.out.println("Null registration timestamp for student: " + student.getUserId());
+                            return false;
+                        }
+                        try {
+
+                            LocalDate regDate = ZonedDateTime.parse(regTimestamp, isoFormatter).toLocalDate();
+                            return (regDate.isEqual(start) || regDate.isAfter(start)) &&
+                                    (regDate.isEqual(end) || regDate.isBefore(end));
+                        } catch (DateTimeParseException e) {
+                            System.out.println("Invalid timestamp format for student: " + student.getUserId());
+                            return false;
+                        }
+                    })
+                    .collect(Collectors.groupingBy(
+                            student -> ZonedDateTime.parse(student.getRegTimestamp(), isoFormatter).toLocalDate().toString(),
+                            Collectors.summingInt(student -> 1)
+                    ));
+        }
+
+
 }

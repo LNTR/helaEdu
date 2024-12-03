@@ -8,6 +8,7 @@ import AddArticleBtn from "@components/articles/AddArticleBtn";
 import ArticleHead from "@components/articles/ArticleHead";
 import { Link } from "react-router-dom";
 import banner from "@assets/img/subject_background.png";
+import LoadingComponent from "@components/common/LoadingComponent";
 
 export default function AddArticles() {
   const authHeader = useAuthHeader();
@@ -17,8 +18,10 @@ export default function AddArticles() {
   const [articles, setArticles] = useState([]);
   const [filteredArticles, setFilteredArticles] = useState([]);
   const [selectedStatus, setSelectedStatus] = useState("");
+  const [loadingState, setLoadingState] = useState(false);
 
   useEffect(() => {
+    setLoadingState(true); 
     listArticlesByTeacher(headers)
       .then((response) => {
         setArticles(response.data);
@@ -26,9 +29,12 @@ export default function AddArticles() {
       })
       .catch((error) => {
         console.error(error);
+      })
+      .finally(() => {
+        setLoadingState(false); 
       });
   }, []);
-
+  
   const handleStatusChange = (status) => {
     setSelectedStatus(status);
     if (status === "All") {
@@ -37,6 +43,38 @@ export default function AddArticles() {
       setFilteredArticles(articles.filter(article => article.status === status));
     }
   };
+  const handleSearch = (searchBy, query) => {
+    if (!query) {
+      setFilteredArticles(articles);
+      return;
+    }
+    const lowerCaseQuery = query.toLowerCase();
+    const filtered = articles.filter((article) => {
+      if (searchBy === "All") {
+        return (
+          article.title.toLowerCase().includes(lowerCaseQuery) ||
+          article.tags.some((tag) => tag.toLowerCase().includes(lowerCaseQuery)) ||
+          article.content.toLowerCase().includes(lowerCaseQuery) ||
+          `${article.firstName} ${article.lastName}`.toLowerCase().includes(lowerCaseQuery)
+        );
+      }
+      if (searchBy === "Author") {
+        return `${article.firstName} ${article.lastName}`.toLowerCase().includes(lowerCaseQuery);
+      }
+      if (searchBy === "Title") {
+        return article.title.toLowerCase().includes(lowerCaseQuery);
+      }
+      if (searchBy === "Tags") {
+        return article.tags.some((tag) => tag.toLowerCase().includes(lowerCaseQuery));
+      }
+      if (searchBy === "Description") {
+        return article.content.toLowerCase().includes(lowerCaseQuery);
+      }
+      return false;
+    });
+
+    setFilteredArticles(filtered);
+  };
 
   return (
     <>
@@ -44,8 +82,11 @@ export default function AddArticles() {
       <div className="subject-catalog">
         <img className="catalog-img" src={banner} alt="" />
         <div className="">
-          <ArticleHead onStatusChange={handleStatusChange}/>
+          <ArticleHead onStatusChange={handleStatusChange} onSearch={handleSearch}/>
           <div className="mx-44 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {loadingState && (
+              <LoadingComponent/>
+            )}
             {filteredArticles.map((article) => (
               <div key={article.articleId} className="p-2">
                 <Link to={`/articles/viewArticleMyself/${article.articleId}`}>

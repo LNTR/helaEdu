@@ -174,6 +174,35 @@ public class TeacherController {
             return new ResponseEntity<>("Error promoting teacher to moderator", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    @PutMapping("/{userId}/declinePromoting")
+    public ResponseEntity<Object> declinePromoting(@PathVariable String userId) throws ExecutionException, InterruptedException {
+        try {
+            String result = teacherService.declinePromoting(userId);
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            ValidationErrorResponse errorResponse = new ValidationErrorResponse();
+            errorResponse.addViolation("userId", e.getMessage());
+            return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        } catch (ExecutionException | InterruptedException e) {
+            return new ResponseEntity<>("Error declining teacher to moderator", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @PutMapping("/{userId}/askToPromote")
+    public ResponseEntity<Object> askToPromoteToModerator(
+            @PathVariable String userId,
+            @RequestBody List<String> assignedSubjects) throws ExecutionException, InterruptedException {
+
+        try {
+            String result = teacherService.askingPromoteToModerator(userId, assignedSubjects);
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            ValidationErrorResponse errorResponse = new ValidationErrorResponse();
+            errorResponse.addViolation("userId", e.getMessage());
+            return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        } catch (ExecutionException | InterruptedException e) {
+            return new ResponseEntity<>("Error asking to promote teacher to moderator", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
     @GetMapping("/articles")
     public ResponseEntity<List<ArticleDto>> getAllArticlesByTeacher(@RequestBody Map<String, String> requestBody) throws ExecutionException, InterruptedException {
@@ -220,4 +249,10 @@ public class TeacherController {
         Map<String, String> requestBody = RequestUtil.createEmailRequestBody(email);
         return getAllArticlesByTeacher(requestBody);
     }
+    @GetMapping("/topTeachers")
+    public ResponseEntity<List<TeacherDto>> getTopTeachers() throws ExecutionException, InterruptedException {
+        List<TeacherDto> teachers = teacherService.getTopTeachers();
+        return ResponseEntity.ok(teachers);
+    }
+
 }

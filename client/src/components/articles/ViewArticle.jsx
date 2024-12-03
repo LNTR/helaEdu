@@ -11,11 +11,12 @@ import Default from '@assets/img/articles/defaultArticle.jpg';
 import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
 import { addUpvote } from '@services/ArticleService';
 import { listTeacherDetails } from '@services/TeacherService';
+import { getAllDetailsForCurrentUser } from '@services/AuthService';
 
 export default function ViewArticle({
     articleId,
-    articleAuthorId, // Renamed for clarity
-    upvote,// This is the list of users who have upvoted
+    articleAuthorId, 
+    upvote,
     title,
     content,
     tags,
@@ -28,8 +29,10 @@ export default function ViewArticle({
 }) {
     const formattedDate = new Date(date).toLocaleDateString();
     const [isLiked, setIsLiked] = useState(false);
+    const [isDbLiked , setDbLiked] = useState(false);
     const [isMarked, setIsMarked] = useState(false);
-    const [loggedInUserId, setLoggedInUserId] = useState(null); 
+    const [loggedInUserId, setLoggedInUserId] = useState(null);
+    const [loggedInUserEmail, setLoggedInUserEmail] = useState(null); 
     const [upvoteCount, setUpvoteCount] = useState(upvote.length); 
     const authHeader = useAuthHeader();
     const headers = {
@@ -40,11 +43,16 @@ export default function ViewArticle({
     useEffect(() => {
         const fetchUserData = async () => {
             try {
-                const response = await listTeacherDetails(headers);
+                const response = await getAllDetailsForCurrentUser(headers);
                 const userId = response.data.userId;
+                const userEmail = response.data.userEmail;
+                if(upvote.includes(userEmail)){
+                    setDbLiked(true);
+                }
                 setLoggedInUserId(userId);
+                setLoggedInUserEmail(userEmail);
                
-                const isUserLiked = upvote.includes(userId);
+                const isUserLiked = upvote.includes(loggedInUserEmail);
                 setIsLiked(isUserLiked);
             } catch (error) {
                 console.error('Failed to fetch user details:', error);
@@ -62,21 +70,20 @@ export default function ViewArticle({
         }
         try {
             if (isLiked) {
-                // If already liked, remove upvote
                 await addUpvote(articleId, headers);
                 setIsLiked(false);
-                setUpvoteCount((prevCount) => prevCount - 1); // Decrease upvote count
+                setUpvoteCount((prevCount) => prevCount - 1);
             } else {
-                // If not liked, add upvote
                 await addUpvote(articleId, headers);
                 setIsLiked(true);
-                setUpvoteCount((prevCount) => prevCount + 1); // Increase upvote count
+                setUpvoteCount((prevCount) => prevCount + 1); 
             }
+           
         } catch (error) {
             console.error('Failed to toggle upvote:', error);
         }
     };
-    // Handle bookmark toggle (for future expansion)
+   
     const toggleMark = () => {
         setIsMarked(!isMarked);
     };
@@ -127,14 +134,14 @@ export default function ViewArticle({
                     </div>
                     <div className='flex justify-start'>
                         <div className='relative'>
-                            {/* Display the upvote count */}
+                          
                             <span className="absolute bottom-10 right-9 translate-x-1/2 translate-y-1/2 text-xs bg-black text-white rounded-full w-6 h-6 flex items-center justify-center">
                                 {upvoteCount}
                             </span>
                             <FontAwesomeIcon
-                                icon={isLiked ? faThumbsUpSolid : faThumbsUpRegular}
+                                icon={isLiked || isDbLiked ? faThumbsUpSolid : faThumbsUpRegular}
                                 className='text-xl  size-14 mx-10 relative'
-                                style={{ color: isLiked ? "blue" : "gray", cursor: 'pointer' }}
+                                style={{ color: isLiked  || isDbLiked ?  "blue" : "gray", cursor: 'pointer' }}
                                 onClick={toggleLike}
                                 onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
                                 onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}

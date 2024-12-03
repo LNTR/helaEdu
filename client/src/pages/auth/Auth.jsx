@@ -3,7 +3,7 @@ import { LogIn, SignUp } from "@components/auth";
 import { useLocation, useNavigate } from "react-router-dom";
 import logo from "@assets/icons/hela-edu-white-text.svg";
 import rightBanner from "@assets/img/hero-banner.svg";
-
+import LoadingComponent from "@components/common/LoadingComponent";
 function Auth() {
   let location = useLocation();
   let navigator = useNavigate();
@@ -11,12 +11,17 @@ function Auth() {
   let isLoginAction = location.state ? location.state.isLoginAction : true;
 
   return (
+    // <div>
+      
     <div className={`auth ${loadingState ? "loading-body" : ""}`}>
-      <span
+      {/* <span
         className={`loading loading-dots loading-lg loading-span ${
           loadingState ? "loading-span" : "no-display"
         }`}
-      ></span>
+      ></span> */}
+       {loadingState && (
+              <LoadingComponent/>
+            )}
       {isLoginAction ? (
         <LogIn setLoadingState={setLoadingState} />
       ) : (
@@ -36,7 +41,9 @@ function Auth() {
             }}
           />
           <p>
-          Your ultimate self-study platform, designed to make learning engaging and effective. Start your journey to academic excellence today with HelaEdu!
+            Your ultimate self-study platform, designed to make learning
+            engaging and effective. Start your journey to academic excellence
+            today with HelaEdu!
           </p>
         </div>
       </div>

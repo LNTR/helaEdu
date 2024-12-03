@@ -24,3 +24,4 @@ export const getCommentsBySubjectId =(subjectId)=>axios.get(`${REST_API_BASE_URL
  
 export const addCommentForForum = (comment, headers) =>
   axios.post(ADD_COMMENTS_SUBJECT_URL, comment, { headers }); 
+export const getSubjectById = (subjectId) => axios.get(`${REST_API_BASE_URL}/${subjectId}`);

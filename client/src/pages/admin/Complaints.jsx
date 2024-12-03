@@ -8,6 +8,7 @@ import { getCommentById } from "@services/ArticleService";
 import { getUserDetails } from "@services/TeacherService";
 import { listComplaints } from "@services/AdminService";
 import Sort from "@components/complaints/Sort";
+import LoadingComponent from "@components/common/LoadingComponent";
 
 const Complaints = () => {
   const [complaints, setComplaints] = useState([]);
@@ -16,9 +17,10 @@ const Complaints = () => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedStatus, setSelectedStatus] = useState("All");
   const rowsPerPage = 7;
-
+  const [loadingState,setLoadingState] =useState(false);
   useEffect(() => {
     const fetchData = async () => {
+      setLoadingState(true);
       try {
         const complaintsList = await listComplaints();
         const complaintsArray = complaintsList.data;
@@ -40,6 +42,8 @@ const Complaints = () => {
         setFilteredComplaints(complaintsWithDetails); // Initialize filtered complaints
       } catch (error) {
         console.error("Error fetching data:", error);
+      }finally{
+        setLoadingState(false);
       }
     };
 
@@ -49,12 +53,10 @@ const Complaints = () => {
   useEffect(() => {
     let filtered = [...complaints];
 
-    // Filter by status
     if (selectedStatus !== "All") {
       filtered = filtered.filter((complaint) => complaint.status === selectedStatus);
     }
 
-    // Sort by date
     if (selectedDate) {
       filtered = filtered.filter((complaint) =>
         new Date(complaint.publishedTimestamp).toDateString() === selectedDate.toDateString()
@@ -96,6 +98,9 @@ const Complaints = () => {
           </div>
           <div className="content-wrapper">
             <h1 className="mx-32 my-14">Complaints</h1>
+            {loadingState?
+              <LoadingComponent/> :null
+            }
             <Sort onDateChange={setSelectedDate} onStatusChange={setSelectedStatus} />
             <TableRowHeaderC />
             <div>{currentRows}</div>

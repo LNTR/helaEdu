@@ -17,14 +17,12 @@ public class SubjectNoteRepository {
         documentReference .set(subjectNote);
         return subjectNote.getSubjectNoteId();
     }
-
     public List<SubjectNote> getStudentSubjectNotesByEmail(String email) throws ExecutionException, InterruptedException {
         Firestore dbFirestore = FirestoreClient.getFirestore();
         CollectionReference subjectNotesCollection = dbFirestore.collection("subjectNotes");
         ApiFuture<QuerySnapshot> future = subjectNotesCollection.whereEqualTo("email", email).get();
         return future.get().toObjects(SubjectNote.class);
     }
-
     public SubjectNote getStudentSubjectNoteBySubjectId(String email, String subjectId) throws ExecutionException, InterruptedException {
         Firestore dbFirestore = FirestoreClient.getFirestore();
         CollectionReference subjectNotesCollection = dbFirestore.collection("subjectNotes");

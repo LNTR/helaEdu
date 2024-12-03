@@ -87,12 +87,26 @@ public class TMController {
         Map<String, String> requestBody = RequestUtil.createEmailRequestBody(email);
         return getAllNotesByTM(requestBody);
     }
+
     @GetMapping("/notes")
     public ResponseEntity<List<NoteDto>> getAllNotesByTM(@RequestBody Map<String, String> requestBody) throws ExecutionException, InterruptedException {
         String email = requestBody.get("email");
         TeacherDto teacherDto = tmService.getTMByEmail(email);
         List<NoteDto> notes = noteService.getNotesByUser(teacherDto.getUserId());
         return ResponseEntity.ok(notes);
+    }
+    @GetMapping("/me/reviewedArticles")
+    public ResponseEntity<List<ArticleDto>> getCurrentTMReviewedArticles() throws ExecutionException, InterruptedException {
+        String email = UserUtil.getCurrentUserEmail();
+        Map<String, String> requestBody = RequestUtil.createEmailRequestBody(email);
+        return getAllReviewedArticlesByTM(requestBody);
+    }
+    @GetMapping("/reviewedArticles")
+    public ResponseEntity<List<ArticleDto>> getAllReviewedArticlesByTM(@RequestBody Map<String, String> requestBody) throws ExecutionException, InterruptedException {
+        String email = requestBody.get("email");
+        TeacherDto teacherDto = tmService.getTMByEmail(email);
+        List<ArticleDto> articles = articleService.getReviewedArticlesByUser(teacherDto.getUserId());
+        return ResponseEntity.ok(articles);
     }
 
     @PostMapping("/deleteProfilePicture")
@@ -175,6 +189,7 @@ public class TMController {
         }
         return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
     }
+
 
 
 

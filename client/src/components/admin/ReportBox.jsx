@@ -8,7 +8,7 @@ export default function ReportBox() {
   const [reportDescription, setReportDescription] = useState("");
 
   const [reportType, setReportType] = useState("Subscriptions");
-  const [userType, setUserType] = useState("Student"); // Default to "Student" for subscriptions
+  const [userType, setUserType] = useState("Student"); 
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 

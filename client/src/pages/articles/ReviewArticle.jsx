@@ -9,6 +9,7 @@ import Default from '@assets/img/articles/defaultArticle.jpg';
 import HTMLReactParser from 'html-react-parser';
 import Sidebar from '@components/moderator_com/ModeratorSidebar';
 import { getUserDetails } from '@services/TeacherService';
+import LoadingComponent from '@components/common/LoadingComponent';
 
 export default function ReviewArticle() {
   const { articleId } = useParams();
@@ -17,9 +18,10 @@ export default function ReviewArticle() {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeclineModalOpen, setIsDeclineModalOpen] = useState(false);
-
+  const [loadingState,setLoadingState]=useState(false);
   useEffect(() => {
     const fetchArticle = async () => {
+      setLoadingState(true);
       try {
         const response = await getArticleById(articleId);
         const articleData = response.data;
@@ -34,6 +36,8 @@ export default function ReviewArticle() {
         });
       } catch (error) {
         console.error(error);
+      }finally{
+        setLoadingState(false);
       }
     };
 
@@ -41,6 +45,7 @@ export default function ReviewArticle() {
   }, [articleId]);
 
   const approve = async () => {
+    setLoadingState(false);
     try {
       const response = await approveArticle(articleId);
       console.log("Article approved:", response.data);
@@ -50,10 +55,13 @@ export default function ReviewArticle() {
         "Error approving article:",
         error.response ? error.response.data : error.message
       );
+    }finally{
+      setLoadingState(true);
     }
   };
 
   const reject = async () => {
+    setLoadingState(false);
     try {
       const response = await rejectArticle(articleId, rejectReason);
       console.log("Article rejected:", response.data);
@@ -63,11 +71,13 @@ export default function ReviewArticle() {
         "Error rejecting article:",
         error.response ? error.response.data : error.message
       );
+    }finally{
+      setLoadingState(true);
     }
   };
 
   if (!article) {
-    return <div>Loading...</div>;
+    return <LoadingComponent/>;
   }
 
   const openModal = () => setIsModalOpen(true);
@@ -83,6 +93,10 @@ export default function ReviewArticle() {
     <>
       <Header />
       <div className="dashboard">
+      {loadingState && (
+        <LoadingComponent/>
+      )}
+
         <div className="dashboard-wrapper mb-9">
           <div className="sidebar-wrapper">
             <Sidebar />

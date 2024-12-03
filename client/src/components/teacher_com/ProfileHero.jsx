@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState ,useEffect} from 'react';
 import profile from "@assets/img/articles/profile.jpg";
 import cover from "@assets/img/articles/bannerP.jpg";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -9,7 +9,10 @@ import { useNavigate } from 'react-router-dom';
 import Profile from "@assets/img/articles/profile.jpg"
 import SilverBadge from "@assets/icons/silverBadge.svg"
 import GoldBadge from "@assets/icons/goldBadge.svg"
-export default function ProfileHero({ email, firstName ,lastName,profileImg}) {
+import BronzeBadge from "@assets/icons/bronzeBadge.svg"
+import ModeratorRequestNotification from '@components/teacher_com/ModeratorRequestNotification';
+
+export default function ProfileHero({ userId,email, firstName ,lastName,profileImg,assignedSubject,upgradedStatus,badges}) {
 
   const [profileImage, setProfileImage] = useState(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -52,6 +55,26 @@ export default function ProfileHero({ email, firstName ,lastName,profileImg}) {
   const handleClosePopup = () => {
     setIsPopupOpen(false);
   };
+  const [badgeCounts, setBadgeCounts] = useState({
+    Gold: 0,
+    Silver: 0,
+    Bronze: 0,
+  });
+  useEffect(() => {
+    if (badges) {
+      const counts = badges.reduce(
+        (acc, badge) => {
+          if (badge.badgeType === "Gold") acc.Gold++;
+          if (badge.badgeType === "Silver") acc.Silver++;
+          if (badge.badgeType === "Bronze") acc.Bronze++;
+          return acc;
+        },
+        { Gold: 0, Silver: 0, Bronze: 0 }
+      );
+      setBadgeCounts(counts);
+    }
+  }, [badges]);
+  
 
   return (
     <div>
@@ -118,6 +141,11 @@ export default function ProfileHero({ email, firstName ,lastName,profileImg}) {
           <div className='absolute flex items-center justify-center rounded-full w-10 h-10 p-2 bottom-5 top-50 left-50 right-7 bg-yellow'>
             <FontAwesomeIcon icon={faPencil} className='size-6' />
           </div>
+          <div className='absolute flex items-center justify-center p-2 bottom-40 top-0 left-50 right-7 '>
+            {upgradedStatus =="REQUESTED" ?
+              <ModeratorRequestNotification assignedSubject={assignedSubject} userId={userId}/> :null
+            }
+          </div>
         </div>
         <div className="absolute top-3/4 left-32 rounded-full w-60 h-60">
           <div className='relative'>
@@ -135,15 +163,32 @@ export default function ProfileHero({ email, firstName ,lastName,profileImg}) {
         <div className='absolute left-96 my-6 mx-10'>
           <h1 className='text-5xl'>{firstName} {lastName}</h1>
           <p className='text-3xl'>Teacher</p>
-          <div className='flex justify-start'>
-            <div className='relative rounded-full w-16 h-16 '>
-              <img src={SilverBadge}/>
-              <div className='absolute bottom-0 right-1 rounded-full w-6 h-5 px-1 bg-yellow'><p className='text-sm'>x2</p></div>
-            </div>
-            <div className='relative rounded-full w-16 h-16  mx-6'>
-              <img src={GoldBadge}/>
-              <div className='absolute bottom-0 right-1 rounded-full w-6 h-5 px-1 bg-yellow'><p className='text-sm'>x3</p></div>
-            </div>
+          <div className="flex justify-start">
+            {Object.entries(badgeCounts).map(([badgeType, count]) => {
+              if (count > 0) {
+                
+                const badgeImage =
+                  badgeType === "Gold"
+                    ? GoldBadge
+                    : badgeType === "Silver"
+                    ? SilverBadge
+                    : badgeType ==="bronze"
+                    ? BronzeBadge : null
+                    ;
+
+                return (
+                  badgeImage && (
+                    <div key={badgeType} className="relative rounded-full w-16 h-16 mx-3">
+                      <img src={badgeImage} alt={`${badgeType} Badge`} />
+                      <div className="absolute bottom-0 right-1 rounded-full w-6 h-5 px-1 bg-yellow flex items-center justify-center">
+                        <p className="text-sm">{`x${count}`}</p>
+                      </div>
+                    </div>
+                  )
+                );
+              }
+              return null;
+            })}
           </div>
         </div>
       </div>

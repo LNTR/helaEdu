@@ -291,4 +291,121 @@ public class AssignmentService {
         assignment.getStudentMarks().put(userId, studentMarks);
         assignmentRepository.updateAssignment(assignmentId, assignment);
     }
+
+    public AssignmentDto getAssignmentReview(String assignmentId, String studentId) throws ExecutionException, InterruptedException {
+        Assignment assignment = assignmentRepository.getAssignmentById(assignmentId);
+
+        AssignmentDto assignmentDto = new AssignmentDto(
+                assignment.getAssignmentId(),
+                assignment.getTitle(),
+                assignment.getInstructions(),
+                assignment.getTotalTime(),
+                assignment.isStarted(),
+                assignment.getStudentMarks(),
+                assignment.getStudentRemainingTimes(),
+                assignment.getPublishedTimestamp(),
+                assignment.getEndedTimestamp(),
+                assignment.getUserId(),
+                assignment.getQuizzes()
+        );
+
+        assignmentDto.getQuizzes().forEach(question -> {
+            Map<String, List<String>> givenAnswers = question.getGivenAnswers();
+            question.setGivenAnswers(Map.of(studentId, givenAnswers.get(studentId)));
+        });
+
+        return assignmentDto;
+    }
+
+    public Map<String, Double> getStudentsWithZeroRemainingTime(String assignmentId) throws ExecutionException, InterruptedException {
+        Assignment assignment = assignmentRepository.getAssignmentById(assignmentId);
+
+        if (assignment == null) {
+            throw new IllegalArgumentException("Assignment not found");
+        }
+
+        Map<String, Long> remainingTimes = assignment.getStudentRemainingTimes();
+        Map<String, Double> studentMarks = assignment.getStudentMarks();
+
+        Map<String, Double> filteredStudents = new HashMap<>();
+        remainingTimes.forEach((studentId, time) -> {
+            if (time == 0L && studentMarks.containsKey(studentId)) {
+                filteredStudents.put(studentId, studentMarks.get(studentId));
+            }
+        });
+
+        return filteredStudents;
+    }
+
+    public void studentFinishAssignment(String assignmentId, String studentId) throws ExecutionException, InterruptedException {
+        Assignment assignment = assignmentRepository.getAssignmentById(assignmentId);
+        if (assignment != null) {
+            if (!assignment.isStarted()) {
+                throw new IllegalArgumentException("Assignment has not started yet.");
+            }
+
+            Map<String, Long> studentRemainingTimes = assignment.getStudentRemainingTimes();
+            if (studentRemainingTimes != null && studentRemainingTimes.containsKey(studentId)) {
+                studentRemainingTimes.put(studentId, 0L);
+            } else {
+                throw new IllegalArgumentException("Student has not started the assignment.");
+            }
+
+            double totalMarks = 0;
+
+            List<AssignmentQuestion> questions = assignment.getQuizzes();
+
+            for (AssignmentQuestion question : questions) {
+                Map<String, List<String>> givenAnswersMap = question.getGivenAnswers();
+                if (givenAnswersMap != null) {
+                    List<String> studentAnswers = givenAnswersMap.get(studentId);
+                    if (studentAnswers != null) {
+                        List<String> correctAnswers = question.getCorrectAnswers();
+                        int marks = question.getMarks();
+
+                        if (studentAnswers.equals(correctAnswers)) {
+                            totalMarks += marks;
+                        }
+                    }
+                }
+            }
+
+            Map<String, Double> studentMarks = assignment.getStudentMarks();
+            if (studentMarks == null) {
+                studentMarks = new HashMap<>();
+                assignment.setStudentMarks(studentMarks);
+            }
+            studentMarks.put(studentId, totalMarks);
+
+            assignmentRepository.updateAssignment(assignmentId, assignment);
+        } else {
+            throw new IllegalArgumentException("Assignment not found.");
+        }
+    }
+
+    public List<AssignmentDto> getCompletedAssignmentsByStudent(String studentId) throws ExecutionException, InterruptedException {
+        List<Assignment> allAssignments = assignmentRepository.getAllAssignments();
+        List<AssignmentDto> assignmentsWithStudentMarks = new ArrayList<>();
+
+        for (Assignment assignment : allAssignments) {
+            Map<String, Double> studentMarks = assignment.getStudentMarks();
+            if (studentMarks != null && studentMarks.containsKey(studentId)) {
+                AssignmentDto assignmentDto = new AssignmentDto(
+                        assignment.getAssignmentId(),
+                        assignment.getTitle(),
+                        assignment.getInstructions(),
+                        assignment.getTotalTime(),
+                        assignment.isStarted(),
+                        assignment.getStudentMarks(),
+                        assignment.getStudentRemainingTimes(),
+                        assignment.getPublishedTimestamp(),
+                        assignment.getEndedTimestamp(),
+                        assignment.getUserId(),
+                        assignment.getQuizzes()
+                );
+                assignmentsWithStudentMarks.add(assignmentDto);
+            }
+        }
+        return assignmentsWithStudentMarks;
+    }
 }

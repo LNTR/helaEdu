@@ -12,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
@@ -50,6 +51,10 @@ public class ModeratorService {
                 false,
                 null,
                 teacherDto.getPreferredSubjects(),
+                null,
+                0,
+                new ArrayList<>(),
+                null,
                 null
         );
         teacherDto.setUserId(moderator.getUserId());
@@ -97,7 +102,11 @@ public class ModeratorService {
                                 moderator.isApproved(),
                                 moderator.getAbout(),
                                 moderator.getPreferredSubjects(),
-                                moderator.getSchool()
+                                moderator.getSchool(),
+                                moderator.getPoints(),
+                                new ArrayList<>(),
+                                moderator.getAssignedSubjects(),
+                                moderator.getUpgradedStatus()
                         )
                 )
                 .collect(Collectors.toList());
@@ -121,7 +130,11 @@ public class ModeratorService {
                         moderator.isApproved(),
                         moderator.getAbout(),
                         moderator.getPreferredSubjects(),
-                        moderator.getSchool()
+                        moderator.getSchool(),
+                        moderator.getPoints(),
+                        moderator.getBadges(),
+                        moderator.getAssignedSubjects(),
+                        moderator.getUpgradedStatus()
                 )
         ).collect(Collectors.toList());
     }
@@ -144,7 +157,11 @@ public class ModeratorService {
                     moderator.isApproved(),
                     moderator.getAbout(),
                     moderator.getPreferredSubjects(),
-                    moderator.getSchool()
+                    moderator.getSchool(),
+                    moderator.getPoints(),
+                    moderator.getBadges(),
+                    moderator.getAssignedSubjects(),
+                    moderator.getUpgradedStatus()
             );
         }
         return null;
@@ -167,7 +184,11 @@ public class ModeratorService {
                     moderator.isApproved(),
                     moderator.getAbout(),
                     moderator.getPreferredSubjects(),
-                    moderator.getSchool()
+                    moderator.getSchool(),
+                    moderator.getPoints(),
+                    moderator.getBadges(),
+                    moderator.getAssignedSubjects(),
+                    moderator.getUpgradedStatus()
             );
         }
         return null;

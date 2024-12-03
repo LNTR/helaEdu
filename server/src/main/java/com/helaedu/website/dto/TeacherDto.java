@@ -1,5 +1,6 @@
 package com.helaedu.website.dto;
 
+import com.helaedu.website.entity.Badge;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
@@ -7,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -37,4 +39,9 @@ public class TeacherDto {
     private String about;
     private ArrayList<String> preferredSubjects;
     private String school;
+    private int points;
+    private ArrayList<Badge> badges;
+    private List<String> assignedSubjects;
+    private String UpgradedStatus;
+
 }

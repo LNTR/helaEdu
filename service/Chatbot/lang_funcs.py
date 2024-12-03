@@ -32,6 +32,7 @@ from langchain_core.runnables import (
     RunnableLambda,
     ConfigurableFieldSpec,
 )
+
 project_id = "helaedu-website"
 
 source = open("./config/firebase-service-account.json")
@@ -44,19 +45,21 @@ cred = credentials.Certificate(info)
 app = firebase_admin.initialize_app(cred)
 db = firestore.client()
 
+
 def generate_chat_id():
-    #generates a unique chat id
-    chat_id = str(uuid.uuid4())  
+    # generates a unique chat id
+    chat_id = str(uuid.uuid4())
     return chat_id
 
-#load the PDF file
+
+# load the PDF file
 def load_pdf_data(file_path):
     loader = PyMuPDFLoader(file_path=file_path)
     docs = loader.load()
     return docs
 
 
-#splitting the documents into several chunks
+# splitting the documents into several chunks
 def split_docs(documents, chunk_size=1000, chunk_overlap=200):
     text_splitter = RecursiveCharacterTextSplitter(
         chunk_size=chunk_size, chunk_overlap=chunk_overlap
@@ -70,9 +73,7 @@ def load_embedding_model(model_path, normalize_embedding=True):
     return HuggingFaceEmbeddings(
         model_name=model_path,
         model_kwargs={"device": "cpu"},
-        encode_kwargs={
-            "normalize_embeddings": normalize_embedding  
-        },
+        encode_kwargs={"normalize_embeddings": normalize_embedding},
     )
 
 
@@ -125,36 +126,43 @@ class ChatHistory(BaseChatMessageHistory, BaseModel):
     def add_messages(self, messages: List[BaseMessage]) -> None:
         """Add a list of messages to the store"""
         user_id = self.user_id
-        chat_id = self.chat_id  
+        chat_id = self.chat_id
         self.messages.extend(messages)
-        message_contents = [{'content': message.content, 'type': message.type} for message in self.messages]
-        
+        message_contents = [
+            {"content": message.content, "type": message.type}
+            for message in self.messages
+        ]
+
         try:
-        # Save to Firestore
-            db.collection("ChatHistory").document(chat_id).set({"userId": user_id,"messages": message_contents})
+            # Save to Firestore
+            db.collection("ChatHistory").document(chat_id).set(
+                {"userId": user_id, "messages": message_contents}
+            )
         except Exception as e:
             print(f"Error saving to Firestore: {e}")
 
     def clear(self) -> None:
         self.messages = []
 
+
 store = {}
 
-def get_session_history(
-    user_id: str, conversation_id: str
-) -> BaseChatMessageHistory:
+
+def get_session_history(user_id: str, conversation_id: str) -> BaseChatMessageHistory:
 
     if (user_id, conversation_id) not in store:
-        store[(user_id, conversation_id)] = ChatHistory(user_id=user_id, chat_id=conversation_id)
+        store[(user_id, conversation_id)] = ChatHistory(
+            user_id=user_id, chat_id=conversation_id
+        )
 
-    
     return store[(user_id, conversation_id)]
 
+
 def create_conversational_chain(rag_chain, session_id):
-    
+
     return RunnableWithMessageHistory(
         rag_chain,
-        get_session_history= get_session_history,
+        get_session_history=get_session_history,
         input_messages_key="input",
         history_messages_key="chat_history",
         output_messages_key="answer",
@@ -178,18 +186,19 @@ def create_conversational_chain(rag_chain, session_id):
         ],
     )
 
+
 def retrieve_history(session_id):
     doc_ref = db.collection("ChatHistory").document(session_id)
     history = doc_ref.get()
     document_data = history.to_dict()
-    messages = document_data.get('messages', []) 
+    messages = document_data.get("messages", [])
     if messages:
         print(f"Document data: {messages}")
         return messages
     else:
         print("No such document!")
         return None
-   
+
 
 class HumanMessage:
     def __init__(self, content):
@@ -206,6 +215,7 @@ class AIMessage:
     def to_dict(self):
         return {"type": "ai", "content": self.content}
 
+
 def serialize_chat_history(chat_history):
     serialized_chat_history = []
     for message in chat_history:
@@ -214,6 +224,7 @@ def serialize_chat_history(chat_history):
         elif isinstance(message, ImportedAIMessage):
             serialized_chat_history.append(AIMessage(message.content).to_dict())
     return serialized_chat_history
+
 
 def get_references(context):
     references = []
@@ -232,7 +243,9 @@ def get_response(query, chain, user_session_id, user_id):
     # Getting response from chain
     response = chain.invoke(
         {"input": query},
-        config={"configurable": {"user_id": user_id, "conversation_id": user_session_id}},
+        config={
+            "configurable": {"user_id": user_id, "conversation_id": user_session_id}
+        },
     )
 
     return response

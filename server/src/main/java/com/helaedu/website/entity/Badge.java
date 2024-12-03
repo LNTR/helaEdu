@@ -10,9 +10,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Badge {
-    private String badgeId;
-    private String name;
-    private String description;
-    private String imageUrl;
+    private String badgeName;
+    private String badgeType;
     private String userType;
 }

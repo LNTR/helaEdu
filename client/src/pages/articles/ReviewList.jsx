@@ -1,27 +1,34 @@
 import React, { useState, useEffect } from "react";
 import Header from "@components/common/Header";
 import ArticleCard from "@components/articles/ArticleCard";
-import { pendingArticles } from "@services/ArticleService";
+import { pendingArticlesByMod } from "@services/ArticleService";
 import { getUserDetails } from "@services/TeacherService";
 import { Link } from "react-router-dom";
 import Sort from "@components/articles/Sort";
 import Sidebar from "@components/moderator_com/ModeratorSidebar";
+import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 
 export default function reviewList() {
-  const [articles, setArticles] = useState([]); // Initialize articles state
+
+  const authHeader = useAuthHeader();
+  const headers = {
+    Authorization: authHeader,
+  };
+  const [filteredArticles, setFilteredArticles] = useState([]);
+  const [articles, setArticles] = useState([]); 
   const [sidebar, setSidebar] = useState(false);
 
   useEffect(() => {
     const fetchApprovedArticles = async () => {
       try {
-        const response = await pendingArticles();
+        const response = await pendingArticlesByMod(headers);
         const articles = response.data;
         console.log(articles);
 
         const articlesWithUserDetails = await Promise.all(
           articles.map(async (article) => {
             console.log(article.userId);
-            const userResponse = await getUserDetails(article.userId); // User ID is passed here
+            const userResponse = await getUserDetails(article.userId); 
             const userDetails = userResponse.data;
             return {
               ...article,
@@ -40,7 +47,7 @@ export default function reviewList() {
 
     fetchApprovedArticles();
   }, []);
-
+  
   return (
     <>
       <Header />
@@ -54,7 +61,7 @@ export default function reviewList() {
               </div>
             </div>
             <div>
-              <Sort />
+              {/* <Sort /> */}
             </div>
 
             <div className=" grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

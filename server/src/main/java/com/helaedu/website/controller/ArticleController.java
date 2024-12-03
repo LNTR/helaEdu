@@ -1,13 +1,7 @@
 package com.helaedu.website.controller;
 
-import com.helaedu.website.dto.ArticleDto;
-import com.helaedu.website.dto.ForumDto;
-import com.helaedu.website.dto.TeacherDto;
-import com.helaedu.website.dto.ValidationErrorResponse;
-import com.helaedu.website.service.ArticleService;
-import com.helaedu.website.service.ForumService;
-import com.helaedu.website.service.ModeratorService;
-import com.helaedu.website.service.TMService;
+import com.helaedu.website.dto.*;
+import com.helaedu.website.service.*;
 import com.helaedu.website.util.UserUtil;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -29,13 +23,14 @@ public class ArticleController{
 
     private final ArticleService articleService;
     private final TMService tmService;
-
+    private final StudentService studentService;
     private final ForumService forumService;
     private final ModeratorService moderatorService;
 
-    public ArticleController(ArticleService articleService, TMService tmService, ForumService forumService, ModeratorService moderatorService){
+    public ArticleController(ArticleService articleService, TMService tmService, StudentService studentService, ForumService forumService, ModeratorService moderatorService){
         this.articleService = articleService;
         this.tmService = tmService;
+        this.studentService = studentService;
         this.forumService = forumService;
         this.moderatorService = moderatorService;
     }
@@ -200,7 +195,7 @@ public class ArticleController{
     public ResponseEntity<Object> upvoteArticle(@PathVariable String articleId) throws ExecutionException, InterruptedException {
         try {
             String email = UserUtil.getCurrentUserEmail();
-            articleService.upvoteArticle(articleId, email);
+            articleService.upvoteArticle(articleId,email);
             return new ResponseEntity<>("Article upvoted", HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             ValidationErrorResponse errorResponse = new ValidationErrorResponse();
@@ -226,6 +221,4 @@ public class ArticleController{
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-
 }

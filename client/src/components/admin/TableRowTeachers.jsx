@@ -28,6 +28,7 @@ export default function TableRowTeachers({userId, firstName,lastName, email }) {
         </div>
         <div className='flex-1'><p className='text-xl '>{firstName} {lastName}</p></div>
         <div className='flex-1'><p className='text-xl '>{email}</p></div>
+        
        
         <div className='flex items-center'>
 

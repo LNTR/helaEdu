@@ -79,10 +79,14 @@ const TProfile = () => {
     <div>
       <Header />
       <ProfileHero
+        userId={teacher.userId}
         email={teacher.email}
         firstName={teacher.firstName}
         lastName={teacher.lastName}
         profileImg={teacher.profilePictureUrl}
+        assignedSubject={teacher.assignedSubject? teacher.assignedSubject :null}
+        upgradedStatus={teacher.upgradedStatus}
+        badges={teacher.badges}
       />
       <div className="flex justify-between mr-32 ml-32 mt-32">
         <div className="w-1/2 mr-12 mt-12 shadow-2xl p-12">

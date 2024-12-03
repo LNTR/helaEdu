@@ -9,16 +9,17 @@ import { getArticleById, reccomendArticles } from "@/services/ArticleService";
 import { getUserDetails } from "@services/TeacherService";
 import { userRoles } from "@utils/userRoles";
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
+import LoadingComponent from "@components/common/LoadingComponent";
 
 export default function ReadArticle() {
   const currentUserRole = useAuthUser()?.role;
   const { articleId } = useParams();
   const [article, setArticle] = useState(null);
-
   const [reccomendedArticleList, setReccomendedArticles] = useState([]);
-
+  const [loadingState, setLoadingState] = useState(false);
   useEffect(() => {
     const fetchArticle = async () => {
+      setLoadingState(true);
       try {
         const response = await getArticleById(articleId);
         const article = response.data;
@@ -37,6 +38,8 @@ export default function ReadArticle() {
         setArticle(articleWithUserDetails);
       } catch (error) {
         console.error("Failed to fetch article", error);
+      }finally{
+        setLoadingState(false);
       }
     };
 
@@ -55,7 +58,7 @@ export default function ReadArticle() {
   }, [article]);
 
   if (!article) {
-    return <div>Loading...</div>;
+    return <LoadingComponent/>;
   }
 
   return (
@@ -63,6 +66,9 @@ export default function ReadArticle() {
       <Header />
       <div className="flex justify-between mx-24">
         <div className="w-8/12">
+        {loadingState && (
+          <LoadingComponent/>
+        )}
           <ViewArticle
             articleId={article.articleId}
             title={article.title}

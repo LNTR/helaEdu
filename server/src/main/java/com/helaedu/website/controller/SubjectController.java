@@ -1,6 +1,7 @@
 package com.helaedu.website.controller;
 
 import com.helaedu.website.dto.ForumDto;
+import com.helaedu.website.dto.StudentDto;
 import com.helaedu.website.dto.SubjectDto;
 import com.helaedu.website.dto.ValidationErrorResponse;
 import com.helaedu.website.service.ForumService;
@@ -48,6 +49,19 @@ public class SubjectController {
             return new ResponseEntity<>("Error creating subject", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    @GetMapping("/{subjectId}")
+    public ResponseEntity<Object> getSubjectById(@PathVariable String subjectId) throws ExecutionException, InterruptedException {
+        SubjectDto subjectDto = subjectService.getSubject(subjectId);
+
+        if (subjectDto != null) {
+            return ResponseEntity.ok(subjectDto);
+        }else{
+            ValidationErrorResponse errorResponse = new ValidationErrorResponse();
+            errorResponse.addViolation("subjectId", "Subject not found");
+            return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        }
+    }
+
 
     @PostMapping("/uploadPdf")
     public ResponseEntity<Object> uploadPdf(@RequestParam String subjectId, @RequestParam("pdf") MultipartFile pdf) {
@@ -85,6 +99,7 @@ public class SubjectController {
             throw new RuntimeException(e);
         }
     }
+
 
 
 

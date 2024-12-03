@@ -1,41 +1,85 @@
 import React, { useState } from "react";
 import { getSubscriptionsByDate, getUserRegistrationsByDate } from "@services/ReportService";
 import Preview from "./Preview";
+import { getSubscribersList } from "@services/AdminService";
 
 export default function ReportBox() {
   const [reportData, setReportData] = useState([]);
   const [reportTitle, setReportTitle] = useState("");
   const [reportDescription, setReportDescription] = useState("");
-
   const [reportType, setReportType] = useState("Subscriptions");
-  const [userType, setUserType] = useState("Student"); 
+  const [userType, setUserType] = useState("Student");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
-  const generateReport = () => {
+  // const generateReport = async () => {
+  //   try {
+  //     if (!startDate || !endDate) {
+  //       alert("Please select both start and end dates.");
+  //       return;
+  //     }
+
+  //     let data = [];
+  //     if (reportType === "Subscriptions") {
+  //       const response = await getSubscribersList(); // Fetch subscription list
+  //       const subscriptions = response.subscription_list;
+  //       data = getSubscriptionsByDate(subscriptions, startDate, endDate);
+
+  //       setReportTitle("Subscriptions Report");
+  //       setReportDescription(
+  //         `This report shows the subscriptions between ${startDate} and ${endDate}.`
+  //       );
+  //     } else if (reportType === "Registrations") {
+  //       const rawData = await getUserRegistrationsByDate(userType, startDate, endDate);
+  //       data = Object.entries(rawData).map(([date, count]) => ({ date, count }));
+
+  //       setReportTitle("User Registrations Report");
+  //       setReportDescription(
+  //         `This report shows the number of registrations by date for ${
+  //           userType ? userType : "all user types"
+  //         }.`
+  //       );
+  //     }
+
+  //     setReportData(data);
+  //   } catch (error) {
+  //     console.error("Error generating report:", error);
+  //   }
+  // };
+  const generateReport = async () => {
     let data = [];
-    if (reportType === "Subscriptions") {
-      data = getSubscriptionsByDate(startDate, endDate);
-      setReportTitle("Subscriptions Report");
-      setReportDescription("This report shows the number of subscriptions by date.");
-    } else if (reportType === "Registrations") {
-      data = getUserRegistrationsByDate(startDate, endDate, userType);
-      setReportTitle("User Registrations Report");
-      setReportDescription(
-        `This report shows the number of registrations by date for ${
-          userType ? userType : "all user types"
-        }.`
-      );
+    try {
+      if (reportType === "Subscriptions") {
+        const rawData = getSubscriptionsByDate(startDate, endDate);
+        data = rawData || []; // Ensure data is at least an empty array
+        setReportTitle("Subscriptions Report");
+        setReportDescription("This report shows the number of subscriptions by date.");
+      } else if (reportType === "Registrations") {
+        const rawData = await getUserRegistrationsByDate(userType, startDate, endDate);
+        data = Object.entries(rawData || {}).map(([date, count]) => ({
+          date,
+          count,
+        }));
+        setReportTitle("User Registrations Report");
+        setReportDescription(
+          `This report shows the number of registrations by date for ${
+            userType ? userType : "all user types"
+          }.`
+        );
+      }
+      setReportData(data);
+    } catch (error) {
+      console.error("Error generating report:", error);
     }
-    setReportData(data);
   };
+  
 
   const handleReportTypeChange = (value) => {
     setReportType(value);
     if (value === "Subscriptions") {
-      setUserType("Student"); // Lock user type to "Student" for subscriptions
+      setUserType("Student");
     } else {
-      setUserType(""); // Reset user type for registrations
+      setUserType("");
     }
   };
 
@@ -61,7 +105,7 @@ export default function ReportBox() {
           <>
             <h1 className="text-2xl text-blue my-6">Choose user type</h1>
             <div className="flex justify-start">
-              {["Student", "Teacher", "Moderator"].map((type) => (
+              {["STUDENT", "TEACHER"].map((type) => (
                 <label key={type} className="text-xl flex items-center mx-2">
                   <input
                     type="radio"

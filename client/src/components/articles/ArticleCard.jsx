@@ -124,7 +124,7 @@ export default function ArticleCard({ imageUrl, firstName,lastName, date, title,
             />
             <span className="absolute bottom-10 right-0 translate-x-1/2 translate-y-1/2 text-xs bg-white text-black rounded-full w-5 h-5 flex items-center justify-center">{commentCount}</span>
           </div>
-          <div className="relative">
+          {/* <div className="relative">
             <FontAwesomeIcon
               icon={isMarked ? faBookmarkSolid : faBookmarkRegular}
               className="text-2xl icon-theme"
@@ -132,7 +132,7 @@ export default function ArticleCard({ imageUrl, firstName,lastName, date, title,
               onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
               onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
             />
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

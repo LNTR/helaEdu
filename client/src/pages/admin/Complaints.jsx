@@ -6,6 +6,7 @@ import TableRowC from "@components/admin/TableRowC";
 import Pagination from "@components/articles/Pagination";
 import { getCommentById } from "@services/ArticleService";
 import { getUserDetails } from "@services/TeacherService";
+import { listAllUsersDetails } from "@services/TeacherService";
 import { listComplaints } from "@services/AdminService";
 import Sort from "@components/complaints/Sort";
 import LoadingComponent from "@components/common/LoadingComponent";
@@ -27,9 +28,9 @@ const Complaints = () => {
 
         const complaintsWithDetails = await Promise.all(
           complaintsArray.map(async (complaint) => {
-            const reporterDetails = await getUserDetails(complaint.userId);
+            const reporterDetails = await listAllUsersDetails(complaint.userId);
             const commentDetails = await getCommentById(complaint.commentId);
-            const commentAuthorDetails = await getUserDetails(commentDetails.data.userId);
+            const commentAuthorDetails = await listAllUsersDetails(commentDetails.data.userId);
             return {
               ...complaint,
               reportedBy: reporterDetails.data.firstName + ' ' + reporterDetails.data.lastName,
@@ -39,7 +40,7 @@ const Complaints = () => {
           })
         );
         setComplaints(complaintsWithDetails);
-        setFilteredComplaints(complaintsWithDetails); // Initialize filtered complaints
+        setFilteredComplaints(complaintsWithDetails); 
       } catch (error) {
         console.error("Error fetching data:", error);
       }finally{

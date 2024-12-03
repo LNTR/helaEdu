@@ -16,20 +16,25 @@ function Enrollment({ subjectId, hasEnrolled, setHasEnrolled }) {
       <h1>Enrollment</h1>
       {!hasEnrolled ? (
         <>
-          <hr className="border-yellow border-t-4 w-56"></hr>
-          <h4>You haven't enrolled to this subject yet.</h4>
-          <button
-            className="blue-button"
-            onClick={() => {
-              enrollToSubject(subjectId, headers).then((res) => {
-                if (res.data.hasEnrolled) {
-                  window.location.reload();
-                }
-              });
-            }}
-          >
-            Enroll Now
-          </button>
+          <hr className="border-yellow border-t-4 w-56 mb-20"></hr>
+         <div className="flex justify-center mb-10">
+           <h4 className="items-center">You haven't enrolled to this subject yet.</h4>
+         </div>
+          <div className="flex justify-center ">
+            <button
+              className="bg-blue rounded-2xl px-32 py-5 text-white text-3xl hover:bg-yellow"
+              onClick={() => {
+                enrollToSubject(subjectId, headers).then((res) => {
+                  if (res.data.hasEnrolled) {
+                    window.location.reload();
+                  }
+                });
+              }}
+            >
+              Enroll Now
+            </button>
+          </div>
+         
         </>
       ) : (
         <>

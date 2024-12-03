@@ -39,11 +39,12 @@ export default function TableRowC({ complaintId, comment, complaint, commentedBy
       if (actionType === 'accept') {
         await reviewComplaint(complaintId, feedback);
         alert('Complaint resolved with feedback');
-        window.location.reload();
+        setShowCommentDeleteConfirmation(true); 
+       
       } else if (actionType === 'decline') {
         await declineComplaint(complaintId, feedback);
         alert('Complaint declined with feedback');
-        setShowCommentDeleteConfirmation(true); 
+        window.location.reload();
       }
       
     } catch (error) {
@@ -80,7 +81,7 @@ export default function TableRowC({ complaintId, comment, complaint, commentedBy
         <div className='flex justify-center w-2/12 text-left'>
           <FontAwesomeIcon icon={faEye} className='text-2xl m-2 hover:text-yellow hover:translate-x-1' onClick={() => navigatePage(articleId)} />
           <FontAwesomeIcon icon={faEdit} className='text-2xl m-2 hover:text-yellow hover:translate-x-1' onClick={() => setShowFeedbackPopup(true)} />
-          <FontAwesomeIcon icon={faTrash} className='text-2xl m-2 hover:text-yellow hover:translate-x-1' onClick={() => setShowDeletePopup(true)} />
+          {/* <FontAwesomeIcon icon={faTrash} className='text-2xl m-2 hover:text-yellow hover:translate-x-1' onClick={() => setShowDeletePopup(true)} /> */}
         </div>
       </div>
 

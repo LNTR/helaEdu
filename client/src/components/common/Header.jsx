@@ -157,18 +157,18 @@ function Header() {
                     </li>
 
                     <li
-                      className={
-                        currentUserRole == userRoles.Admin ||
-                        currentUserRole == userRoles.Moderator
-                          ? ""
-                          : "no-display"
-                      }
+                      // className={
+                      //   currentUserRole == userRoles.Admin ||
+                      //   currentUserRole == userRoles.Moderator
+                      //     ? ""
+                      //     : "no-display"
+                      // }
                     >
                       {currentUserRole == userRoles.Admin ? (
                         <Link to="/dashboard">
                           <h4>Dashboard</h4>
                         </Link>
-                      ) : currentUserRole == userRoles.Moderator ? (
+                      ) : currentUserRole == userRoles.Moderator? (
                         <Link to="/modDashboard">
                           <h4>Dashboard</h4>
                         </Link>

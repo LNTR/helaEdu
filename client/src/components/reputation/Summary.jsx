@@ -8,22 +8,27 @@ import SilverBadge from '@assets/icons/silverBadge.svg';
 import GoldBadge from '@assets/icons/goldBadge.svg';
 import { listTeacherDetails } from '@services/TeacherService';
 import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
+import LoadingComponent from '@components/common/LoadingComponent';
 
 export default function Summary() {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [teacherDetails, setTeacherDetails] = useState(null); 
+  const [loadingState,setLoadingState] = useState(false);
   const authHeader = useAuthHeader();
   const headers = {
     Authorization: authHeader,
   };
   useEffect(() => {
     const fetchTeacherDetails = async () => {
+      setLoadingState(true);
       try {
         const response = await listTeacherDetails(headers);
         setTeacherDetails(response.data); 
         console.log(response);
       } catch (error) {
         console.error('Error fetching teacher details:', error);
+      }finally{
+        setLoadingState(false);
       }
     };
 
@@ -61,6 +66,7 @@ export default function Summary() {
 
   return (
     <div>
+       {loadingState ? <LoadingComponent/> : null}
       <div className="flex justify-start">
         {isPopupOpen && (
           <dialog open className="modal">

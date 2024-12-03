@@ -65,14 +65,34 @@ def get_history():
 # @authenticate
 def get_quiz():
     request_payload = request.get_json(silent=True)
+    subjectId = request_payload["subjectId"]
+    subject = request_payload["subject"]
     grade = request_payload["grade"]
-    number = request_payload["number"]
-    quiz_response = quiz_gen(grade, number)
+    start = request_payload["start"]
+    end = request_payload["end"]
+    quiz_response = quiz_gen(subjectId, subject, grade, start, end)
     response_payload = {
         "response": quiz_response,
     }
 
     return jsonify(response_payload)
+
+@chat.route("/regen", methods=["POST"])
+@chat.route("/regen/", methods=["POST"])
+# @authenticate
+def get_MCQ():
+    request_payload = request.get_json(silent=True)
+    subject = request_payload["subject"] 
+    grade = request_payload["grade"]
+    topic = request_payload["topic"]
+    mcq = mcq_gen(subject, grade, topic)
+    response_payload = {
+        "response": mcq,
+    }
+    return jsonify(response_payload)
+
+
+   
 
 @chat.route("/embed", methods=["POST"])
 @chat.route("/embed/", methods=["POST"])
@@ -85,10 +105,12 @@ def get_textbook():
     type = request_payload["type"]
     embeddings = embeddings_gen(grade, subject, toc, type)
     response_payload = {
-        "response": embeddings,
+        "response": "True",
     }
 
     return jsonify(response_payload)
+
+
 
 @chat.route("/contents", methods=["POST"])
 @chat.route("/contents/", methods=["POST"])
@@ -121,3 +143,4 @@ def get_topics():
     }
 
     return jsonify(response_payload)
+

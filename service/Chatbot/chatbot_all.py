@@ -54,7 +54,7 @@ def retrieve_docs():
 
 def chat_response_all(prompt, grade, subject, user_id, chat_session_id):
     if not chat_session_id:
-        chat_session_id = generate_chat_id(user_id)
+        chat_session_id = generate_chat_id()
     print("Chat session ID: ", chat_session_id)
     retriever = retrieve_docs()
     return retriever

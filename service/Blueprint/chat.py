@@ -3,6 +3,7 @@ from utils import authenticate
 from firebase_admin import firestore
 from Models.Student import Student
 from Chatbot.main import *
+from Models.Quiz import Quiz
 
 chat = Blueprint("chat", __name__)
 # Look in version history for comments
@@ -71,9 +72,21 @@ def get_quiz():
     start = request_payload["start"]
     end = request_payload["end"]
     quiz_response = quiz_gen(subjectId, subject, grade, start, end)
+    q = Quiz()
+    q.quiz = quiz_response["quiz"]
+    q.subjectId = subjectId
+    q.subject = subject
+    q.grade = grade
+    q.status = "PENDING"
+    q.save()
+    print(q.id)
+    print(q.key)
     response_payload = {
         "response": quiz_response,
     }
+
+
+    
 
     return jsonify(response_payload)
 

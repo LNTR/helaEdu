@@ -70,8 +70,50 @@ def get_quiz(subjectId, subject, grade, start, end, chain=quiz_chain_ret):
     # keywords = getKeywords(subject, grade, start, end)
     keywordList = ["kings in Kandyan Kingdom"]
     quiz = []
-    for keyword in keywordList:
-        mcq = get_MCQ(subject, grade, "kings in Kandyan Kingdom")
-        quiz.append(mcq)
 
-    return quiz
+    # for keyword in keywordList:
+    #     mcq = get_MCQ(subject, grade, "kings in Kandyan Kingdom")
+    #     quiz.append(mcq)
+
+    quiz = [
+        {
+        "question": "What is not a major export crop in Sri Lanka?",
+        "options": ["Tea", "Rubber", "Vegetables", "Paddy"],
+        "answer": "Vegetables",
+        "id": 1,
+        },
+        {
+        "question": "When was a rubber first planted in Sri Lanka?",
+        "options": ["1890", "1790", "1892", "1895"],
+        "answer": "1890",
+        "id": 2,
+        },
+        {
+        "question": "What is not a main area where graphite is found in Sri Lanka?",
+        "options": ["Southern", "Sabaragamuwa", "North Western", "Western"],
+        "answer": "Western",
+        "id": 3,
+        },
+        {
+        "question": "What is not a significant feature of paddy cultivation?",
+        "options": [
+            "It is a staple food of Sri Lankans",
+            "It provides raw materials for many industries",
+            "It is a Production of organic fertilizer",
+            "It is popular among many countries",
+        ],
+        "answer": "It is popular among many countries",
+        "id": 4,
+        },
+        {
+        "question": "What is a vegetable grown in dry zone?",
+        "options": ["Potatoes", "Drumsticks", "Long beans", "Carrot"],
+        "answer": "Drumsticks",
+        "id": 5,
+        },
+    ]
+
+    output = {
+        "quiz": quiz
+    }
+    return output

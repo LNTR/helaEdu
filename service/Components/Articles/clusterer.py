@@ -4,7 +4,6 @@ from sklearn.metrics import silhouette_score, pairwise_distances
 
 
 def create_clusters(df, max_clusters=10):
-    # Step 1: Vectorize the content using TF-IDF
     vectorizer = TfidfVectorizer()
     features = vectorizer.fit_transform(df["content"])
 

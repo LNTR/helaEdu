@@ -18,8 +18,8 @@ def all_chat_response(query, grade, subject, user_id, chat_session_id):
 def retrieve_history(session_id):
     return chat_history(session_id)
 
-def quiz_gen(subjectId, subject, grade, start, end):
-    return get_quiz(subjectId, subject, grade, start, end)
+def quiz_gen(subjectId, subject, grade, topic,moderatorEmail, identifier):
+    return get_quiz(subjectId, subject, grade,topic,moderatorEmail, identifier)
 
 def mcq_gen(subject, grade, topic):
     return get_MCQ(subject, grade, topic)

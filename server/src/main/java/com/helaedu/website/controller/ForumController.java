@@ -13,6 +13,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 @RestController
@@ -52,18 +53,22 @@ public class ForumController {
         }
         try {
             String email = UserUtil.getCurrentUserEmail();
-
+            String articleId = forumDto.getArticleId();
+            ArticleDto articleDto=articleService.getArticle(articleId);
             TeacherDto teacherDto = tmService.getTMByEmail(email);
-            if (teacherDto != null) {
-                forumDto.setUserId(teacherDto.getUserId());
-            } else {
-                StudentDto studentDto = studentService.getStudentByEmail(email);
-                if (studentDto == null) {
-                    return new ResponseEntity<>("User not found", HttpStatus.UNAUTHORIZED);
+            if(Objects.equals(articleDto.getUserId(), teacherDto.getUserId())){
+                return new ResponseEntity<>("You can't add comments for your own article", HttpStatus.BAD_REQUEST);
+            }else{
+                if (teacherDto != null) {
+                    forumDto.setUserId(teacherDto.getUserId());
+                } else {
+                    StudentDto studentDto = studentService.getStudentByEmail(email);
+                    if (studentDto == null) {
+                        return new ResponseEntity<>("User not found", HttpStatus.UNAUTHORIZED);
+                    }
+                    forumDto.setUserId(studentDto.getUserId());
                 }
-                forumDto.setUserId(studentDto.getUserId());
             }
-
             String commentId = forumService.addComment(forumDto);
             return new ResponseEntity<>(commentId, HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {

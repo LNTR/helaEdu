@@ -337,51 +337,49 @@ public class AssignmentService {
         return filteredStudents;
     }
 
-    public void studentFinishAssignment(String assignmentId, String studentId) throws ExecutionException, InterruptedException {
+    public double studentFinishAssignment(String assignmentId, String studentId) throws ExecutionException, InterruptedException {
         Assignment assignment = assignmentRepository.getAssignmentById(assignmentId);
-        if (assignment != null) {
-            if (!assignment.isStarted()) {
-                throw new IllegalArgumentException("Assignment has not started yet.");
-            }
+        if (assignment == null) {
+            throw new IllegalArgumentException("Assignment not found.");
+        }
+        if (!assignment.isStarted()) {
+            throw new IllegalArgumentException("Assignment has not started yet.");
+        }
+        Map<String, Long> studentRemainingTimes = assignment.getStudentRemainingTimes();
+        if (studentRemainingTimes != null && studentRemainingTimes.containsKey(studentId)) {
+            studentRemainingTimes.put(studentId, 0L);
+        } else {
+            throw new IllegalArgumentException("Student has not started the assignment.");
+        }
+        double totalMarksScored = 0;
+        double maxPossibleMarks = 0;
 
-            Map<String, Long> studentRemainingTimes = assignment.getStudentRemainingTimes();
-            if (studentRemainingTimes != null && studentRemainingTimes.containsKey(studentId)) {
-                studentRemainingTimes.put(studentId, 0L);
-            } else {
-                throw new IllegalArgumentException("Student has not started the assignment.");
-            }
+        List<AssignmentQuestion> questions = assignment.getQuizzes();
 
-            double totalMarks = 0;
-
-            List<AssignmentQuestion> questions = assignment.getQuizzes();
-
-            for (AssignmentQuestion question : questions) {
-                Map<String, List<String>> givenAnswersMap = question.getGivenAnswers();
-                if (givenAnswersMap != null) {
-                    List<String> studentAnswers = givenAnswersMap.get(studentId);
-                    if (studentAnswers != null) {
-                        List<String> correctAnswers = question.getCorrectAnswers();
-                        int marks = question.getMarks();
-
-                        if (studentAnswers.equals(correctAnswers)) {
-                            totalMarks += marks;
-                        }
+        for (AssignmentQuestion question : questions) {
+            maxPossibleMarks += question.getMarks();
+            Map<String, List<String>> givenAnswersMap = question.getGivenAnswers();
+            if (givenAnswersMap != null) {
+                List<String> studentAnswers = givenAnswersMap.get(studentId);
+                if (studentAnswers != null) {
+                    List<String> correctAnswers = question.getCorrectAnswers();
+                    if (studentAnswers.equals(correctAnswers)) {
+                        totalMarksScored += question.getMarks();
                     }
                 }
             }
-
-            Map<String, Double> studentMarks = assignment.getStudentMarks();
-            if (studentMarks == null) {
-                studentMarks = new HashMap<>();
-                assignment.setStudentMarks(studentMarks);
-            }
-            studentMarks.put(studentId, totalMarks);
-
-            assignmentRepository.updateAssignment(assignmentId, assignment);
-        } else {
-            throw new IllegalArgumentException("Assignment not found.");
         }
+        double percentageScore = (totalMarksScored / maxPossibleMarks) * 100;
+        Map<String, Double> studentMarks = assignment.getStudentMarks();
+        if (studentMarks == null) {
+            studentMarks = new HashMap<>();
+            assignment.setStudentMarks(studentMarks);
+        }
+        studentMarks.put(studentId, percentageScore);
+        assignmentRepository.updateAssignment(assignmentId, assignment);
+        return percentageScore;
     }
+
 
     public List<AssignmentDto> getCompletedAssignmentsByStudent(String studentId) throws ExecutionException, InterruptedException {
         List<Assignment> allAssignments = assignmentRepository.getAllAssignments();

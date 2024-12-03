@@ -2,6 +2,27 @@ import React from "react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from "recharts";
 
 export default function Preview({ data = [], title, description }) {
+
+  const downloadReport = () => {
+    if (!data || data.length === 0) {
+      alert("No data to download");
+      return;
+    }
+
+    const csvContent = [
+      ["Date", "Count"],
+      ...data.map((item) => [item.date, item.count]),
+    ]
+      .map((row) => row.join(","))
+      .join("\n");
+
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = `${title.replace(/\s+/g, "_").toLowerCase()}.csv`;
+    link.click();
+  };
+
   if (!data || data.length === 0) {
     return (
       <div className="px-14 py-14 rounded-xl shadow-xl">
@@ -19,7 +40,7 @@ export default function Preview({ data = [], title, description }) {
       <h2 className="text-2xl mb-4">{title}</h2>
       <p className="text-lg mb-6">{description}</p>
 
-      <div className="my-10">
+      <div className="my-10 text-2xl">
         <LineChart
           width={600}
           height={300}
@@ -39,7 +60,7 @@ export default function Preview({ data = [], title, description }) {
         <thead>
           <tr>
             <th className="border px-4 py-2">Date</th>
-            <th className="border px-4 py-2">Count</th>
+            <th className="border px-4 py-2 ">Count</th>
           </tr>
         </thead>
         <tbody>
@@ -51,6 +72,15 @@ export default function Preview({ data = [], title, description }) {
           ))}
         </tbody>
       </table>
+
+      <div className="mt-10 flex justify-end">
+        <button
+          onClick={downloadReport}
+          className="bg-blue px-6 py-3 rounded-xl text-2xl text-white"
+        >
+          Download Report
+        </button>
+      </div>
     </div>
   );
 }

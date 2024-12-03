@@ -19,9 +19,7 @@ export const uploadPdf = (subjectId, formData) =>axios.post(`${REST_API_BASE_URL
     });
   };
   export const listSubjectsByGrade = (grade) => axios.get(`${REST_API_BASE_URL}/byGrade/${grade}`);
-export const getCommentsBySubjectId =(subjectId)=>axios.get(`${REST_API_BASE_URL}/${subjectId}/comments`);
-  
- 
-export const addCommentForForum = (comment, headers) =>
-  axios.post(ADD_COMMENTS_SUBJECT_URL, comment, { headers }); 
-export const getSubjectById = (subjectId) => axios.get(`${REST_API_BASE_URL}/${subjectId}`);
+  export const getCommentsBySubjectId =(subjectId)=>axios.get(`${REST_API_BASE_URL}/${subjectId}/comments`);
+  export const addCommentForForum = (comment, headers) =>
+    axios.post(ADD_COMMENTS_SUBJECT_URL, comment, { headers }); 
+  export const getSubjectById = (subjectId) => axios.get(`${REST_API_BASE_URL}/${subjectId}`);

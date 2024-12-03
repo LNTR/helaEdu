@@ -7,9 +7,7 @@ export default function AddComment({ articleId }) {
   const headers = {
     Authorization: authHeader,
   };
-
   const [commentText, setCommentText] = useState("");
-
   const handlePostComment = async (e) => {
     e.preventDefault();
     if (!commentText.trim()) return;
@@ -29,8 +27,10 @@ export default function AddComment({ articleId }) {
     } catch (err) {
       if (err.response) {
         console.error("Error posting comment:", err.response.data);
+        alert(err.response.data);
       } else {
         console.error("Error posting comment:", err.message);
+        alert(err.response.data);
       }
     }
   };
@@ -44,7 +44,7 @@ export default function AddComment({ articleId }) {
       <form onSubmit={handlePostComment}>
         <input
           type="text"
-          className="border border-blue w-11/12 h-80 rounded-xl mt-7 mb-7 px-10"
+          className="border border-blue w-11/12  rounded-xl mt-7 mb-7 px-10 pb-40 pt-3"
           value={commentText}
           onChange={(e) => setCommentText(e.target.value)}
           placeholder="Write your comment..."

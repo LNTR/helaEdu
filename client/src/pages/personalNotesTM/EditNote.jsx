@@ -19,9 +19,8 @@ const EditNote = () => {
     const [loading, setLoading] = useState(false);
 
     const headers = {
-        Authorization: authHeader(),
+        Authorization: authHeader,
     };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError(null);
@@ -32,13 +31,11 @@ const EditNote = () => {
             setLoading(false);
             return;
         }
-
         const noteData = {
             title,
             subject,
             content,
         };
-
         try {
             await updateNoteByTeacher(id,noteData); 
             navigate("/notes"); 
@@ -49,7 +46,6 @@ const EditNote = () => {
             setLoading(false);
         }
     };
-
     return (
         <div>
             <Header />
@@ -88,5 +84,4 @@ const EditNote = () => {
         </div>
     );
 };
-
 export default EditNote;

@@ -62,7 +62,7 @@ const Sidebar = () => {
             <FontAwesomeIcon icon={faChartLine} className="mr-4" />
             Reports
           </Link>
-          <Link
+          {/* <Link
             to="/notifications"
             className={`text-2xl flex items-center p-4 rounded transition-colors duration-300 ${
               isActive("/notifications")
@@ -72,7 +72,7 @@ const Sidebar = () => {
           >
             <FontAwesomeIcon icon={faBell} className="mr-4" />
             Notifications
-          </Link>
+          </Link> */}
           <Link
             to="/complaints"
             className={`text-2xl flex items-center p-4 rounded transition-colors duration-300 ${

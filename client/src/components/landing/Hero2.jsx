@@ -1,9 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import bot from "@assets/img/bot.svg";
 import logo from "@assets/icons/hela-edu-black-text2.svg";
 import land from "@assets/img/Land bg.svg";
 import { useNavigate } from "react-router-dom";
-
 import maths from "@assets/img/subjects/maths.png";
 import science from "@assets/img/subjects/2.png";
 import geography from "@assets/img/subjects/3.png";
@@ -11,13 +10,74 @@ import bussiness from "@assets/img/subjects/4.png";
 import buddhism from "@assets/img/subjects/5.png";
 import islam from "@assets/img/subjects/6.png";
 import christian from "@assets/img/subjects/7.png";
-import articleImg1 from "@assets/img/Top Articles/Science laboratory.png";
-import articleImg2 from "@assets/img/Top Articles/SINHABAH2 1.png";
-import articleImg3 from "@assets/img/Top Articles/Young indian woman in blue sari standing in dance position.png";
-import Article from "@components/landing/Article";
 import hinduism from "@assets/img/subjects/8.png";
+import Article from "@components/landing/Article";
+import { getTopArticles } from "@services/ArticleService";
+import { listAllUsersDetails } from "@services/TeacherService";
+import { getUpvoteCountByArticleId } from "@services/ArticleService";
+import { getCommentCountByArticleId } from "@services/ArticleService";
+import FormatToYYMMDD from "@components/common/FormatToYYMMDD";
 function Hero2() {
-  let navigator = useNavigate();
+  const navigate = useNavigate();
+  const [topArticles, setTopArticles] = useState([]);
+  const [loadingState,setLoadingState]  = useState(false);
+
+  const truncateContent = (text, maxWords) => {
+    const words = text.split(" ");
+    if (words.length > maxWords) {
+      return words.slice(0, maxWords).join(" ") + "...";
+    }
+    return text;
+  };
+  
+  useEffect(() => {
+    const fetchArticlesAndDetails = async () => {
+      try {
+        setLoadingState(true);
+        const articlesResponse = await getTopArticles();
+        const articles = articlesResponse.data;
+
+        const articlesWithDetails = await Promise.all(
+          articles.map(async (article) => {
+            try {
+              const userResponse = await listAllUsersDetails(article.userId);
+              const author = userResponse.data;
+
+              const upvoteResponse = await getUpvoteCountByArticleId(article.articleId);
+              const upvoteCount = upvoteResponse.data;
+
+              const commentResponse = await getCommentCountByArticleId(article.articleId);
+              const commentCount = commentResponse.data;
+
+              const truncatedTitle = truncateContent(article.title, 5);
+              const truncatedContent = truncateContent(article.content, 40);
+              const date=FormatToYYMMDD(article.publishedTimestamp);
+              return {
+                ...article,
+                author,
+                upvoteCount,
+                commentCount,
+                truncatedTitle,
+                truncatedContent,
+                date
+              };
+            } catch (error) {
+              console.error(`Error fetching details for articleId: ${article.articleId}`, error);
+              return { ...article, author: null, upvoteCount: 0, commentCount: 0 };
+            }finally{
+              setLoadingState(false);
+            }
+          })
+        );
+
+        setTopArticles(articlesWithDetails);
+      } catch (error) {
+        console.error("Error fetching articles:", error);
+      }
+    };
+
+    fetchArticlesAndDetails();
+  }, []);
   return (
     <div className="hero2">
       <div className="flex-c">
@@ -34,7 +94,7 @@ function Hero2() {
               <h3
                 className="text-center white"
                 onClick={() => {
-                  navigator("/premiumPlan");
+                  navigate("/premiumPlan");
                 }}
               >
                 Subscribe
@@ -141,9 +201,29 @@ function Hero2() {
         <h3>Most Popular Articles</h3>
       </div>
       <section className="article-section">
-        <Article img={articleImg1} alignment="right" />
-        <Article img={articleImg2} alignment="left" />
-        <Article img={articleImg3} alignment="right" />
+        {loadingState? (
+          <div className="flex justify-start px-40 py-20 items-center">
+                <div className="h-12 w-4 bg-blue rounded-full animate-pulse mx-5"></div>
+                <div className="h-8 w-4 bg-blue rounded-full animate-pulse delay-200"></div>
+                <div className="h-4 w-4 bg-blue rounded-full animate-pulse delay-400 mx-5"></div>
+          </div>
+        
+        ): null
+        }
+        {topArticles.map((article, index) => (
+          <Article
+            key={article.articleId}
+            articleId={article.articleId}
+            publishedTimestamp={article.date}
+            img={article.imageRef}
+            alignment={index % 2 === 0 ? "right" : "left"}
+            title={article.truncatedTitle}
+            content={article.truncatedContent}
+            author={article.author}
+            upvoteCount={article.upvoteCount}
+            commentCount={article.commentCount}
+          />
+        ))}
       </section>
     </div>
   );

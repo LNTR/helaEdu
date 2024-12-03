@@ -14,8 +14,10 @@ import {
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import { Link } from "react-router-dom";
 import EditProfileModal from "@components/teacher_com/EditProfileModal";
+import LoadingComponent from "@components/common/LoadingComponent";
 
 const TProfile = () => {
+  const [loadingState,setLoadingState] =useState(false);
   const [teacher, setTeacher] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({
@@ -25,14 +27,15 @@ const TProfile = () => {
     email: "",
     school: "",
     password:"",
+    preferredSubjects: [],
   });
 
   const authHeader = useAuthHeader();
   const headers = {
     Authorization: authHeader,
   };
-
   useEffect(() => {
+    setLoadingState(true); 
     listTeacherDetails(headers)
       .then((response) => {
         setTeacher(response.data);
@@ -42,13 +45,18 @@ const TProfile = () => {
           about: response.data.about,
           email: response.data.email,
           school: response.data.school,
-          password:response.data.password,
+          password: response.data.password,
+          preferredSubjects: response.data.preferredSubjects,
         });
       })
       .catch((error) => {
         console.error(error);
+      })
+      .finally(() => {
+        setLoadingState(false); 
       });
   }, []);
+  
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -74,6 +82,17 @@ const TProfile = () => {
     const { name, value } = event.target;
     setFormData({ ...formData, [name]: value });
   };
+  const addSubject = (newSubject) => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      preferredSubjects: [...prevFormData.preferredSubjects, newSubject],
+    }));
+  };
+  
+  const removeSubject = (index) => {
+    const newSubjects = formData.preferredSubjects.filter((_, i) => i !== index);
+    setFormData({ ...formData, preferredSubjects: newSubjects });
+  };
 
   return (
     <div>
@@ -89,7 +108,9 @@ const TProfile = () => {
         badges={teacher.badges}
       />
       <div className="flex justify-between mr-32 ml-32 mt-32">
+
         <div className="w-1/2 mr-12 mt-12 shadow-2xl p-12">
+        {loadingState ? <LoadingComponent/> : null }
           <p className="text-2xl m-4">
             <span className="text-blue">About me</span>: {teacher.about}
           </p>
@@ -103,7 +124,9 @@ const TProfile = () => {
             </p>
             <p className="text-2xl m-4">
               <span className="text-blue">Teaching Subject</span>:{" "}
-              {teacher.preferredSubjects}
+              {teacher.preferredSubjects
+                ? teacher.preferredSubjects.join(", ")
+                : "No subjects specified"}
             </p>
           </div>
           <div className="flex justify-end">
@@ -148,6 +171,8 @@ const TProfile = () => {
         handleSubmit={handleSubmit}
         formData={formData}
         handleInputChange={handleInputChange}
+        addSubject={addSubject}
+        removeSubject={removeSubject}
       />
       <br></br>
       <Footer />

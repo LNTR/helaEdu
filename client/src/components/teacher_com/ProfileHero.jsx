@@ -47,11 +47,9 @@ export default function ProfileHero({ userId,email, firstName ,lastName,profileI
       console.error('Error uploading image:', error);
     }
   };
-
   const handleEditClick = () => {
     setIsPopupOpen(true);
   };
-
   const handleClosePopup = () => {
     setIsPopupOpen(false);
   };
@@ -75,7 +73,6 @@ export default function ProfileHero({ userId,email, firstName ,lastName,profileI
     }
   }, [badges]);
   
-
   return (
     <div>
       {isPopupOpen && (

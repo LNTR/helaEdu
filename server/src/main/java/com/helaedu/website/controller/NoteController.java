@@ -23,10 +23,12 @@ import java.util.concurrent.ExecutionException;
 public class NoteController {
     private final NoteService noteService;
     private final TMService tmService;
-    public NoteController( NoteService noteService, TMService tmService) {
+    private final StudentService studentService;
+    public NoteController(NoteService noteService, TMService tmService, StudentService studentService) {
       
         this.noteService = noteService;
         this.tmService = tmService;
+        this.studentService = studentService;
     }
     @PostMapping("/create")
     public ResponseEntity<Object> createNote(@Valid @RequestBody NoteDto noteDto, BindingResult bindingResult) throws ExecutionException, InterruptedException {
@@ -40,7 +42,15 @@ public class NoteController {
         try {
             String email = UserUtil.getCurrentUserEmail();
             TeacherDto teacherDto = tmService.getTMByEmail(email);
-            noteDto.setUserId(teacherDto.getUserId());
+            if(teacherDto != null){
+                noteDto.setUserId(teacherDto.getUserId());
+            }else{
+                StudentDto studentDto = studentService.getStudentByEmail(email);
+                if (studentDto == null) {
+                    return new ResponseEntity<>("User not found", HttpStatus.UNAUTHORIZED);
+                }
+                noteDto.setUserId(studentDto.getUserId());
+            }
             String noteId = noteService.createNoteTeacher(noteDto);
             return new ResponseEntity<>(noteId, HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
@@ -82,7 +92,28 @@ public class NoteController {
             return new ResponseEntity<>("Error updating note", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    
+
+    @GetMapping("/me/notes")
+    public ResponseEntity<List<NoteDto>> getCurrentUserNotes() throws ExecutionException, InterruptedException {
+        String email = UserUtil.getCurrentUserEmail();
+        return getAllNotesByEmail(email);
+    }
+    private ResponseEntity<List<NoteDto>> getAllNotesByEmail(String email) throws ExecutionException, InterruptedException {
+        TeacherDto teacherDto = tmService.getTMByEmail(email);
+
+        if (teacherDto != null) {
+            List<NoteDto> notes = noteService.getNotesByUser(teacherDto.getUserId());
+            return ResponseEntity.ok(notes);
+        }
+        StudentDto studentDto = studentService.getStudentByEmail(email);
+        if (studentDto != null) {
+            List<NoteDto> notes = noteService.getNotesByUser(studentDto.getUserId());
+            return ResponseEntity.ok(notes);
+        }
+        return new ResponseEntity("User not found", HttpStatus.UNAUTHORIZED);
+    }
+
+
 
 
 

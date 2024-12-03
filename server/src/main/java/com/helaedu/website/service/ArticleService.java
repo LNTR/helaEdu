@@ -332,6 +332,18 @@ public class ArticleService {
     public int getUpvoteCountForArticle(String articleId) throws ExecutionException, InterruptedException {
         return articleRepository.getUpvoteCountByArticleId(articleId);
     }
+    public List<Article> getTopThreeArticles() throws ExecutionException, InterruptedException {
+        List<Article> articles = articleRepository.getAllArticles();
+
+        return articles.stream()
+                .sorted((a1, a2) -> Integer.compare(
+                        a2.getUpvote().size(),
+                        a1.getUpvote().size()
+                ))
+                .limit(3)
+                .toList();
+    }
+
 
 
 

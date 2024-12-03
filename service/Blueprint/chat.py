@@ -9,59 +9,59 @@ chat = Blueprint("chat", __name__)
 # Look in version history for comments
 
 
-# @chat.route("/", methods=["POST"])
-# @chat.route("", methods=["POST"])
-# # @authenticate
-# def index():
+@chat.route("/", methods=["POST"])
+@chat.route("", methods=["POST"])
+# @authenticate
+def index():
 
-#     request_payload = request.get_json(silent=True)
-#     prompt = request_payload["prompt"]
-#     grade = request_payload["grade"]
-#     subject = request_payload["subject"]
-#     student_id = request_payload["student_id"]
-#     chat_session_id = request_payload["chat_session_id"]
-#     chatbot_response = student_chat_response(
-#         prompt, grade, subject, student_id, chat_session_id
-#     )
-#     response_payload = {
-#         "response": chatbot_response,
-#     }
+    request_payload = request.get_json(silent=True)
+    prompt = request_payload["prompt"]
+    grade = request_payload["grade"]
+    subject = request_payload["subject"]
+    student_id = request_payload["student_id"]
+    chat_session_id = request_payload["chat_session_id"]
+    chatbot_response = student_chat_response(
+        prompt, grade, subject, student_id, chat_session_id
+    )
+    response_payload = {
+        "response": chatbot_response,
+    }
 
-#     return jsonify(response_payload)
-
-
-# @chat.route("/all", methods=["POST"])
-# @chat.route("/all/", methods=["POST"])
-# # @authenticate
-# def chat_all():
-#     request_payload = request.get_json(silent=True)
-#     prompt = request_payload["prompt"]
-#     grade = request_payload["grade"]
-#     subject = request_payload["subject"]
-#     user_id = request_payload["user_id"]
-#     chat_session_id = request_payload["chat_session_id"]
-#     chatbot_response = all_chat_response(
-#         prompt, grade, subject, user_id, chat_session_id
-#     )
-#     response_payload = {
-#         "response": chatbot_response,
-#     }
-
-#     return jsonify(response_payload)
+    return jsonify(response_payload)
 
 
-# @chat.route("/history", methods=["POST"])
-# @chat.route("/history/", methods=["POST"])
-# # @authenticate
-# def get_history():
-#     request_payload = request.get_json(silent=True)
-#     chat_session_id = request_payload["chat_session_id"]
-#     chatbot_history = retrieve_history(chat_session_id)
-#     response_payload = {
-#         "response": chatbot_history,
-#     }
+@chat.route("/all", methods=["POST"])
+@chat.route("/all/", methods=["POST"])
+# @authenticate
+def chat_all():
+    request_payload = request.get_json(silent=True)
+    prompt = request_payload["prompt"]
+    grade = request_payload["grade"]
+    subject = request_payload["subject"]
+    user_id = request_payload["user_id"]
+    chat_session_id = request_payload["chat_session_id"]
+    chatbot_response = all_chat_response(
+        prompt, grade, subject, user_id, chat_session_id
+    )
+    response_payload = {
+        "response": chatbot_response,
+    }
 
-#     return jsonify(response_payload)
+    return jsonify(response_payload)
+
+
+@chat.route("/history", methods=["POST"])
+@chat.route("/history/", methods=["POST"])
+# @authenticate
+def get_history():
+    request_payload = request.get_json(silent=True)
+    chat_session_id = request_payload["chat_session_id"]
+    chatbot_history = retrieve_history(chat_session_id)
+    response_payload = {
+        "response": chatbot_history,
+    }
+
+    return jsonify(response_payload)
 
 
 @chat.route("/quizgen", methods=["POST"])
@@ -84,6 +84,7 @@ def get_quiz():
     q.save()
     print(q.id)
     print(q.key)
+    quiz_response["quizId"] = q.id
     response_payload = {
         "response": quiz_response,
     }
@@ -101,11 +102,42 @@ def get_MCQ():
     subject = request_payload["subject"] 
     grade = request_payload["grade"]
     topic = request_payload["topic"]
-    mcq = mcq_gen(subject, grade, topic)
-    response_payload = {
-        "response": mcq,
-    }
-    return jsonify(response_payload)
+    quizId = request_payload["quizId"]
+    questionId = request_payload["questionId"]
+    # mcq = mcq_gen(subject, grade, topic)
+    mcq = [
+        {
+                "answer": "WVegetables",
+                "id": 1,
+                "options": [
+                    "Tea",
+                    "Rubber",
+                    "Vegetables",
+                    "Paddy"
+                ],
+                "question": "What is not a major export crop in Sri Lanka?"
+            },
+    ]
+    if mcq:  # Check if the list is not empty
+        quiz = Quiz()
+        question_data = mcq[0] 
+
+        if quiz.update_question(quizId, question_data["id"], question_data["question"], question_data["answer"], question_data["options"]):
+            response_payload = {
+                "response": question_data,
+            }
+            return jsonify(response_payload)
+        else:
+            return jsonify({"success": False, "message": "Failed to update question."}), 400
+
+
+@chat.route("/<quiz_id>/review", methods=["GET"])
+@chat.route("/<quiz_id>/review/", methods=["GET"])
+def approve_quiz(quiz_id):
+    quiz: Quiz = Quiz.collection.get(quiz_id)
+    quiz.reviewed()
+    quiz.update()
+    return jsonify({"message": "update complete"})
 
 
    

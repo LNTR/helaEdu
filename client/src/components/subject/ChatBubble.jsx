@@ -62,8 +62,8 @@ function ChatBubble({ content, type }) {
     case "ai": {
       return <>{botBubble(content)}</>;
     }
-    case "reference":
-      return <>{referenceBubble(content)}</>;
+    // case "reference":
+    //   return <>{referenceBubble(content)}</>;
     case "human":
       return <>{userBubble(content)}</>;
     default:

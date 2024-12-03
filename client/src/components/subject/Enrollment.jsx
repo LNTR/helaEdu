@@ -17,9 +17,11 @@ function Enrollment({ subjectId, hasEnrolled, setHasEnrolled }) {
       {!hasEnrolled ? (
         <>
           <hr className="border-yellow border-t-4 w-56 mb-20"></hr>
-         <div className="flex justify-center mb-10">
-           <h4 className="items-center">You haven't enrolled to this subject yet.</h4>
-         </div>
+          <div className="flex justify-center mb-10">
+            <h4 className="items-center">
+              You haven't enrolled to this subject yet.
+            </h4>
+          </div>
           <div className="flex justify-center ">
             <button
               className="bg-blue rounded-2xl px-32 py-5 text-white text-3xl hover:bg-yellow"
@@ -34,24 +36,29 @@ function Enrollment({ subjectId, hasEnrolled, setHasEnrolled }) {
               Enroll Now
             </button>
           </div>
-         
         </>
       ) : (
         <>
-          <hr className="border-yellow border-t-4 w-56"></hr>
-          <h4>You already have enrolled to this subject</h4>
-          <button
-            className="blue-button"
-            onClick={() => {
-              unenrollFromSubject(subjectId, headers).then((res) => {
-                if (!res.data.hasEnrolled) {
-                  window.location.reload();
-                }
-              });
-            }}
-          >
-            Unenroll
-          </button>
+          <hr className="border-yellow border-t-4 w-56 mb-20"></hr>
+          <div className="flex justify-center mb-10">
+            <h4 className="items-center">
+              You have already enrolled to this subject.
+            </h4>
+          </div>
+          <div className="flex justify-center ">
+            <button
+              className="bg-red-500 rounded-2xl px-32 py-5 text-white text-3xl hover:bg-yellow"
+              onClick={() => {
+                unenrollFromSubject(subjectId, headers).then((res) => {
+                  if (res.data.hasEnrolled) {
+                    window.location.reload();
+                  }
+                });
+              }}
+            >
+              Unenroll
+            </button>
+          </div>
         </>
       )}
 

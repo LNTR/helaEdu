@@ -106,7 +106,7 @@ function Hero2() {
       <main className="pannels">
         <div className="left-pannel flex-c">
           <div className="hero-text-box">
-            {userRoles.Student == currentUserRole ? (
+            {userRoles.Student == currentUserRole || !currentUserRole ? (
               <div className="subscribe">
                 <h3 className="text-center blue">Subscribe to premium now</h3>
                 <h3

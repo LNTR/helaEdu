@@ -17,6 +17,11 @@ function ChatBot({ subject, hasEnrolled }) {
   const [history, setHistory] = useState([]);
   const textInputRef = useRef(null);
   const rocketButtonRef = useRef(null);
+  const [selectedValue, setSelectedValue] = useState("new");
+
+  const handleChange = (event) => {
+    setSelectedValue(event.target.value);
+  };
   const sendToChat = () => {
     let content = textInputRef.current.value;
     chatPayload.prompt = content;
@@ -59,22 +64,38 @@ function ChatBot({ subject, hasEnrolled }) {
   };
 
   useEffect(() => {
-    getChatBotHistory({
-      chat_session_id: chatPayload.chat_session_id,
-    }).then((res) => {
-      history.push(res.data.response);
-      setHistory(...history);
-    });
-  }, []);
+    if (selectedValue !== "new") {
+      getChatBotHistory({
+        chat_session_id: chatPayload.chat_session_id,
+      }).then((res) => {
+        history.push(res.data.response);
+        setHistory(...history);
+      });
+    }
+  }, [selectedValue]);
   return (
     <div className="chatbot">
       <div className="title-wrapper">
         <div className="title flex-sb">
           <h3>{subject}</h3>
-          <h4>
-            Grade 10
-            <FontAwesomeIcon icon={faPen} className="pen-icon" />
-          </h4>
+          <select
+            class="select select-bordered w-full max-w-xs"
+            onChange={handleChange}
+          >
+            <option value={"chat-id-1"}>
+              <h4>Option 1</h4>
+            </option>
+            <option value={"chat-id-1"}>
+              <h4>Option 2</h4>
+            </option>
+            <option value={"chat-id-1"}>
+              <h4>Option 3</h4>
+            </option>
+            <hr />
+            <option value={"new"} selected>
+              <h4>New Conversation</h4>
+            </option>
+          </select>
         </div>
       </div>
       <ChatContent messageList={history} />

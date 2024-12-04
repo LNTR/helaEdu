@@ -25,7 +25,6 @@ const Subjects = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log("Fetching enrolled subjects...");
     getEnrolledSubjects(headers)
       .then((res) => {
         setSubjects(res.data); 

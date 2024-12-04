@@ -104,20 +104,20 @@ def get_MCQ():
     topic = request_payload["topic"]
     quizId = request_payload["quizId"]
     questionId = request_payload["questionId"]
-    # mcq = mcq_gen(subject, grade, topic)
-    mcq = [
-        {
-                "answer": "WVegetables",
-                "id": 1,
-                "options": [
-                    "Tea",
-                    "Rubber",
-                    "Vegetables",
-                    "Paddy"
-                ],
-                "question": "What is not a major export crop in Sri Lanka?"
-            },
-    ]
+    mcq = mcq_gen(subject, grade, topic)
+    # mcq = [
+    #     {
+    #             "answer": "WVegetables",
+    #             "id": 1,
+    #             "options": [
+    #                 "Tea",
+    #                 "Rubber",
+    #                 "Vegetables",
+    #                 "Paddy"
+    #             ],
+    #             "question": "What is not a major export crop in Sri Lanka?"
+    #         },
+    # ]
     if mcq:  # Check if the list is not empty
         quiz = Quiz()
         question_data = mcq[0] 
@@ -195,3 +195,18 @@ def get_topics():
 
     return jsonify(response_payload)
 
+
+@chat.route("/quiz/<subject_id>", methods=["GET"])
+@chat.route("/quiz/<subject_id>/", methods=["GET"])
+def getOpenQuiz(subject_id):
+    try:
+        quiz = Quiz.get_open_quiz(subject_id)
+        if quiz:
+            return jsonify(quiz), 200
+        else:
+            return jsonify({"message": "No quiz found"}), 404
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+   

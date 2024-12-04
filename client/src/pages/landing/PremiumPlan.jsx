@@ -34,12 +34,6 @@ export default function PremiumPlan() {
                 <li className="flex items-center space-x-2">
                   <span className="text-green-500 text-3xl">✓</span>
                   <span className="text-2xl">
-                    Ask from chatbot with limited tokens
-                  </span>
-                </li>
-                <li className="flex items-center space-x-2">
-                  <span className="text-green-500 text-3xl">✓</span>
-                  <span className="text-2xl">
                     Access to all Textbooks & Articles
                   </span>
                 </li>
@@ -50,12 +44,6 @@ export default function PremiumPlan() {
                 <li className="flex items-center space-x-2">
                   <span className="text-green-500 text-3xl">✓</span>
                   <span className="text-2xl">Earn Badges </span>
-                </li>
-                <li className="flex items-center space-x-2">
-                  <span className="text-red-500 text-3xl">✗</span>
-                  <span className="text-2xl">
-                    Unlimited Tokens for Ask from Chatbot
-                  </span>
                 </li>
                 <li className="flex items-center space-x-2">
                   <span className="text-red-500 text-3xl">✗</span>
@@ -86,12 +74,6 @@ export default function PremiumPlan() {
                 <li className="flex items-center space-x-2">
                   <span className="text-green-500 text-3xl">✓</span>
                   <span className="text-2xl">Earn Badges</span>
-                </li>
-                <li className="flex items-center space-x-2">
-                  <span className="text-green-500 text-3xl">✓</span>
-                  <span className="text-2xl">
-                    Unlimited Tokens for Ask from Chatbot
-                  </span>
                 </li>
                 <li className="flex items-center space-x-2">
                   <span className="text-green-500 text-3xl">✓</span>

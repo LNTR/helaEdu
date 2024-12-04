@@ -70,7 +70,7 @@ function SubjectFilters({ selectedGrade, setSelectedGrade }) {
               </button>
               <ul
                 tabIndex={0}
-                className="dropdown-content menu p-1 shadow rounded-box w-52 text-sm"
+                className="dropdown-content menu p-1 shadow rounded-box w-52 text-sm bg-white"
                 style={{ zIndex: 10 }}
               >
                 {grades.map((grade, index) => (

@@ -8,12 +8,22 @@ from Blueprint.chat import chat
 from Blueprint.notes import notes
 from Blueprint.subject import subjects
 from flask_cors import CORS
-
+from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.triggers.cron import CronTrigger
+from scheduler_function import update_upcoming_quiz
 
 import fireo
 
+scheduler = BackgroundScheduler()
+
 
 def create_app():
+    global scheduler
+    scheduler.add_job(
+        update_upcoming_quiz, CronTrigger(day_of_week="mon", hour=0, minute=0)
+    )
+    scheduler.start()
+
     app = Flask(__name__)
     CORS(app, resources={"/*": {"origins": "*"}})
     fireo.connection(from_file="config/firebase-service-account.json")
@@ -30,5 +40,8 @@ def create_app():
 
 
 if __name__ == "__main__":
-    app = create_app()
-    app.run(debug=True, port=8081)
+    try:
+        app = create_app()
+        app.run(debug=True, port=8081)
+    except (KeyboardInterrupt, SystemExit):
+        scheduler.shutdown()

@@ -5,7 +5,8 @@ from firebase_admin import firestore
 from Models.Student import Student
 from Chatbot.main import *
 from Models.Quiz import Quiz
-from datetime import datetime
+from datetime import datetime, timedelta
+from Models.ChatHistory import ChatHistory
 
 chat = Blueprint("chat", __name__)
 
@@ -68,6 +69,23 @@ def get_history(data):
 
     return jsonify(response_payload)
 
+
+@chat.route("/history-meta", methods=["POST"])
+@chat.route("/history-meta/", methods=["POST"])
+@authenticate
+def get_history_meta(data):
+    email = data["sub"]
+    user: Student = Student.find_by_email(email)
+    chat_histories = ChatHistory.collection.filter("userId", "==", user.userId).fetch()
+    history_ids = [history.id for history in chat_histories]
+
+    response_payload = {
+        "history_ids": history_ids,
+    }
+
+    return jsonify(response_payload)
+
+
 @chat.route("/quizgen", methods=["POST"])
 @chat.route("/quizgen/", methods=["POST"])
 @authenticate
@@ -76,11 +94,13 @@ def get_quiz(data):
     subjectId = request_payload["subjectId"]
     subject = request_payload["subject"]
     grade = request_payload["grade"]
-    topic  = request_payload["topic"]
+    topic = request_payload["topic"]
     moderatorEmail = data["sub"]
     identifier = request_payload["identifier"]
 
-    quiz_response = quiz_gen(subjectId, subject, grade, topic , moderatorEmail, identifier)
+    quiz_response = quiz_gen(
+        subjectId, subject, grade, topic, moderatorEmail, identifier
+    )
     q = Quiz()
     q.quiz = quiz_response["quiz"]
     q.subjectId = subjectId
@@ -91,17 +111,15 @@ def get_quiz(data):
     q.identifier = identifier
     q.save()
 
-
     quiz_response["quizId"] = q.id
     response_payload = {"response": quiz_response}
 
-#     print(q.id)
-#     print(q.key)
-#     quiz_response["quizId"] = q.id
-#     response_payload = {
-#         "response": quiz_response,
-#     }
-
+    #     print(q.id)
+    #     print(q.key)
+    #     quiz_response["quizId"] = q.id
+    #     response_payload = {
+    #         "response": quiz_response,
+    #     }
 
     return jsonify(response_payload)
 
@@ -111,7 +129,7 @@ def get_quiz(data):
 # @authenticate
 def get_MCQ():
     request_payload = request.get_json(silent=True)
-    subject = request_payload.get("subject") 
+    subject = request_payload.get("subject")
     grade = request_payload.get("grade")
     quizId = request_payload.get("quizId")
     questionId = request_payload.get("questionId")
@@ -123,7 +141,7 @@ def get_MCQ():
             "id": questionId,
             "options": ["Tea", "Rubber", "Vegetables", "Paddy"],
             "question": "What is not a major export crop in Sri Lanka?",
-            "topic": "Agriculture",  
+            "topic": "Agriculture",
         },
     ]
  
@@ -131,7 +149,7 @@ def get_MCQ():
         quiz = Quiz()
         question_data = mcq[0]
         # Use .get() to avoid KeyError
-        topic = question_data.get("topic")  
+        topic = question_data.get("topic")
 
         if quiz.update_question(
             quizId,
@@ -146,6 +164,7 @@ def get_MCQ():
         else:
             return jsonify({"success": False, "message": "Failed to update question."}),400
 
+
 @chat.route("/<quiz_id>/review", methods=["GET"])
 @chat.route("/<quiz_id>/review/", methods=["GET"])
 def approve_quiz(quiz_id):
@@ -153,6 +172,7 @@ def approve_quiz(quiz_id):
     quiz.reviewed()
     quiz.update()
     return jsonify({"message": "update complete"})
+
 
 @chat.route("/get-quiz/<quiz_id>", methods=["GET"])
 @chat.route("/get-quiz/<quiz_id>/", methods=["GET"])
@@ -168,9 +188,8 @@ def get_quiz_by_Id(quiz_id):
             "subject": quiz.subject,
             "grade": quiz.grade,
             "status": quiz.status,
-            
         }
-        
+
         return jsonify({"success": True, "quiz": quiz_data})
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 500
@@ -181,24 +200,31 @@ def get_quiz_by_Id(quiz_id):
 @authenticate
 def get_quizzes_by_moderator(data):
     try:
-        email=data["sub"]
+        email = data["sub"]
         quizzes = Quiz.collection.filter("moderatorEmail", "==", email).fetch()
         if not quizzes:
-            return jsonify({"success": False, "message": "No quizzes found for this moderator"}), 404
-        
+            return (
+                jsonify(
+                    {"success": False, "message": "No quizzes found for this moderator"}
+                ),
+                404,
+            )
+
         quizzes_data = []
         for quiz in quizzes:
-            quizzes_data.append({
-                "quizId": quiz.id,
-                "quiz": quiz.quiz,
-                "subjectId": quiz.subjectId,
-                "subject": quiz.subject,
-                "grade": quiz.grade,
-                "status": quiz.status,
-                "identifier":quiz.identifier,
-                "moderatorEmail":quiz.moderatorEmail
-            })
-        
+            quizzes_data.append(
+                {
+                    "quizId": quiz.id,
+                    "quiz": quiz.quiz,
+                    "subjectId": quiz.subjectId,
+                    "subject": quiz.subject,
+                    "grade": quiz.grade,
+                    "status": quiz.status,
+                    "identifier": quiz.identifier,
+                    "moderatorEmail": quiz.moderatorEmail,
+                }
+            )
+
         return jsonify({"success": True, "quizzes": quizzes_data}), 200
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 500
@@ -207,41 +233,52 @@ def get_quizzes_by_moderator(data):
 @chat.route("/get-quizzes-by-date/<subject_id>", methods=["GET"])
 @chat.route("/get-quizzes-by-date/<subject_id>", methods=["GET"])
 @authenticate
-def get_quizzes_by_date(data,subject_id):
+def get_quizzes_by_date(data, subject_id):
     try:
         email = data["sub"]
-        quizzes = Quiz.collection.filter("moderatorEmail", "==", email).filter("subjectId","==",subject_id).fetch()
+        quizzes = (
+            Quiz.collection.filter("moderatorEmail", "==", email)
+            .filter("subjectId", "==", subject_id)
+            .fetch()
+        )
 
         if not quizzes:
-            return jsonify({"success": False, "message": "No quizzes found for this moderator"}), 404
+            return (
+                jsonify(
+                    {"success": False, "message": "No quizzes found for this moderator"}
+                ),
+                404,
+            )
 
-        current_date = datetime.now()  
+        current_date = datetime.now()
         quizzes_data = []
 
         for quiz in quizzes:
-            identifier_date = datetime.strptime(quiz.identifier, "%Y-%m-%d") 
+            identifier_date = datetime.strptime(quiz.identifier, "%Y-%m-%d")
             if identifier_date > current_date:
                 if quiz.status == "PENDING":
                     status_label = "Pending"
                 elif quiz.status == "REVIEWED":
                     status_label = "Already Reviewed"
-                elif quiz.status =="OPENED":
-                    status_label ="Opened"
+                elif quiz.status == "OPENED":
+                    status_label = "Opened"
                 else:
                     status_label = "Unknown Status"
             else:
                 status_label = "Generate Quiz"
 
-            quizzes_data.append({
-                "quizId": quiz.id,
-                "quiz": quiz.quiz,
-                "subjectId": quiz.subjectId,
-                "subject": quiz.subject,
-                "grade": quiz.grade,
-                "status_label": status_label,
-                "identifier": quiz.identifier,
-                "moderatorEmail": quiz.moderatorEmail
-            })
+            quizzes_data.append(
+                {
+                    "quizId": quiz.id,
+                    "quiz": quiz.quiz,
+                    "subjectId": quiz.subjectId,
+                    "subject": quiz.subject,
+                    "grade": quiz.grade,
+                    "status_label": status_label,
+                    "identifier": quiz.identifier,
+                    "moderatorEmail": quiz.moderatorEmail,
+                }
+            )
 
         return jsonify({"success": True, "quizzes": quizzes_data}), 200
 
@@ -300,6 +337,7 @@ def get_topics():
     return jsonify(response_payload)
 
 
+
 @chat.route("/quiz/<subject_id>", methods=["GET"])
 @chat.route("/quiz/<subject_id>/", methods=["GET"])
 def getOpenQuiz(subject_id):
@@ -314,3 +352,25 @@ def getOpenQuiz(subject_id):
         return jsonify({"error": str(e)}), 500
 
    
+
+def update_upcoming_quiz():
+
+    today = datetime.now()
+    next_monday = today + timedelta(days=(6 - today.weekday()))
+    next_monday_str = next_monday.strftime("%Y-%m-%d")
+    print(next_monday_str)
+    quizzes_list = list(
+        Quiz.collection.filter("identifier", "==", next_monday_str).fetch()
+    )
+
+    for quizzes in quizzes_list:
+        if quizzes.status == "REVIEWED":
+            quizzes.status = "OPENED"
+        quizzes.update()
+
+
+@chat.route("/test", methods=["POST"])
+def test():
+    update_upcoming_quiz()
+    return jsonify({"success": "true"})
+

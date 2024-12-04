@@ -7,11 +7,14 @@ class Quiz(Model):
     grade = TextField()
     subject = TextField()
     status = TextField()
+    moderatorEmail=TextField()
+    identifier=TextField()
+    topic=ListField()
 
     def reviewed(self):
         self.status = "REVIEWED"
 
-    def update_question(self, quiz_id, question_id, new_question, new_answer, new_options):
+    def update_question(self, quiz_id, question_id, new_question, new_answer, new_options,new_topic):
         try:
             # Fetch the quiz record by ID using the class-level collection
             quiz_record = Quiz.collection.get(quiz_id)
@@ -25,6 +28,7 @@ class Quiz(Model):
                     question["question"] = new_question
                     question["answer"] = new_answer
                     question["options"] = new_options
+                    question["topic"]=new_topic
                     break
             else:
                 print(f"Question with ID {question_id} not found in quiz {quiz_id}.")

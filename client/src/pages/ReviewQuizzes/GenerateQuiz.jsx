@@ -6,41 +6,18 @@ import FormComponent from '@components/moderator_com/FormComponent';
 import QuizCard from '@components/Quiz/QuizCard';
 
 export default function GenerateQuiz() {
-  const quizzes = [
-    {
-      quizId: 1,
-      topic: 'Quiz Topic 1',
-      subject: 'Science',
-      grade: 'Grade 8',
-      link: '/reviewQuiz',
-    },
-    {
-      quizId: 2,
-      topic: 'Quiz Topic 2',
-      subject: 'Science',
-      grade: 'Grade 7',
-    },
-    {
-      quizId: 3,
-      topic: 'Quiz Topic 3',
-      subject: 'Science',
-      grade: 'Grade 6',
-    },
-    {
-      quizId: 4,
-      topic: 'Quiz Topic 4',
-      subject: 'Science',
-      grade: 'Grade 9',
-    },
-  ];
-
+  
   const [sidebar, setSidebar] = useState(false);
   const location = useLocation();
   const { grade } = location.state || { grade: 'Default Grade' }; 
   const [showModal, setShowModal] = useState(false);
   const [generatedData, setGeneratedData] = useState(null);
 
-  const handleOpenModal = () => setShowModal(true);
+  const handleOpenModal = (subjectId) => {
+    setShowModal(true);
+    setSelectedSubjectId(subjectId);
+  };
+  
   const handleCloseModal = () => setShowModal(false);
 
   const handleFormSubmit = (formData) => {
@@ -56,6 +33,7 @@ export default function GenerateQuiz() {
           onSubmit={handleFormSubmit}
           onClose={handleCloseModal}
           grades={grade}
+          subjectId={selectedSubjectId}  
         />
       )}
       <div
@@ -69,24 +47,12 @@ export default function GenerateQuiz() {
           <div className="flex justify-center">
             <button
               className="bg-blue px-7 py-3 text-white text-2xl"
-              onClick={handleOpenModal}
+              onClick={() => handleOpenModal(1)} 
             >
               Generate Quiz
             </button>
           </div>
-          <div className="flex center py-5">
-            {quizzes.map((quiz, index) => (
-              <QuizCard
-                key={index}
-                imageUrl={quiz.imageUrl}
-                topic={quiz.topic}
-                subject={quiz.subject}
-                grade={quiz.grade}
-                link={quiz.link}
-                quizId={quiz.quizId}
-              />
-            ))}
-          </div>
+          
         </div>
       </div>
     </>

@@ -4,8 +4,11 @@ import com.helaedu.website.dto.*;
 import com.helaedu.website.service.*;
 import com.helaedu.website.util.RequestUtil;
 import com.helaedu.website.util.UserUtil;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -135,6 +138,7 @@ public class TMController {
         return getTMByEmail(requestBody);
     }
 
+
     @GetMapping("/me/articles")
     public ResponseEntity<List<ArticleDto>> getCurrentTMArticles() throws ExecutionException, InterruptedException {
         String email = UserUtil.getCurrentUserEmail();
@@ -190,6 +194,27 @@ public class TMController {
         return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
     }
 
+    @PutMapping("/profile")
+    public ResponseEntity<Object> updateTM(@Valid @RequestBody TeacherDto teacherDto, BindingResult bindingResult) throws ExecutionException, InterruptedException {
+        if(bindingResult.hasErrors()) {
+            ValidationErrorResponse errorResponse = new ValidationErrorResponse();
+            for (FieldError fieldError : bindingResult.getFieldErrors()) {
+                errorResponse.addViolation(fieldError.getField(), fieldError.getDefaultMessage());
+            }
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
+        try {
+            String email = UserUtil.getCurrentUserEmail();
+            String result = tmService.updateTM(email, teacherDto);
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            ValidationErrorResponse errorResponse = new ValidationErrorResponse();
+            errorResponse.addViolation("userId", e.getMessage());
+            return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        } catch (ExecutionException | InterruptedException e) {
+            return new ResponseEntity<>("Error updating teacher", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 
 

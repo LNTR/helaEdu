@@ -1,6 +1,7 @@
 package com.helaedu.website.controller;
 
 import com.helaedu.website.dto.*;
+import com.helaedu.website.entity.Article;
 import com.helaedu.website.service.*;
 import com.helaedu.website.util.UserUtil;
 import jakarta.validation.Valid;
@@ -221,4 +222,14 @@ public class ArticleController{
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    @GetMapping("/popular")
+    public ResponseEntity<List<Article>> getTopThreeArticles() {
+        try {
+            List<Article> popularArticles = articleService.getTopThreeArticles();
+            return ResponseEntity.ok(popularArticles);
+        } catch (ExecutionException | InterruptedException e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }

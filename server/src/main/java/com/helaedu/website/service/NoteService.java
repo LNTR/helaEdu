@@ -74,20 +74,21 @@ public class NoteService {
 
     public String updateNote(String noteId, NoteDto noteDto) throws ExecutionException, InterruptedException {
         Note existingNote = noteRepository.getNoteById(noteId);
-        if(existingNote == null) {
+        if (existingNote == null) {
             throw new IllegalArgumentException("Note not found");
         }
-        noteDto.setNoteId(noteId);
+
         Note note = new Note(
-                noteDto.getNoteId(),
-                noteDto.getContent(),
-                noteDto.getTitle(),
-                noteDto.getSubject(),
-                noteDto.getPublishedTimestamp(),
-                noteDto.getUserId()
+                noteId,
+                noteDto.getContent() != null ? noteDto.getContent() : existingNote.getContent(),
+                noteDto.getTitle() != null ? noteDto.getTitle() : existingNote.getTitle(),
+                noteDto.getSubject() != null ? noteDto.getSubject() : existingNote.getSubject(),
+                noteDto.getPublishedTimestamp() != null ? noteDto.getPublishedTimestamp() : existingNote.getPublishedTimestamp(),
+                noteDto.getUserId() != null ? noteDto.getUserId() : existingNote.getUserId()
         );
         return noteRepository.updateNote(noteId, note);
     }
+
     public String deleteNote(String noteId) throws ExecutionException, InterruptedException {
         return noteRepository.deleteNote(noteId);
     }

@@ -5,6 +5,7 @@ import SelectGrades from '@components/moderator_com/SelectGrades';
 import { listTeacherDetails } from '@services/TeacherService';
 import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
 import { getSubjectById } from '@services/SubjectService';
+import LoadingComponent from '@components/common/LoadingComponent';
 
 export default function ReviewQuizHome() {
   const authHeader = useAuthHeader();
@@ -14,9 +15,10 @@ export default function ReviewQuizHome() {
   const [sidebar, setSidebar] = useState(false);
   const [assignedSubjects, setAssignedSubjects] = useState([]);
   const [subjectsDetails, setSubjectsDetails] = useState([]);
-
+  const [loadingState,setLoadingState] = useState(false);
   useEffect(() => {
     const fetchTeacherDetails = async () => {
+      setLoadingState(true);
       try {
       
         const teacherDetails = await listTeacherDetails(headers);
@@ -41,6 +43,8 @@ export default function ReviewQuizHome() {
         setSubjectsDetails(subjectDetailsArray);
       } catch (error) {
         console.error('Error fetching teacher details or subjects:', error);
+      }finally{
+        setLoadingState(false);
       }
     };
 
@@ -51,6 +55,7 @@ export default function ReviewQuizHome() {
     <>
       <Header />
       <div className="dashboard h-screen mx-auto" style={{ width: sidebar ? `calc(100vw - 384px)` : '100vw' }} onClick={() => setSidebar(false)}>
+        {loadingState? <LoadingComponent/>: null}
         <Sidebar value={sidebar} setValue={setSidebar} />
         <div className="content-wrapper mx-64 border">
           <h1 className="mx-10 my-14">Weekly Quizzes</h1>

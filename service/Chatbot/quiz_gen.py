@@ -66,7 +66,7 @@ quiz_chain_ret = (
     | parser
 )
 
-def get_quiz(subjectId, subject, grade, start, end, chain=quiz_chain_ret):
+def get_quiz(subjectId, subject, grade, topics,moderatorEmail, identifier):
     # keywords = getKeywords(subject, grade, start, end)
     keywordList = ["kings in Kandyan Kingdom"]
     quiz = []

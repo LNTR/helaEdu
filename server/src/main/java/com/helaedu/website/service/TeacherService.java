@@ -17,7 +17,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -302,21 +304,67 @@ public class TeacherService {
         return teacherRepository.approveTeacher(userId);
     }
 
+//    public Map<String, Integer> getTeachersCountForReport(String startDate, String endDate) throws ExecutionException, InterruptedException {
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+//        LocalDate start = LocalDate.parse(startDate, formatter);
+//        LocalDate end = LocalDate.parse(endDate, formatter);
+//
+//        List<Teacher> teachers = teacherRepository.getAllTeachers();
+//
+//        return teachers.stream()
+//                .filter(teacher -> {
+//                    LocalDate regDate = LocalDate.parse(teacher.getRegTimestamp(), formatter);
+//                    return (regDate.isEqual(start) || regDate.isAfter(start)) && (regDate.isEqual(end) || regDate.isBefore(end));
+//                })
+//                .collect(Collectors.groupingBy(
+//                        teacher -> LocalDate.parse(teacher.getRegTimestamp(), formatter).toString(),
+//                        Collectors.summingInt(student -> 1)
+//                ));
+//    }
     public Map<String, Integer> getTeachersCountForReport(String startDate, String endDate) throws ExecutionException, InterruptedException {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate start = LocalDate.parse(startDate, formatter);
-        LocalDate end = LocalDate.parse(endDate, formatter);
+        DateTimeFormatter isoFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSSX");
 
+        LocalDate start;
+        LocalDate end;
+
+        try {
+            startDate = startDate.trim();
+            endDate = endDate.trim();
+            start = LocalDate.parse(startDate, formatter);
+            end = LocalDate.parse(endDate, formatter);
+        } catch (DateTimeParseException e) {
+            throw new IllegalArgumentException(
+                    "Invalid date format for startDate or endDate. Expected format: yyyy-MM-dd. Received startDate: "
+                            + startDate + ", endDate: " + endDate, e
+            );
+        }
         List<Teacher> teachers = teacherRepository.getAllTeachers();
-
+        if (teachers == null || teachers.isEmpty()) {
+            throw new RuntimeException("No teachers found in the database.");
+        }
         return teachers.stream()
                 .filter(teacher -> {
-                    LocalDate regDate = LocalDate.parse(teacher.getRegTimestamp(), formatter);
-                    return (regDate.isEqual(start) || regDate.isAfter(start)) && (regDate.isEqual(end) || regDate.isBefore(end));
+                    String regTimestamp = teacher.getRegTimestamp();
+                    if (regTimestamp == null) {
+                        System.out.println("Null registration timestamp for teacher: " + teacher.getUserId());
+                        return false;
+                    }
+                    try {
+
+                        LocalDate regDate = ZonedDateTime.parse(regTimestamp, isoFormatter).toLocalDate();
+                        return (regDate.isEqual(start) || regDate.isAfter(start)) &&
+                                (regDate.isEqual(end) || regDate.isBefore(end));
+                    } catch (DateTimeParseException e) {
+                        System.out.println("Invalid timestamp format for teacher: " + teacher.getUserId());
+                        return false;
+                    }
                 })
                 .collect(Collectors.groupingBy(
-                        teacher -> LocalDate.parse(teacher.getRegTimestamp(), formatter).toString(),
-                        Collectors.summingInt(student -> 1)
+                        teacher -> ZonedDateTime.parse(teacher.getRegTimestamp(), isoFormatter).toLocalDate().toString(),
+                        Collectors.summingInt(teacher -> 1)
                 ));
     }
+
+
 }

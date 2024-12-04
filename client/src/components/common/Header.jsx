@@ -156,54 +156,53 @@ function Header() {
                       ) : null}
                     </li>
 
-                    <li
-                      // className={
-                      //   currentUserRole == userRoles.Admin ||
-                      //   currentUserRole == userRoles.Moderator
-                      //     ? ""
-                      //     : "no-display"
-                      // }
-                    >
-                      {currentUserRole == userRoles.Admin ? (
-                        <Link to="/dashboard">
+                    {currentUserRole == userRoles.Admin ? (
+                      <Link to="/dashboard">
+                        <li>
                           <h4>Dashboard</h4>
-                        </Link>
-                      ) : currentUserRole == userRoles.Moderator? (
-                        <Link to="/modDashboard">
+                        </li>
+                      </Link>
+                    ) : currentUserRole == userRoles.Moderator ? (
+                      <Link to="/modDashboard">
+                        <li>
                           <h4>Dashboard</h4>
-                        </Link>
-                      ) : null}
-                    </li>
+                        </li>
+                      </Link>
+                    ) : null}
                     {/* <li>
                       <h4>Grades</h4>
                     </li> */}
-                    <li>
-                      {currentUserRole == userRoles.Teacher ? (
-                        <Link to="/articles/addArticles">
+                    {currentUserRole == userRoles.Teacher ? (
+                      <Link to="/articles/addArticles">
+                        <li>
                           <h4> My Articles</h4>
-                        </Link>
-                      ) : currentUserRole == userRoles.Moderator ? (
-                        <Link to="/articles/addArticles">
-                          <h4> My Articles</h4>
-                        </Link>
-                      ) : null}
-                    </li>
-                    <li>
-                      {currentUserRole == userRoles.Teacher ? (
-                        <Link to="/assignments/assignmentList">
-                          <h4>Assignments</h4>
-                        </Link>
-                      ) : currentUserRole == userRoles.Moderator ? (
-                        <Link to="/assignments/assignmentList">
-                          <h4>Assignments</h4>
-                        </Link>
-                      ) : null}
-                    </li>
-                    <li>
-                      <Link to="/notes">
-                        <h4>Stickies</h4>
+                        </li>
                       </Link>
-                    </li>
+                    ) : currentUserRole == userRoles.Moderator ? (
+                      <Link to="/articles/addArticles">
+                        <li>
+                          <h4> My Articles</h4>
+                        </li>
+                      </Link>
+                    ) : null}
+                    {currentUserRole == userRoles.Teacher ? (
+                      <Link to="/assignments/assignmentList">
+                        <li>
+                          <h4>Assignments</h4>
+                        </li>
+                      </Link>
+                    ) : currentUserRole == userRoles.Moderator ? (
+                      <Link to="/assignments/assignmentList">
+                        <li>
+                          <h4>Assignments</h4>
+                        </li>
+                      </Link>
+                    ) : null}
+                    <Link to="/notes">
+                      <li>
+                        <h4>Notes</h4>
+                      </li>
+                    </Link>
                     <li>
                       <h4
                         onClick={() => {

@@ -1,14 +1,13 @@
 package com.helaedu.website.service;
 
+import com.helaedu.website.dto.AdminDto;
 import com.helaedu.website.dto.TeacherDto;
-import com.helaedu.website.entity.Badge;
-import com.helaedu.website.entity.Student;
-import com.helaedu.website.entity.Subscription;
-import com.helaedu.website.entity.Teacher;
+import com.helaedu.website.entity.*;
 import com.helaedu.website.repository.TMRepository;
 import com.helaedu.website.repository.TeacherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -208,4 +207,55 @@ public class TMService {
                 )
                 .collect(Collectors.toList());
     }
+    public String updateTM(String email, TeacherDto teacherDto) throws ExecutionException, InterruptedException {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
+        Teacher existingTeacher = tmRepository.getTMByEmail(email);
+        if(existingTeacher == null) {
+            throw new IllegalArgumentException("Teacher not found");
+        }
+
+        if(teacherDto.getFirstName() != null && !teacherDto.getFirstName().equals(existingTeacher.getFirstName())) {
+            existingTeacher.setFirstName(teacherDto.getFirstName());
+        }
+        if(teacherDto.getLastName() != null && !teacherDto.getLastName().equals(existingTeacher.getLastName())) {
+            existingTeacher.setLastName(teacherDto.getLastName());
+        }
+        if(teacherDto.getEmail() != null && !teacherDto.getEmail().equals(existingTeacher.getEmail())) {
+            existingTeacher.setEmail(teacherDto.getEmail());
+        }
+        if(teacherDto.getPassword() != null && !(encoder.encode(teacherDto.getPassword()).equals(encoder.encode(existingTeacher.getPassword())))) {
+            existingTeacher.setPassword(encoder.encode(teacherDto.getPassword()));
+        }
+        if(teacherDto.getRegTimestamp() != null) {
+            existingTeacher.setRegTimestamp(teacherDto.getRegTimestamp());
+        }
+        if(teacherDto.getIsModerator() != null) {
+            existingTeacher.setIsModerator(teacherDto.getIsModerator());
+        }
+        if(teacherDto.getProofRef() != null && !teacherDto.getProofRef().equals(existingTeacher.getProofRef())) {
+            existingTeacher.setProofRef(teacherDto.getProofRef());
+        }
+        if(teacherDto.getRegTimestamp() != null) {
+            existingTeacher.setRegTimestamp(teacherDto.getRegTimestamp());
+        }
+        if(teacherDto.getIsModerator() != null) {
+            existingTeacher.setIsModerator(teacherDto.getIsModerator());
+        }
+        if(teacherDto.getPreferredSubjects() != null) {
+            existingTeacher.setPreferredSubjects(teacherDto.getPreferredSubjects());
+        }
+        if(teacherDto.getBadges() != null) {
+            existingTeacher.setBadges(teacherDto.getBadges());
+        }
+        if(teacherDto.getSchool() != null) {
+            existingTeacher.setSchool(teacherDto.getSchool());
+        }
+        if(teacherDto.getAbout() != null) {
+            existingTeacher.setAbout(teacherDto.getAbout());
+        }
+
+        return tmRepository.updateTMByEmail(email, existingTeacher);
+    }
+
 }

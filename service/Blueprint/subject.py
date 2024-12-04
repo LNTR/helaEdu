@@ -87,6 +87,7 @@ def unenroll_from_subject(data, subject_id):
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
 
+
 @subjects.route("/subjects", methods=["GET"])
 @authenticate
 def get_subjects(data):

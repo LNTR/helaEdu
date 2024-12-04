@@ -17,10 +17,15 @@ import { listAllUsersDetails } from "@services/TeacherService";
 import { getUpvoteCountByArticleId } from "@services/ArticleService";
 import { getCommentCountByArticleId } from "@services/ArticleService";
 import FormatToYYMMDD from "@components/common/FormatToYYMMDD";
+import useAuthUser from "react-auth-kit/hooks/useAuthUser";
+import { userRoles } from "@utils/userRoles";
+
 function Hero2() {
   const navigate = useNavigate();
+  const currentUserRole = useAuthUser()?.role;
+
   const [topArticles, setTopArticles] = useState([]);
-  const [loadingState,setLoadingState]  = useState(false);
+  const [loadingState, setLoadingState] = useState(false);
 
   const truncateContent = (text, maxWords) => {
     const words = text.split(" ");
@@ -29,7 +34,7 @@ function Hero2() {
     }
     return text;
   };
-  
+
   useEffect(() => {
     const fetchArticlesAndDetails = async () => {
       try {
@@ -43,15 +48,19 @@ function Hero2() {
               const userResponse = await listAllUsersDetails(article.userId);
               const author = userResponse.data;
 
-              const upvoteResponse = await getUpvoteCountByArticleId(article.articleId);
+              const upvoteResponse = await getUpvoteCountByArticleId(
+                article.articleId
+              );
               const upvoteCount = upvoteResponse.data;
 
-              const commentResponse = await getCommentCountByArticleId(article.articleId);
+              const commentResponse = await getCommentCountByArticleId(
+                article.articleId
+              );
               const commentCount = commentResponse.data;
 
               const truncatedTitle = truncateContent(article.title, 5);
               const truncatedContent = truncateContent(article.content, 40);
-              const date=FormatToYYMMDD(article.publishedTimestamp);
+              const date = FormatToYYMMDD(article.publishedTimestamp);
               return {
                 ...article,
                 author,
@@ -59,12 +68,20 @@ function Hero2() {
                 commentCount,
                 truncatedTitle,
                 truncatedContent,
-                date
+                date,
               };
             } catch (error) {
-              console.error(`Error fetching details for articleId: ${article.articleId}`, error);
-              return { ...article, author: null, upvoteCount: 0, commentCount: 0 };
-            }finally{
+              console.error(
+                `Error fetching details for articleId: ${article.articleId}`,
+                error
+              );
+              return {
+                ...article,
+                author: null,
+                upvoteCount: 0,
+                commentCount: 0,
+              };
+            } finally {
               setLoadingState(false);
             }
           })
@@ -89,17 +106,22 @@ function Hero2() {
       <main className="pannels">
         <div className="left-pannel flex-c">
           <div className="hero-text-box">
-            <div className="subscribe">
-              <h3 className="text-center blue">Subscribe to premium now</h3>
-              <h3
-                className="text-center white"
-                onClick={() => {
-                  navigate("/premiumPlan");
-                }}
-              >
-                Subscribe
-              </h3>
-            </div>
+            {userRoles.Student == currentUserRole || !currentUserRole ? (
+              <div className="subscribe">
+                <h3 className="text-center blue">Subscribe to premium now</h3>
+                <h3
+                  className="text-center white"
+                  onClick={() => {
+                    navigate("/premiumPlan");
+                  }}
+                >
+                  Subscribe
+                </h3>
+              </div>
+            ) : (
+              <></>
+            )}
+
             <h4 className="mt-4">
               Your ultimate self-study platform, designed to make learning
               engaging and effective. Start your journey to academic excellence
@@ -201,15 +223,13 @@ function Hero2() {
         <h3>Most Popular Articles</h3>
       </div>
       <section className="article-section">
-        {loadingState? (
+        {loadingState ? (
           <div className="flex justify-start px-40 py-20 items-center">
-                <div className="h-12 w-4 bg-blue rounded-full animate-pulse mx-5"></div>
-                <div className="h-8 w-4 bg-blue rounded-full animate-pulse delay-200"></div>
-                <div className="h-4 w-4 bg-blue rounded-full animate-pulse delay-400 mx-5"></div>
+            <div className="h-12 w-4 bg-blue rounded-full animate-pulse mx-5"></div>
+            <div className="h-8 w-4 bg-blue rounded-full animate-pulse delay-200"></div>
+            <div className="h-4 w-4 bg-blue rounded-full animate-pulse delay-400 mx-5"></div>
           </div>
-        
-        ): null
-        }
+        ) : null}
         {topArticles.map((article, index) => (
           <Article
             key={article.articleId}

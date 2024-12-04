@@ -42,11 +42,11 @@ const Question = ({ question_no, question, totalQuizTime, questionLength, timet 
       </div>
       <div className="-mt-12 mx-auto min-h-32 w-32">
         <div
-          className="radial-progress bg-blue text-yellow border-blue border-4 absolute -bottom-16 right-12"
+          className="radial-progress bg-blue  text-4xl text-bold text-yellow border-yellow border-4 absolute -bottom-16 right-12"
           style={{
             "--value": progress,
             "--size": "10rem",
-            "--thickness": "1.2rem",
+            "--thickness": "0rem",
           }}
           role="progressbar"
         >

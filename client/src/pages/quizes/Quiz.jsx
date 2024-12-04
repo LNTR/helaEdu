@@ -11,7 +11,7 @@ const Quiz = () => {
   const { subject } = useParams();
   return (
     <>
-    <QuizBegin subject={subject} />
+    <QuizBegin subject={subjectId} />
     </>
   );
 };

@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from utils import authenticate
 from Models.Student import Student
+from Models.Subjects import Subjects
 
 subjects = Blueprint("subject", __name__)
 
@@ -10,7 +11,6 @@ subjects = Blueprint("subject", __name__)
 def check_enrollments(data, subject_id):
 
     try:
-        subject_id = subject_id.replace("-", "_").replace("/", "_")
         email = data["sub"]
         user: Student = Student.find_by_email(email)
 
@@ -91,15 +91,14 @@ def unenroll_from_subject(data, subject_id):
 @subjects.route("/subjects", methods=["GET"])
 @authenticate
 def get_subjects(data):
-
     try:
         email = data["sub"]
         user: Student = Student.find_by_email(email)
-        return jsonify(user.enrolledSubjects), 200
-        # if user.enrolledSubjects:
-        #     return jsonify(user.enrolledSubjects), 200
-        # else:
-        #     return jsonify({"success": True, "hasEnrolled": False}), 200
+        subjects = Subjects.getSubjects(user.enrolledSubjects)
+        if (subjects):
+            return subjects, 200
+        else:
+            return jsonify({"success": True, "hasEnrolled": False}), 200
 
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500

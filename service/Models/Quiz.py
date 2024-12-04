@@ -43,5 +43,25 @@ class Quiz(Model):
             print(f"Error updating question: {e}")
             return False
 
+
+    def get_open_quiz(subject_id):
+        try:
+            # Fetch the single quiz with matching subjectId and status
+            subject_id = subject_id.replace("_", "-").replace("/", "_")
+            quiz = Quiz.collection.filter("subjectId", "==", subject_id).filter("status", "==", "OPENED").get()
+            if quiz:
+                return {
+                    "quiz": quiz.quiz,
+                    "subjectId": quiz.subjectId,
+                    "grade": quiz.grade,
+                    "status": quiz.status,
+                    "subject": quiz.subject,
+                }
+            else:
+                return None 
+
+        except Exception as e:
+            print(f"Error fetching the quiz: {e}")
+            return None 
     class Meta:
         collection_name = "quiz"

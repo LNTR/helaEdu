@@ -17,38 +17,58 @@ export default function AddTextBookPopup({ grade, onClose, onSuccess }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+  
     try {
-     
+      // Step 1: Create the subject only once
       const subjectData = { subjectName, language, grade };
       const response = await createSubject(subjectData);
-      const subjectId = response.data;
-
+      const subjectId = response.data; // Get the subject ID from the response
+  
       if (!subjectId) {
         alert('Error creating subject');
         return;
       }
-
+  
+      // Step 2: Upload the PDF (if provided)
       if (pdfFile) {
         const pdfFormData = new FormData();
         pdfFormData.append('pdf', pdfFile);
-        await uploadPdf(subjectId, pdfFormData);
+  
+        try {
+          await uploadPdf(subjectId, pdfFormData);
+        } catch (error) {
+          console.error('Error uploading PDF:', error);
+          alert('Failed to upload the PDF. Please try again.');
+          return; // Exit on error to prevent inconsistent state
+        }
       }
-
+  
+      // Step 3: Upload the cover image (if provided)
       if (coverImage) {
         const coverFormData = new FormData();
-        coverFormData.append('subjectCoverImage', coverImage); 
-        await uploadSubjectCover(subjectId, coverFormData);
+        coverFormData.append('subjectCoverImage', coverImage);
+  
+        try {
+          await uploadSubjectCover(subjectId, coverFormData);
+        } catch (error) {
+          console.error('Error uploading Cover Image:', error);
+          alert('Failed to upload the cover image. Please try again.');
+          return; // Exit on error to prevent inconsistent state
+        }
       }
-
-      alert('Subject, PDF, and Cover Image uploaded successfully');
-      onClose();
-      onSuccess(); 
+  
+      // Success message and cleanup
+      alert('Subject, PDF, and Cover Image uploaded successfully!');
+      onClose(); // Close the popup
+      onSuccess(); // Trigger success callback
+  
     } catch (error) {
-      console.error('Error uploading files:', error);
-      alert('There was an error. Please try again.');
-      onClose();
+      console.error('Error creating subject:', error);
+      alert('An error occurred while creating the subject. Please try again.');
     }
   };
+  
+  
 
   return (
     <div className="popup-overlay">
@@ -71,12 +91,12 @@ export default function AddTextBookPopup({ grade, onClose, onSuccess }) {
               value={language}
               onChange={(e) => setLanguage(e.target.value)}
             /><br /><br />
-            <div className='flex justify-between'>
-              <div>
+            <div className=''>
+              <div className='items center'>
                 <label className='text-2xl'>Upload Textbook</label>
                 <input type="file" className="my-6 w-full" onChange={handleFileChange} />
               </div>
-              <div>
+              <div className=''>
                 <label className='text-2xl'>Upload Cover Image</label>
                 <input type="file" className="my-6 w-full" onChange={handleCoverChange} />
               </div>

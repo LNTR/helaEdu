@@ -133,6 +133,7 @@ def get_MCQ():
     grade = request_payload.get("grade")
     quizId = request_payload.get("quizId")
     questionId = request_payload.get("questionId")
+    # mcq = mcq_gen(subject, grade, topic)
     # Generate dummy MCQ for testing purposes
     mcq = [
         {
@@ -143,7 +144,7 @@ def get_MCQ():
             "topic": "Agriculture",
         },
     ]
-
+ 
     if mcq:  # Check if the list is not empty
         quiz = Quiz()
         question_data = mcq[0]
@@ -159,13 +160,9 @@ def get_MCQ():
             topic,
         ):
             response_payload = {"response": question_data}
-
             return jsonify(response_payload)
         else:
-            return (
-                jsonify({"success": False, "message": "Failed to update question."}),
-                400,
-            )
+            return jsonify({"success": False, "message": "Failed to update question."}),400
 
 
 @chat.route("/<quiz_id>/review", methods=["GET"])
@@ -340,6 +337,22 @@ def get_topics():
     return jsonify(response_payload)
 
 
+
+@chat.route("/quiz/<subject_id>", methods=["GET"])
+@chat.route("/quiz/<subject_id>/", methods=["GET"])
+def getOpenQuiz(subject_id):
+    try:
+        quiz = Quiz.get_open_quiz(subject_id)
+        if quiz:
+            return jsonify(quiz), 200
+        else:
+            return jsonify({"message": "No quiz found"}), 404
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+   
+
 def update_upcoming_quiz():
 
     today = datetime.now()
@@ -360,3 +373,4 @@ def update_upcoming_quiz():
 def test():
     update_upcoming_quiz()
     return jsonify({"success": "true"})
+

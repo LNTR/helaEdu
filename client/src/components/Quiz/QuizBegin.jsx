@@ -5,9 +5,33 @@ import Questions from "./Questions";
 import Score from "./Score";
 import QuizHeader from "./QuizHeader";
 import StartPopup from "./StartPopup";
+import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
+import { getOpenQuiz } from '@services/WeeklyQuizService';
 
-const QuizBegin = ({ subject }) => {
-  const questionbank = [
+
+const QuizBegin = ({ subjectId }) => {
+
+  const authHeader = useAuthHeader();
+  const headers = {
+    Authorization: authHeader,
+  };
+  const [quiz, setQuiz] = useState([]); 
+  const questionbank = quiz.quiz;
+
+  console.log("jgghg",quiz);
+  useEffect(() => {
+    getOpenQuiz(headers, {subjectId})
+      .then((res) => {
+        setQuiz(res.data); 
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Failed to fetch enrolled subjects:", err);
+        setError("Failed to load subjects. Please try again later.");
+        setLoading(false);
+      });
+  }, []);
+  const questionbankm = [
     {
       question: "What is not a major export crop in Sri Lanka?",
       options: ["Tea", "Rubber", "Vegetables", "Paddy"],
@@ -122,7 +146,7 @@ const QuizBegin = ({ subject }) => {
       <div>
         {!quizStarted && !showPopup ? (
           <div>
-            <Guidlines subject={subject} />
+            <Guidlines subject={quiz.subject} />
             <div className="text-center m-10">
               <div className="button-29 mt-10" onClick={showStartPopup}>
                 Start Quiz!
